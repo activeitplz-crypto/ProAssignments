@@ -10,20 +10,13 @@ import {
   Wallet,
   Users,
   ClipboardList,
-  Menu,
+  MoreVertical,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { cn } from '@/lib/utils';
 import { UserNav } from '@/components/user-nav';
 import { JanzyIcon } from '@/components/janzy-icon';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
 import { MobileNav } from '@/components/mobile-nav';
 
 const navItems = [
@@ -110,6 +103,25 @@ export default function AppLayout({
         </div>
       </header>
       <main className="flex-1 p-4 lg:p-6">{children}</main>
+
+       {/* Mobile Bottom Navigation */}
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
+        <div className="flex h-16 items-center justify-around">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex flex-col items-center gap-1 p-2 text-muted-foreground',
+                pathname === item.href ? 'text-primary' : 'hover:text-primary'
+              )}
+            >
+              <item.icon className="h-6 w-6" />
+              <span className="text-xs">{item.label}</span>
+            </Link>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 }

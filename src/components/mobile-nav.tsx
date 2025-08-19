@@ -4,9 +4,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { JanzyIcon } from '@/components/janzy-icon';
 import { cn } from '@/lib/utils';
 
@@ -27,16 +27,18 @@ export function MobileNav({ navItems }: MobileNavProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="md:hidden">
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Toggle navigation menu</span>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <MoreVertical className="h-5 w-5" />
+          <span className="sr-only">Open navigation menu</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="left">
-        <div className="flex h-16 items-center gap-2 border-b px-6">
-          <JanzyIcon className="h-8 w-8" />
-          <span className="text-xl font-bold">Janzy</span>
-        </div>
+        <SheetHeader>
+          <SheetTitle className="flex items-center gap-2">
+            <JanzyIcon className="h-8 w-8" />
+            <span className="text-xl font-bold">Janzy</span>
+          </SheetTitle>
+        </SheetHeader>
         <nav className="flex flex-col gap-2 p-4">
           {navItems.map((item) => (
             <Link

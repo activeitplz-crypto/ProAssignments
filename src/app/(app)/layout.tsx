@@ -57,14 +57,14 @@ export default async function AppLayout({
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
               {navItems.map((item) => (
-                <Link
+                <a
                   key={item.href}
                   href={item.href}
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                 >
                   <item.icon className="h-4 w-4" />
                   {item.label}
-                </Link>
+                </a>
               ))}
             </nav>
           </div>
@@ -89,14 +89,14 @@ export default async function AppLayout({
                   <Logo />
                 </div>
                 {navItems.map((item) => (
-                  <Link
+                  <a
                     key={item.href}
                     href={item.href}
                     className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                   >
                     <item.icon className="h-5 w-5" />
                     {item.label}
-                  </Link>
+                  </a>
                 ))}
               </nav>
             </SheetContent>

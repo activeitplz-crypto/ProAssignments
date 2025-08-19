@@ -107,7 +107,6 @@ function PurchasePlanDialog({ plan }: { plan: Plan }) {
           </div>
           <form action={purchasePlan}>
             <input type="hidden" name="plan_id" value={plan.id} />
-            <input type="hidden" name="plan_name" value={plan.name} />
             <div className="space-y-2">
               <Label htmlFor="payment_uid">Payment Transaction ID (UID)</Label>
               <Input id="payment_uid" name="payment_uid" required placeholder="e.g., 12345678901" />

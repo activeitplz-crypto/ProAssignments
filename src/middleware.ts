@@ -1,9 +1,6 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
-import dotenv from 'dotenv';
-
-dotenv.config({ path: '.env.local' });
 
 export async function middleware(request: NextRequest) {
   // update user's auth session

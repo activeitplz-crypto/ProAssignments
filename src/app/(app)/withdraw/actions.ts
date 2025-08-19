@@ -10,6 +10,7 @@ const withdrawalSchema = z.object({
   amount: z.coerce.number().positive('Amount must be positive.'),
   bank_name: z.string().min(1, 'Bank name is required.'),
   holder_name: z.string().min(1, 'Account holder name is required.'),
+  account_number: z.string().min(1, 'Account number is required.'),
 });
 
 export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchema>) {
@@ -41,6 +42,7 @@ export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchem
       p_account_info: {
           bank_name: formData.bank_name,
           holder_name: formData.holder_name,
+          account_number: formData.account_number,
       }
   });
 

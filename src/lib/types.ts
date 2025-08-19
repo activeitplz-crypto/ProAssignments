@@ -22,6 +22,7 @@ export interface UserProfile {
   referral_count: number;
   referral_bonus: number;
   current_balance: number;
+  referral_code: string;
 }
 
 export interface Payment {
@@ -42,6 +43,7 @@ export interface Withdrawal {
   account_info: {
     bank_name: string;
     holder_name: string;
+    account_number: string;
   };
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;

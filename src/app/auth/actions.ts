@@ -31,6 +31,15 @@ const signupSchema = z.object({
   password: z.string().min(6),
 });
 
+function generateReferralCode(length = 8) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
 export async function signup(formData: z.infer<typeof signupSchema>) {
   const supabase = createClient();
 
@@ -54,6 +63,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
       id: data.user.id, 
       name: formData.name,
       email: formData.email,
+      referral_code: generateReferralCode(),
     });
     if (profileError) {
       // If profile creation fails, we should probably handle this case,

@@ -26,6 +26,7 @@ const formSchema = z.object({
     .positive({ message: 'Amount must be greater than zero.' }),
   bank_name: z.string().min(2, { message: 'Bank/Service name is required.' }),
   holder_name: z.string().min(2, { message: 'Account holder name is required.' }),
+  account_number: z.string().min(11, { message: 'Account number is required.'}),
 });
 
 interface WithdrawFormProps {
@@ -43,6 +44,7 @@ export function WithdrawForm({ currentBalance }: WithdrawFormProps) {
       amount: undefined,
       bank_name: '',
       holder_name: '',
+      account_number: '',
     },
   });
 
@@ -111,6 +113,19 @@ export function WithdrawForm({ currentBalance }: WithdrawFormProps) {
               <FormLabel>Account Holder Name</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., John Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={form.control}
+          name="account_number"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Account Number</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., 03123456789" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

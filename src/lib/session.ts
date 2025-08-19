@@ -2,27 +2,25 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { MOCK_AUTH_COOKIE_NAME, MOCK_USER, MOCK_ADMIN_EMAIL } from './mock-data';
+import { MOCK_AUTH_COOKIE_NAME, MOCK_USERS } from './mock-data';
 
 export async function getSession() {
   const cookieStore = cookies();
-  const token = cookieStore.get(MOCK_AUTH_COOKIE_NAME);
+  const email = cookieStore.get(MOCK_AUTH_COOKIE_NAME)?.value;
 
-  if (token) {
-    // In a real app, you'd verify the token.
-    // Here we just return the mock user based on the admin email or default user
-    const email = token.value;
-    if (email === MOCK_ADMIN_EMAIL) {
-        return {
-            ...MOCK_USER,
-            email: MOCK_ADMIN_EMAIL,
-            name: "Admin User",
-        }
+  if (email) {
+    // Find the user in our mock database
+    const user = MOCK_USERS.find(u => u.email === email);
+    
+    if (user) {
+      return {
+        isLoggedIn: true,
+        email: user.email,
+        name: user.name,
+        // ... other non-sensitive data you might need
+      };
     }
-    return {
-        ...MOCK_USER,
-        email: email,
-    };
   }
+  
   return null;
 }

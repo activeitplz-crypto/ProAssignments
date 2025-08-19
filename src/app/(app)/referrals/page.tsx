@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Card,
   CardContent,
@@ -16,21 +18,35 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ReferralLinkCard } from '@/components/referral-link-card';
-import { MOCK_USER } from '@/lib/mock-data';
+import { MOCK_USERS } from '@/lib/mock-data';
+import { useState, useEffect } from 'react';
+import type { UserProfile } from '@/lib/types';
+import { getSession } from '@/lib/session';
 
-export default async function ReferralsPage() {
-  const referralLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/signup?ref=${MOCK_USER.id}`;
+export default function ReferralsPage() {
+  const [user, setUser] = useState<UserProfile | null>(null);
 
-  const referralStats = {
-    count: MOCK_USER.referral_count,
-    bonus: MOCK_USER.referral_bonus,
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      const session = await getSession();
+      if (session?.email) {
+        setUser(MOCK_USERS.find(u => u.email === session.email) || null);
+      }
+    };
+    fetchUser();
+  }, []);
   
   const recentReferrals: { name: string; plan: string; bonus: number; date: string }[] = [
     { name: 'Ali Khan', plan: 'Standard Plan', bonus: 300.00, date: '2023-10-26' },
     { name: 'Fatima Ahmed', plan: 'Basic Plan', bonus: 200.00, date: '2023-10-25' },
     { name: 'Zainab Bibi', plan: 'Premium Plan', bonus: 600.00, date: '2023-10-22' },
   ];
+
+  if (!user) {
+    return <div>Loading referrals...</div>;
+  }
+
+  const referralLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/signup?ref=${user.referral_code}`;
 
   return (
     <div className="space-y-6">
@@ -50,7 +66,7 @@ export default async function ReferralsPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{referralStats.count}</div>
+            <div className="text-2xl font-bold">{user.referral_count}</div>
             <p className="text-xs text-muted-foreground">
               Total friends who joined and invested.
             </p>
@@ -62,7 +78,7 @@ export default async function ReferralsPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">PKR {referralStats.bonus.toFixed(2)}</div>
+            <div className="text-2xl font-bold">PKR {user.referral_bonus.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
               Total earnings from your referrals.
             </p>

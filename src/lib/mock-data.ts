@@ -4,25 +4,41 @@ import type { Plan, UserProfile, Payment, Withdrawal } from './types';
 export const MOCK_AUTH_COOKIE_NAME = 'mock-auth-token';
 export const MOCK_ADMIN_EMAIL = 'jnzb505@gmail.com';
 
-export const MOCK_USER: UserProfile = {
-  id: 'mock-user-123',
-  name: 'Jahanzaib',
-  email: 'jaanzaib1212@gmail.com',
-  current_plan: 'Premium Plan',
-  plan_start: new Date('2023-10-01T10:00:00Z').toISOString(),
-  plan_end: new Date('2024-01-01T10:00:00Z').toISOString(),
-  total_earning: 12500,
-  today_earning: 600,
-  referral_count: 5,
-  referral_bonus: 3000,
-  current_balance: 7500,
-  referral_code: 'JANZY-REF-123',
-  avatarUrl: null,
-};
-
+// This is now our mock "database" of users
 export const MOCK_USERS: UserProfile[] = [
-  MOCK_USER,
+  // Admin User
   {
+    id: 'mock-admin-001',
+    name: 'Admin',
+    email: MOCK_ADMIN_EMAIL,
+    current_plan: 'Ultimate Plan',
+    plan_start: new Date('2023-10-01T10:00:00Z').toISOString(),
+    plan_end: new Date('2024-01-01T10:00:00Z').toISOString(),
+    total_earning: 99999,
+    today_earning: 8000,
+    referral_count: 50,
+    referral_bonus: 25000,
+    current_balance: 50000,
+    referral_code: 'ADMIN-REF-001',
+    avatarUrl: null,
+  },
+  // Default User for login
+  {
+    id: 'mock-user-123',
+    name: 'Jahanzaib',
+    email: 'jaanzaib1212@gmail.com',
+    current_plan: 'Premium Plan',
+    plan_start: new Date('2023-10-01T10:00:00Z').toISOString(),
+    plan_end: new Date('2024-01-01T10:00:00Z').toISOString(),
+    total_earning: 12500,
+    today_earning: 600,
+    referral_count: 5,
+    referral_bonus: 3000,
+    current_balance: 7500,
+    referral_code: 'JANZY-REF-123',
+    avatarUrl: null,
+  },
+   {
     id: 'mock-user-456',
     name: 'Ali Khan',
     email: 'ali.khan@example.com',
@@ -53,6 +69,10 @@ export const MOCK_USERS: UserProfile[] = [
     avatarUrl: null,
   }
 ];
+
+// Single MOCK_USER for simple access where we know one user is logged in
+// DEPRECATED in favor of finding user in MOCK_USERS, but kept for non-user specific pages if needed.
+export const MOCK_USER: UserProfile = MOCK_USERS[1];
 
 
 export const MOCK_PLANS: Plan[] = [

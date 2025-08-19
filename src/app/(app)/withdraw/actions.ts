@@ -3,7 +3,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { MOCK_USER, MOCK_WITHDRAWALS } from '@/lib/mock-data';
+import { MOCK_USERS, MOCK_WITHDRAWALS } from '@/lib/mock-data';
+import { getSession } from '@/lib/session';
 
 const withdrawalSchema = z.object({
   amount: z.coerce.number().positive('Amount must be positive.'),
@@ -13,7 +14,17 @@ const withdrawalSchema = z.object({
 });
 
 export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchema>) {
-  if (formData.amount > MOCK_USER.current_balance) {
+  const session = await getSession();
+  if (!session?.email) {
+    return { error: 'You must be logged in to make a withdrawal.' };
+  }
+  
+  const user = MOCK_USERS.find(u => u.email === session.email);
+  if (!user) {
+    return { error: 'User not found.' };
+  }
+
+  if (formData.amount > user.current_balance) {
     return { error: 'Insufficient balance.' };
   }
 
@@ -23,7 +34,7 @@ export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchem
 
   MOCK_WITHDRAWALS.unshift({
     id: `withdrawal-${Date.now()}`,
-    user_id: 'mock-user-123',
+    user_id: user.id,
     amount: formData.amount,
     status: 'pending',
     created_at: new Date().toISOString(),
@@ -32,7 +43,7 @@ export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchem
         holder_name: formData.holder_name,
         account_number: formData.account_number,
     },
-    users: { name: 'Jahanzaib' },
+    users: { name: user.name || 'Unknown' },
   });
   
   // You could update the mock data here if you wanted the balance to change,

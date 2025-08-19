@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Card,
   CardContent,
@@ -7,22 +9,52 @@ import {
 } from '@/components/ui/card';
 import { UserProfileCard } from '@/components/user-profile-card';
 import { DollarSign, Zap, Briefcase, Wallet } from 'lucide-react';
-import { MOCK_USER } from '@/lib/mock-data';
+import { MOCK_USERS } from '@/lib/mock-data';
+import { useEffect, useState } from 'react';
+import type { UserProfile } from '@/lib/types';
+import { getSession } from '@/lib/session';
 
-export default async function DashboardPage() {
-  // In a real app, you'd fetch this data. Here we use mocks.
+
+export default function DashboardPage() {
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const session = await getSession();
+      if (session?.email) {
+        // Find the base user from mock data
+        const baseUser = MOCK_USERS.find(u => u.email === session.email);
+        
+        // Check local storage for any client-side updates (like name or avatar)
+        const storedUserStr = localStorage.getItem(`user-profile-${session.email}`);
+        const storedUser = storedUserStr ? JSON.parse(storedUserStr) : {};
+
+        // Merge base user with stored updates
+        if (baseUser) {
+           setUser({ ...baseUser, ...storedUser });
+        }
+      }
+    };
+    fetchUser();
+  }, []);
+
+  if (!user) {
+    return <div>Loading dashboard...</div>;
+  }
+
   const userData = {
-    name: MOCK_USER.name || 'Anonymous',
-    username: MOCK_USER.email?.split('@')[0] || 'anonymous',
-    total_earning: MOCK_USER.total_earning,
-    today_earning: MOCK_USER.today_earning,
-    active_plan: MOCK_USER.current_plan || 'None',
-    current_balance: MOCK_USER.current_balance,
+    name: user.name || 'Anonymous',
+    username: user.email?.split('@')[0] || 'anonymous',
+    avatarUrl: user.avatarUrl,
+    total_earning: user.total_earning,
+    today_earning: user.today_earning,
+    active_plan: user.current_plan || 'None',
+    current_balance: user.current_balance,
   };
 
   return (
     <div className="flex flex-col gap-6">
-      <UserProfileCard name={userData.name} username={userData.username} />
+      <UserProfileCard name={userData.name} username={userData.username} avatarUrl={userData.avatarUrl} />
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-card/80">
@@ -81,3 +113,4 @@ export default async function DashboardPage() {
     </div>
   );
 }
+

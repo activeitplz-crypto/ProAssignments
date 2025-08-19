@@ -19,22 +19,10 @@ import { cn } from '@/lib/utils';
 import { JanzyIcon } from '@/components/janzy-icon';
 import { MobileNav } from '@/components/mobile-nav';
 import { logout } from '@/app/auth/actions';
-import { MOCK_USER } from '@/lib/mock-data';
+import { MOCK_USERS } from '@/lib/mock-data';
 import { UserNav } from '@/components/user-nav';
-
-const navItems = [
-  { href: '/dashboard', label: 'Home', icon: Home },
-  { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
-  { href: '/referrals', label: 'Referral', icon: Users },
-  { href: '/plans', label: 'Plans', icon: ClipboardList },
-];
-
-const actionItems = [{ href: '/profile', label: 'Edit Profile', icon: UserIcon }];
-
-// Add admin link only if the user is an admin
-if (MOCK_USER.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-  navItems.push({ href: '/admin', label: 'Admin Panel', icon: Shield });
-}
+import type { UserProfile } from '@/lib/types';
+import { getSession } from '@/lib/session';
 
 export default function AppLayout({
   children,
@@ -42,16 +30,48 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [user, setUser] = useState(MOCK_USER);
+  const [user, setUser] = useState<UserProfile | null>(null);
 
-   useEffect(() => {
-    // In a real app, you might fetch user data here.
-    // For our mock setup, we can still simulate updates if needed, e.g., from local storage.
-    const storedUser = localStorage.getItem('user-profile');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, [pathname]); // Rerun on path change to reflect updates
+  useEffect(() => {
+    const fetchUser = async () => {
+      const session = await getSession();
+      if (session?.email) {
+        // In a real app, you'd fetch from a DB. Here we find in mock data.
+        const currentUser = MOCK_USERS.find(u => u.email === session.email) || null;
+        
+        // Also check localStorage for client-side updates (like avatar)
+        const storedUserStr = localStorage.getItem(`user-profile-${session.email}`);
+        if (storedUserStr) {
+          const storedUser = JSON.parse(storedUserStr);
+          setUser({...currentUser, ...storedUser});
+        } else {
+          setUser(currentUser);
+        }
+
+      }
+    };
+    fetchUser();
+  }, [pathname]);
+
+  const navItems = [
+    { href: '/dashboard', label: 'Home', icon: Home },
+    { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
+    { href: '/referrals', label: 'Referral', icon: Users },
+    { href: '/plans', label: 'Plans', icon: ClipboardList },
+  ];
+
+  const actionItems = [{ href: '/profile', label: 'Edit Profile', icon: UserIcon }];
+
+  // Add admin link only if the user is an admin
+  if (user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    navItems.push({ href: '/admin', label: 'Admin Panel', icon: Shield });
+  }
+
+  if (!user) {
+    // Optional: Show a loading state
+    return <div className="flex min-h-screen w-full items-center justify-center">Loading...</div>;
+  }
+
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">

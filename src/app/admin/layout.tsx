@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Logo } from '@/components/logo';
 import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
@@ -17,14 +19,30 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { getSession } from '@/lib/session';
+import { useEffect, useState } from 'react';
 
-export default async function AdminLayout({
+type Session = {
+  isLoggedIn: boolean;
+  email?: string | null;
+  name?: string | null;
+};
+
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
 
-  const session = await getSession();
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const sessionData = await getSession();
+      setSession(sessionData);
+    };
+    fetchSession();
+  }, []);
+
 
   const navItems = [
     { href: '/admin?tab=payments', label: 'Payments', icon: CreditCard },
@@ -32,6 +50,10 @@ export default async function AdminLayout({
     { href: '/admin?tab=users', label: 'Users', icon: Users },
     { href: '/admin?tab=plans', label: 'Plans', icon: ClipboardList },
   ];
+  
+  if (!session) {
+      return <div>Loading admin panel...</div>
+  }
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">

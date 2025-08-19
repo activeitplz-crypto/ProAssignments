@@ -4,7 +4,8 @@
 import { z } from 'zod';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { MOCK_AUTH_COOKIE_NAME, MOCK_USER } from '@/lib/mock-data';
+import { MOCK_AUTH_COOKIE_NAME, MOCK_USERS } from '@/lib/mock-data';
+import type { UserProfile } from '@/lib/types';
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -12,9 +13,10 @@ const loginSchema = z.object({
 });
 
 export async function login(formData: z.infer<typeof loginSchema>) {
-  // In a real app, you'd validate against a database.
-  // Here, we'll just check against our mock user.
-  if (formData.email !== MOCK_USER.email) {
+  // Find user in our mock database
+  const user = MOCK_USERS.find(u => u.email === formData.email);
+
+  if (!user) {
     return { error: 'Invalid email or password.' };
   }
   
@@ -23,8 +25,8 @@ export async function login(formData: z.infer<typeof loginSchema>) {
      return { error: 'Invalid email or password.' };
   }
 
-  // Set a mock auth cookie
-  cookies().set(MOCK_AUTH_COOKIE_NAME, 'mock-token-12345', {
+  // Set auth cookie with user's email to simulate a session
+  cookies().set(MOCK_AUTH_COOKIE_NAME, user.email!, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -41,17 +43,47 @@ const signupSchema = z.object({
 });
 
 export async function signup(formData: z.infer<typeof signupSchema>) {
-  // This is a mock signup. In a real app, you would create a new user.
-  // We'll just log them in as the mock user for demonstration.
-  console.log('Mock signup with:', formData.name, formData.email);
+  // Check if user already exists
+  if (MOCK_USERS.some(u => u.email === formData.email)) {
+    return { error: 'An account with this email already exists.' };
+  }
+
+  // Create a new user object
+  const newUser: UserProfile = {
+    id: `mock-user-${Date.now()}`,
+    name: formData.name,
+    email: formData.email,
+    current_plan: null,
+    plan_start: null,
+    plan_end: null,
+    total_earning: 0,
+    today_earning: 0,
+    referral_count: 0,
+    referral_bonus: 0,
+    current_balance: 0,
+    referral_code: `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`,
+    avatarUrl: null,
+  };
+
+  // Add the new user to our mock "database"
+  MOCK_USERS.push(newUser);
+  console.log(`New user created: ${formData.email}. Total users: ${MOCK_USERS.length}`);
 
   // Set the mock auth cookie as if they've signed up and are now logged in
-  cookies().set(MOCK_AUTH_COOKIE_NAME, 'mock-token-12345', {
+  cookies().set(MOCK_AUTH_COOKIE_NAME, newUser.email!, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7, // 1 week
     path: '/',
   });
+
+  // Also save their profile to local storage immediately
+  // This is a bit of a hack for the mock setup
+  // In a real app, this would be read from the DB on the next page load
+  if (newUser.email) {
+    const profileData = { name: newUser.name, avatarUrl: newUser.avatarUrl };
+    // This part is tricky as we are on the server. We'll rely on the client to fetch.
+  }
 
   return { error: null };
 }

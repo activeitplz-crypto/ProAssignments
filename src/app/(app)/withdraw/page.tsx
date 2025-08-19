@@ -1,4 +1,6 @@
 
+'use client';
+
 import {
   Card,
   CardContent,
@@ -7,10 +9,30 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { WithdrawForm } from './withdraw-form';
-import { MOCK_USER } from '@/lib/mock-data';
+import { MOCK_USERS } from '@/lib/mock-data';
+import { useState, useEffect } from 'react';
+import { getSession } from '@/lib/session';
+import type { UserProfile } from '@/lib/types';
 
-export default async function WithdrawPage() {
-  const availableBalance = MOCK_USER.current_balance;
+
+export default function WithdrawPage() {
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const session = await getSession();
+      if (session?.email) {
+        setUser(MOCK_USERS.find(u => u.email === session.email) || null);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
+  const availableBalance = user.current_balance;
 
   return (
     <div className="flex justify-center">

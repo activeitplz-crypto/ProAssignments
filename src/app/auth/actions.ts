@@ -39,6 +39,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
     email: formData.email,
     password: formData.password,
     options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
       data: {
         name: formData.name,
         referral_code: referral_code,

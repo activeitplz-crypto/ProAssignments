@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, useFormState } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -15,29 +15,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { login } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  password: z.string().min(1, { message: "Password is required." }),
 });
-
-function SubmitButton() {
-    const { pending } = useFormState(login);
-
-    return (
-        <Button type="submit" className="w-full" disabled={pending}>
-            {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Log In
-        </Button>
-    )
-}
 
 export function LoginForm() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,10 +48,17 @@ export function LoginForm() {
     }
   }, [searchParams, toast]);
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
+    await login(values);
+    // login action redirects, so we don't need to handle success case here.
+    // In case of error, the redirect will include the error message.
+    setLoading(false);
+  }
 
   return (
     <Form {...form}>
-      <form action={login} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="email"
@@ -88,7 +85,10 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <SubmitButton />
+        <Button type="submit" className="w-full" disabled={loading}>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Log In
+        </Button>
       </form>
     </Form>
   );

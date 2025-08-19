@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { login } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from 'next/navigation';
 
@@ -27,7 +27,7 @@ const formSchema = z.object({
 export function LoginForm() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,12 +48,10 @@ export function LoginForm() {
     }
   }, [searchParams, toast]);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    await login(values);
-    // login action redirects, so we don't need to handle success case here.
-    // In case of error, the redirect will include the error message.
-    setLoading(false);
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    startTransition(async () => {
+      await login(values);
+    });
   }
 
   return (
@@ -85,8 +83,8 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={loading}>
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Log In
         </Button>
       </form>

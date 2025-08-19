@@ -1,11 +1,14 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
-import { MOCK_AUTH_COOKIE_NAME } from './lib/mock-data';
+import { MOCK_AUTH_COOKIE_NAME, MOCK_ADMIN_EMAIL } from './lib/mock-data';
+import {
+  getSession,
+} from '@/lib/session';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  const isLoggedIn = request.cookies.has(MOCK_AUTH_COOKIE_NAME);
+  
+  const session = await getSession();
 
   const authRoutes = ['/login', '/signup'];
   const isAuthRoute = authRoutes.includes(pathname);
@@ -13,13 +16,22 @@ export async function middleware(request: NextRequest) {
   const protectedRoutes = ['/dashboard', '/plans', '/withdraw', '/referrals', '/profile'];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
-  if (isLoggedIn && isAuthRoute) {
+  const isAdminRoute = pathname.startsWith('/admin');
+
+  if (session && isAuthRoute) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
   
-  if (!isLoggedIn && isProtectedRoute) {
+  if (!session && isProtectedRoute) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
+
+  if (isAdminRoute) {
+    if (!session || session.email !== MOCK_ADMIN_EMAIL) {
+       return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+  }
+
 
   return NextResponse.next();
 }

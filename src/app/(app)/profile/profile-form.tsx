@@ -15,10 +15,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { useTransition } from 'react';
-import { Loader2 } from 'lucide-react';
+import { useRef, useTransition, useState } from 'react';
+import { Loader2, Upload } from 'lucide-react';
 import { updateProfile } from './actions';
 import { useRouter } from 'next/navigation';
+import type { UserProfile } from '@/lib/types';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 const formSchema = z.object({
@@ -26,20 +28,38 @@ const formSchema = z.object({
 });
 
 interface ProfileFormProps {
-    name: string;
+    user: UserProfile;
+    onUpdate: (data: Partial<UserProfile>) => void;
 }
 
-export function ProfileForm({ name }: ProfileFormProps) {
+export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(user.avatarUrl || null);
+  
+  const initials = user.name?.split(' ').map((n) => n[0]).join('') || '';
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: name || '',
+      name: user.name || '',
     },
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setPreview(result);
+        onUpdate({ avatarUrl: result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
@@ -51,6 +71,7 @@ export function ProfileForm({ name }: ProfileFormProps) {
           description: result.error,
         });
       } else {
+        onUpdate(values);
         toast({
           title: 'Success',
           description: 'Your profile has been updated.',
@@ -76,14 +97,25 @@ export function ProfileForm({ name }: ProfileFormProps) {
             </FormItem>
           )}
         />
-        {/* Placeholder for future Image Upload functionality */}
+        
         <div className="space-y-2">
             <FormLabel>Profile Picture</FormLabel>
             <div className="flex items-center gap-4">
-                <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-                    <span>Soon</span>
-                </div>
-                 <Button type="button" variant="outline" disabled>Upload Image</Button>
+                <Avatar className="h-20 w-20">
+                    <AvatarImage src={preview || ''} alt="User avatar" data-ai-hint="user avatar" />
+                    <AvatarFallback>{initials}</AvatarFallback>
+                </Avatar>
+                 <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
+                   <Upload className="mr-2 h-4 w-4" />
+                   Upload Image
+                </Button>
+                <Input 
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/png, image/jpeg, image/gif"
+                  onChange={handleFileChange}
+                />
             </div>
         </div>
 

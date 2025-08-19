@@ -1,6 +1,4 @@
 
-import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
 import { Logo } from '@/components/logo';
 import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
@@ -18,28 +16,18 @@ import {
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { getSession } from '@/lib/session';
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/login');
-  }
-
-  if (user.email !== process.env.ADMIN_EMAIL) {
-    redirect('/dashboard');
-  }
+  const session = await getSession();
 
   const navItems = [
-    { href: '/admin', label: 'Payments', icon: CreditCard },
+    { href: '/admin?tab=payments', label: 'Payments', icon: CreditCard },
     { href: '/admin?tab=withdrawals', label: 'Withdrawals', icon: Send },
     { href: '/admin?tab=users', label: 'Users', icon: Users },
     { href: '/admin?tab=plans', label: 'Plans', icon: ClipboardList },
@@ -116,7 +104,7 @@ export default async function AdminLayout({
           <div className="w-full flex-1">
             <h1 className="font-headline text-lg font-semibold">Admin Panel</h1>
           </div>
-          <UserNav name="Admin" email={user.email ?? ''} />
+          <UserNav name="Admin" email={session?.email ?? ''} />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}

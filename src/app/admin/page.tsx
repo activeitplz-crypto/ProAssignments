@@ -1,5 +1,7 @@
 
-import { createClient } from '@/lib/supabase/server';
+'use client';
+
+import { useSearchParams } from 'next/navigation';
 import {
   Tabs,
   TabsContent,
@@ -16,42 +18,37 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { approvePayment, rejectPayment, approveWithdrawal, rejectWithdrawal, seedInitialPlans } from './actions';
+import { approvePayment, rejectPayment, approveWithdrawal, rejectWithdrawal } from './actions';
 import type { Payment, Withdrawal, UserProfile, Plan } from '@/lib/types';
 import { format } from 'date-fns';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { MOCK_USERS, MOCK_PAYMENTS, MOCK_WITHDRAWALS, MOCK_PLANS } from '@/lib/mock-data';
+import { useState } from 'react';
 
 type AdminPageProps = {
   searchParams: {
-    tab: 'payments' | 'withdrawals' | 'users' | 'plans';
+    tab?: 'payments' | 'withdrawals' | 'users' | 'plans';
   };
 };
 
-export default async function AdminPage({ searchParams }: AdminPageProps) {
-  const supabase = createClient();
-  const currentTab = searchParams.tab || 'payments';
-
-  // Real data fetching logic
-  const { data: paymentsData } = await supabase
-    .from('payments')
-    .select('*, users(name), plans(name)');
+export default function AdminPage({ searchParams }: AdminPageProps) {
+  const defaultTab = useSearchParams().get('tab') || 'payments';
   
-  const { data: withdrawalsData } = await supabase
-    .from('withdrawals')
-    .select('*, users(name)');
+  // Use state to manage mock data to reflect UI changes
+  const [payments, setPayments] = useState<Payment[]>(MOCK_PAYMENTS);
+  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>(MOCK_WITHDRAWALS);
 
-  const { data: usersData } = await supabase.from('users').select('*');
-  const { data: plansData } = await supabase.from('plans').select('*').order('investment');
+  const handleAction = () => {
+    // This is a trick to force re-render and show updated status from mock data
+    setPayments([...MOCK_PAYMENTS]);
+    setWithdrawals([...MOCK_WITHDRAWALS]);
+  };
 
-
-  const payments = paymentsData as Payment[] || [];
-  const withdrawals = withdrawalsData as (Omit<Withdrawal, 'account_info'> & { account_info: any })[] || [];
-  const users = usersData as UserProfile[] || [];
-  const plans = plansData as Plan[] || [];
-
+  const users: UserProfile[] = MOCK_USERS;
+  const plans: Plan[] = MOCK_PLANS;
 
   return (
-    <Tabs defaultValue={currentTab} className="w-full">
+    <Tabs defaultValue={defaultTab} className="w-full">
       <TabsList>
         <TabsTrigger value="payments">Plan Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
@@ -82,8 +79,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 <TableCell className="space-x-2">
                   {p.status === 'pending' && (
                     <>
-                      <form action={approvePayment} className="inline-block"><input type="hidden" name="paymentId" value={p.id}/><input type="hidden" name="userId" value={p.user_id}/><input type="hidden" name="planId" value={p.plan_id}/><Button size="sm" type="submit">Approve</Button></form>
-                      <form action={rejectPayment} className="inline-block"><input type="hidden" name="paymentId" value={p.id}/><Button size="sm" variant="destructive" type="submit">Reject</Button></form>
+                      <form action={approvePayment} className="inline-block" onSubmit={handleAction}><input type="hidden" name="paymentId" value={p.id}/><Button size="sm" type="submit">Approve</Button></form>
+                      <form action={rejectPayment} className="inline-block" onSubmit={handleAction}><input type="hidden" name="paymentId" value={p.id}/><Button size="sm" variant="destructive" type="submit">Reject</Button></form>
                     </>
                   )}
                 </TableCell>
@@ -116,8 +113,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 <TableCell className="space-x-2">
                    {w.status === 'pending' && (
                     <>
-                      <form action={approveWithdrawal} className="inline-block"><input type="hidden" name="withdrawalId" value={w.id}/><Button size="sm" type="submit">Approve</Button></form>
-                      <form action={rejectWithdrawal} className="inline-block"><input type="hidden" name="withdrawalId" value={w.id}/><Button size="sm" variant="destructive" type="submit">Reject</Button></form>
+                      <form action={approveWithdrawal} className="inline-block" onSubmit={handleAction}><input type="hidden" name="withdrawalId" value={w.id}/><Button size="sm" type="submit">Approve</Button></form>
+                      <form action={rejectWithdrawal} className="inline-block" onSubmit={handleAction}><input type="hidden" name="withdrawalId" value={w.id}/><Button size="sm" variant="destructive" type="submit">Reject</Button></form>
                     </>
                    )}
                 </TableCell>
@@ -156,7 +153,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <Card>
             <CardHeader>
                 <CardTitle>Manage Investment Plans</CardTitle>
-                <CardDescription>View, add, or edit investment plans. Be careful, changes here are live.</CardDescription>
+                <CardDescription>View investment plans. Changes must be made in the mock data file.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -188,13 +185,6 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     </TableBody>
                 </Table>
             </CardContent>
-            <CardFooter>
-                {plans.length === 0 && (
-                    <form action={seedInitialPlans}>
-                        <Button>Seed Initial Plans</Button>
-                    </form>
-                )}
-            </CardFooter>
         </Card>
       </TabsContent>
     </Tabs>

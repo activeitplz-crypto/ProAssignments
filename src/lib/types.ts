@@ -23,6 +23,7 @@ export interface UserProfile {
   referral_bonus: number;
   current_balance: number;
   referral_code: string;
+  avatarUrl?: string | null;
 }
 
 export interface Payment {

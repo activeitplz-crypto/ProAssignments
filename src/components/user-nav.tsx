@@ -10,16 +10,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User, MoreVertical } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { logout } from '@/app/auth/actions';
 import Link from 'next/link';
 
 interface UserNavProps {
   name: string;
   email: string;
+  avatarUrl?: string | null;
 }
 
-export function UserNav({ name, email }: UserNavProps) {
+export function UserNav({ name, email, avatarUrl }: UserNavProps) {
   const initials = name
     .split(' ')
     .map((n) => n[0])
@@ -28,23 +29,20 @@ export function UserNav({ name, email }: UserNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative rounded-full">
-           <MoreVertical className="h-5 w-5" />
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+           <Avatar className="h-9 w-9">
+              <AvatarImage src={avatarUrl || ''} alt={`@${name}`} data-ai-hint="profile picture" />
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-9 w-9">
-                <AvatarImage src="https://placehold.co/100x100.png" alt={`@${name}`} data-ai-hint="profile picture" />
-                <AvatarFallback>{initials}</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{name}</p>
-              <p className="text-xs leading-none text-muted-foreground">
-                {email}
-              </p>
-            </div>
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{name}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {email}
+            </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -56,9 +54,10 @@ export function UserNav({ name, email }: UserNavProps) {
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <form action={logout} className="w-full">
-            <button type="submit" className="flex items-center w-full cursor-pointer">
+            <button type="submit" className="flex w-full cursor-pointer items-center">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </button>

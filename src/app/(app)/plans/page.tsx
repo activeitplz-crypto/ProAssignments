@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Zap } from 'lucide-react';
 import type { Plan } from '@/lib/types';
 import {
@@ -22,16 +23,36 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { purchasePlan } from './actions';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { format } from 'date-fns';
 
 export default async function PlansPage() {
   const supabase = createClient();
-  const { data: plans, error } = await supabase.from('plans').select('*').order('investment');
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (error) {
-    console.error('Error fetching plans:', error);
+  const { data: plans, error: plansError } = await supabase.from('plans').select('*').order('investment');
+  const { data: payments, error: paymentsError } = await supabase
+    .from('payments')
+    .select('*, plans(name)')
+    .eq('user_id', user?.id || '')
+    .order('created_at', { ascending: false });
+
+  if (plansError) {
+    console.error('Error fetching plans:', plansError);
     return <div>Could not load plans. Please try again later.</div>
   }
-  
+  if (paymentsError) {
+    console.error('Error fetching payments:', paymentsError);
+    // Non-critical, so we can still render the rest of the page
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -75,6 +96,8 @@ export default async function PlansPage() {
           </Card>
         ))}
       </div>
+
+      <PurchaseHistory payments={payments as any[] || []} />
     </div>
   );
 }
@@ -114,4 +137,49 @@ function PurchasePlanDialog({ plan }: { plan: Plan }) {
       </DialogContent>
     </Dialog>
   );
+}
+
+function PurchaseHistory({ payments }: { payments: any[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="font-headline">Purchase History</CardTitle>
+        <CardDescription>The status of your plan purchase requests.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Plan</TableHead>
+              <TableHead>Transaction ID</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {payments.length > 0 ? (
+              payments.map((p) => (
+                <TableRow key={p.id}>
+                  <TableCell>{p.plans?.name || 'N/A'}</TableCell>
+                  <TableCell>{p.payment_uid}</TableCell>
+                  <TableCell>{format(new Date(p.created_at), 'PPP')}</TableCell>
+                  <TableCell>
+                    <Badge variant={p.status === 'pending' ? 'secondary' : p.status === 'approved' ? 'default' : 'destructive'}>
+                      {p.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center">
+                  You have not purchased any plans yet.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  )
 }

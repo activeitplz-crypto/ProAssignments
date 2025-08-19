@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut } from 'lucide-react';
+import { LogOut, MoreHorizontal } from 'lucide-react';
 import { logout } from '@/app/auth/actions';
 
 interface UserNavProps {
@@ -18,19 +18,12 @@ interface UserNavProps {
 }
 
 export function UserNav({ name, email }: UserNavProps) {
-  const initials = name
-    .split(' ')
-    .map((n) => n[0])
-    .join('');
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="/avatars/01.png" alt={`@${name}`} />
-            <AvatarFallback>{initials}</AvatarFallback>
-          </Avatar>
+           <MoreHorizontal className="h-6 w-6" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>

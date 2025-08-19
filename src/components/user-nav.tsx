@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,14 +20,17 @@ interface UserNavProps {
   name: string;
   email: string;
   avatarUrl?: string | null;
+  expiresAt?: number;
 }
 
-export function UserNav({ name, email, avatarUrl }: UserNavProps) {
+export function UserNav({ name, email, avatarUrl, expiresAt }: UserNavProps) {
   const initials = name
     .split(' ')
     .map((n) => n[0])
     .join('');
     
+  const expirationDate = expiresAt ? new Date(expiresAt * 1000).toLocaleString() : 'N/A';
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +41,7 @@ export function UserNav({ name, email, avatarUrl }: UserNavProps) {
             </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
+      <DropdownMenuContent className="w-64" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{name}</p>
@@ -54,6 +59,10 @@ export function UserNav({ name, email, avatarUrl }: UserNavProps) {
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+         <div className="px-2 py-1.5 text-xs text-muted-foreground">
+            Session expires: {expirationDate}
+          </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <form action={logout} className="w-full">

@@ -114,7 +114,7 @@ export default async function AppLayout({
         </div>
 
         <div className="flex items-center gap-2">
-            <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
+            <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} expiresAt={session.expires_at} />
             <MobileNav navItems={navItems} actionItems={actionItems} />
         </div>
       </header>

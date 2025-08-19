@@ -1,5 +1,7 @@
 
-import { createClient } from '@/lib/supabase/server';
+'use client';
+
+import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,44 +12,81 @@ import {
   LogOut,
   User as UserIcon,
   Shield,
+  Loader2,
 } from 'lucide-react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { JanzyIcon } from '@/components/janzy-icon';
 import { MobileNav } from '@/components/mobile-nav';
 import { logout } from '@/app/auth/actions';
 import { UserNav } from '@/components/user-nav';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import type { Profile } from '@/lib/types';
+import type { Session } from '@supabase/supabase-js';
 
-export default async function AppLayout({
+export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const supabase = createClient();
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  useEffect(() => {
+    const getSessionData = async () => {
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      setSession(currentSession);
+      
+      if (!currentSession) {
+        router.push('/login');
+        return;
+      }
 
-  if (!session) {
-    redirect('/login');
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentSession.user.id)
+        .single();
+      
+      if (error || !profile) {
+        console.error('Error fetching profile:', error);
+        // Could redirect or show an error state
+      } else {
+        setUser(profile);
+      }
+      setLoading(false);
+    };
+
+    getSessionData();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        if (!session) {
+            router.push('/login');
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, [router, supabase, supabase.auth]);
+
+
+  if (loading) {
+    return (
+        <div className="flex min-h-screen w-full items-center justify-center">
+            <Loader2 className="h-10 w-10 animate-spin" />
+        </div>
+    )
   }
-
-  const { data: user, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', session.user.id)
-    .single();
-
-  if (error || !user) {
-    // This could happen if the profile wasn't created yet
-    // or if there's a network error.
-    console.error('Error fetching profile:', error);
-    // You might want to handle this more gracefully
-    return <div className="p-4">Error loading user profile. Please try logging out and back in.</div>
+  
+  if (!session || !user) {
+    return null; // Or a redirect component
   }
-
+  
   const navItems = [
     { href: '/dashboard', label: 'Home', icon: Home },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
@@ -76,7 +115,6 @@ export default async function AppLayout({
                 href={item.href}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary'
-                  // pathname is not available in server components easily, so active state is removed for now
                 )}
               >
                 <item.icon className="h-5 w-5" />

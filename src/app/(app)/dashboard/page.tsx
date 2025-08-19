@@ -12,9 +12,9 @@ import {
   DollarSign,
   Users,
   Building,
-  Clipboard,
 } from 'lucide-react';
 import Link from 'next/link';
+import { ReferralLinkCard } from '@/components/referral-link-card';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -99,30 +99,7 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline">Your Referral Link</CardTitle>
-          <CardDescription>
-            Share this link to invite others and earn bonuses.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center gap-4">
-          <input
-            readOnly
-            value={referralLink}
-            className="flex-1 rounded-md border bg-muted px-3 py-2 text-sm"
-          />
-          <Button
-            variant="outline"
-            onClick={async () => {
-              await navigator.clipboard.writeText(referralLink);
-              // Consider adding a toast notification here for feedback
-            }}
-          >
-            <Clipboard className="mr-2 h-4 w-4" /> Copy
-          </Button>
-        </CardContent>
-      </Card>
+      <ReferralLinkCard referralLink={referralLink} />
     </div>
   );
 }

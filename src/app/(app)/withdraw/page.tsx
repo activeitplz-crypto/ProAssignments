@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -6,21 +7,25 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-
-async function submitWithdrawal(formData: FormData) {
-  'use server';
-  // Server action logic will go here
-  console.log('Withdrawal submitted');
-}
+import { WithdrawForm } from './withdraw-form';
+import type { UserProfile } from '@/lib/types';
+import { redirect } from 'next/navigation';
 
 export default async function WithdrawPage() {
   const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  // In a real app, you would fetch the user's available balance
-  const availableBalance = 1250.75;
+  if (!user) {
+    redirect('/login');
+  }
+
+  const { data: userProfile } = await supabase
+    .from('users')
+    .select('current_balance')
+    .eq('id', user.id)
+    .single<Pick<UserProfile, 'current_balance'>>();
+
+  const availableBalance = userProfile?.current_balance || 0;
 
   return (
     <div className="flex justify-center">
@@ -28,25 +33,11 @@ export default async function WithdrawPage() {
         <CardHeader>
           <CardTitle className="font-headline text-3xl">Request Withdrawal</CardTitle>
           <CardDescription>
-            Your current available balance is ${availableBalance.toFixed(2)}. Withdrawals are processed within 24 hours.
+            Your current available balance is PKR {availableBalance.toFixed(2)}. Withdrawals are manually processed within 24 hours.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={submitWithdrawal} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="amount">Amount</Label>
-              <Input id="amount" name="amount" type="number" step="0.01" placeholder="e.g., 50.00" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="bank_name">Bank / Service Name</Label>
-              <Input id="bank_name" name="bank_name" placeholder="e.g., Easypaisa, JazzCash, Bank Al-Habib" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="holder_name">Account Holder Name</Label>
-              <Input id="holder_name" name="holder_name" placeholder="e.g., John Doe" required />
-            </div>
-            <Button type="submit" className="w-full">Submit Withdrawal Request</Button>
-          </form>
+          <WithdrawForm currentBalance={availableBalance} />
         </CardContent>
       </Card>
     </div>

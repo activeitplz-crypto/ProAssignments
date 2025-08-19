@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -6,8 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Clipboard, Gift, Users, DollarSign } from 'lucide-react';
+import { Users, DollarSign } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -16,6 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import type { UserProfile } from '@/lib/types';
+import { ReferralLinkCard } from '@/components/referral-link-card';
 
 export default async function ReferralsPage() {
   const supabase = createClient();
@@ -26,16 +28,22 @@ export default async function ReferralsPage() {
     ? `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/signup?ref=${userId}`
     : 'Loading...';
 
-  // Mock data
-  const referralStats = {
-    count: 12,
-    bonus: 300.00,
-  };
+  // Fetch real data
+  const { data: userProfile, error: profileError } = await supabase
+    .from('users')
+    .select('referral_count, referral_bonus')
+    .eq('id', userId)
+    .single<Pick<UserProfile, 'referral_count' | 'referral_bonus'>>();
 
-  const recentReferrals = [
-    { name: 'Jane Doe', plan: 'Standard', bonus: 15.00, date: '2023-10-26' },
-    { name: 'Peter Jones', plan: 'Basic', bonus: 5.00, date: '2023-10-24' },
-    { name: 'Sam Wilson', plan: 'Premium', bonus: 50.00, date: '2023-10-22' },
+  const referralStats = {
+    count: userProfile?.referral_count || 0,
+    bonus: userProfile?.referral_bonus || 0,
+  };
+  
+  // Mock recent referrals for now as referral tracking logic is complex
+  // In a real app, you would have a 'referrals' table to query from.
+  const recentReferrals: { name: string; plan: string; bonus: number; date: string }[] = [
+    // { name: 'Jane Doe', plan: 'Standard', bonus: 15.00, date: '2023-10-26' },
   ];
 
   return (
@@ -47,29 +55,7 @@ export default async function ReferralsPage() {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline">Your Unique Referral Link</CardTitle>
-          <CardDescription>
-            Share this link with your friends. You'll earn a bonus for each friend who signs up and purchases a plan.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center gap-4">
-          <input
-            readOnly
-            value={referralLink}
-            className="flex-1 rounded-md border bg-muted px-3 py-2 text-sm"
-          />
-          <Button
-            variant="outline"
-            onClick={async () => {
-              await navigator.clipboard.writeText(referralLink);
-            }}
-          >
-            <Clipboard className="mr-2 h-4 w-4" /> Copy Link
-          </Button>
-        </CardContent>
-      </Card>
+      <ReferralLinkCard referralLink={referralLink} />
       
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
@@ -90,7 +76,7 @@ export default async function ReferralsPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${referralStats.bonus.toFixed(2)}</div>
+            <div className="text-2xl font-bold">PKR {referralStats.bonus.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
               Total earnings from your referrals.
             </p>
@@ -101,6 +87,7 @@ export default async function ReferralsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="font-headline">Recent Referrals</CardTitle>
+           <CardDescription>This section is a placeholder for now.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -113,14 +100,18 @@ export default async function ReferralsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {recentReferrals.map((ref, index) => (
+              {recentReferrals.length > 0 ? recentReferrals.map((ref, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{ref.name}</TableCell>
                   <TableCell>{ref.plan}</TableCell>
-                  <TableCell>${ref.bonus.toFixed(2)}</TableCell>
+                  <TableCell>PKR {ref.bonus.toFixed(2)}</TableCell>
                   <TableCell>{ref.date}</TableCell>
                 </TableRow>
-              ))}
+              )) : (
+                <TableRow>
+                    <TableCell colSpan={4} className="text-center">No recent referrals yet.</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>

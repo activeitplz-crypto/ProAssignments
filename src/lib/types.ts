@@ -1,3 +1,4 @@
+
 export interface Plan {
   id: string;
   name: string;
@@ -20,6 +21,7 @@ export interface UserProfile {
   today_earning: number;
   referral_count: number;
   referral_bonus: number;
+  current_balance: number;
 }
 
 export interface Payment {
@@ -29,17 +31,19 @@ export interface Payment {
   payment_uid: string;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
-  users?: UserProfile;
-  plans?: Plan;
+  users?: Pick<UserProfile, 'name'>;
+  plans?: Pick<Plan, 'name'>;
 }
 
 export interface Withdrawal {
   id: string;
   user_id: string;
   amount: number;
-  bank_name: string;
-  holder_name: string;
+  account_info: {
+    bank_name: string;
+    holder_name: string;
+  };
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
-  users?: UserProfile;
+  users?: Pick<UserProfile, 'name'>;
 }

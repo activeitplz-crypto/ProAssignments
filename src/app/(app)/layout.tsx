@@ -1,3 +1,6 @@
+
+'use client';
+
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Logo } from '@/components/logo';
@@ -21,34 +24,103 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import React, { useState, useEffect } from 'react';
+import type { User } from '@supabase/supabase-js';
 
-export default async function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/login');
-  }
-
-  const { data: userProfile } = await supabase
-    .from('users')
-    .select('name')
-    .eq('id', user.id)
-    .single();
-
-  const navItems = [
+const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/plans', label: 'Plans', icon: Building },
     { href: '/withdraw', label: 'Withdraw', icon: Wallet },
     { href: '/referrals', label: 'Referrals', icon: Users },
   ];
+
+function MobileNav({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          className="shrink-0 md:hidden"
+        >
+          <PanelLeft className="h-5 w-5" />
+          <span className="sr-only">Toggle navigation menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="flex flex-col">
+        <SheetHeader className="sr-only">
+          <SheetTitle>Navigation Menu</SheetTitle>
+          <SheetDescription>
+            Main navigation links for the application.
+          </SheetDescription>
+        </SheetHeader>
+        <nav className="grid gap-2 text-lg font-medium">
+          <div className="mb-4">
+            <Logo />
+          </div>
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+            >
+              <item.icon className="h-5 w-5" />
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+export default function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<{ name: string | null } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        redirect('/login');
+        return;
+      }
+      setUser(user);
+
+      const { data: profile } = await supabase
+        .from('users')
+        .select('name')
+        .eq('id', user.id)
+        .single();
+      
+      setUserProfile(profile);
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, []);
+
+  if (loading) {
+    // You can return a loading spinner here
+    return <div>Loading...</div>;
+  }
+  
+  if (!user) {
+    // This should theoretically not be reached due to the redirect inside useEffect,
+    // but it's good practice for robustness.
+    return null;
+  }
+
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -75,41 +147,9 @@ export default async function AppLayout({
       </div>
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="shrink-0 md:hidden"
-              >
-                <PanelLeft className="h-5 w-5" />
-                <span className="sr-only">Toggle navigation menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="flex flex-col">
-               <SheetHeader className="sr-only">
-                  <SheetTitle>Navigation Menu</SheetTitle>
-                  <SheetDescription>
-                    Main navigation links for the application.
-                  </SheetDescription>
-                </SheetHeader>
-              <nav className="grid gap-2 text-lg font-medium">
-                <div className="mb-4">
-                  <Logo />
-                </div>
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <item.icon className="h-5 w-5" />
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
+          <MobileNav>
+            {/* The MobileNav component now handles its own state */}
+          </MobileNav>
           <div className="w-full flex-1" />
           <UserNav
             name={userProfile?.name ?? 'User'}

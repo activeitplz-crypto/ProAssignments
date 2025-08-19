@@ -55,6 +55,7 @@ export function SignupForm() {
           description: "You are now logged in. Redirecting...",
         });
         router.push('/dashboard');
+        router.refresh();
       }
     });
   }

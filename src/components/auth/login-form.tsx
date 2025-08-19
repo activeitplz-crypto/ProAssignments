@@ -53,7 +53,7 @@ export function LoginForm() {
           description: 'Logged in successfully. Redirecting...',
         });
         router.push('/dashboard');
-        router.refresh(); // This ensures the layout re-renders with the user state
+        router.refresh(); 
       }
     });
   }

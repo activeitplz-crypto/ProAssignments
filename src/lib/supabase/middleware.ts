@@ -1,6 +1,6 @@
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
-import { type NextRequest, type NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import type { Database } from '../database.types';
 
 export function createClient(request: NextRequest) {

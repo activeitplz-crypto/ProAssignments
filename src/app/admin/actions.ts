@@ -1,3 +1,4 @@
+
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
@@ -19,26 +20,20 @@ export async function approvePayment(formData: FormData) {
   const userId = formData.get('userId') as string;
   const planId = formData.get('planId') as string;
   
-  // 1. Get plan details
-  const { data: plan, error: planError } = await supabase.from('plans').select('*').eq('id', planId).single();
-  if (planError || !plan) throw new Error('Plan not found');
+  // Use a transaction to ensure all or nothing
+  const { error } = await supabase.rpc('approve_payment_and_update_user', {
+    p_payment_id: paymentId,
+    p_user_id: userId,
+    p_plan_id: planId,
+  });
 
-  // 2. Update payment status
-  const { error: paymentError } = await supabase.from('payments').update({ status: 'approved' }).eq('id', paymentId);
-  if (paymentError) throw new Error(paymentError.message);
-
-  // 3. Update user's profile with the new plan
-  const plan_start = new Date();
-  const plan_end = add(plan_start, { days: plan.period_days });
-  
-  const { error: userError } = await supabase.from('users').update({
-    current_plan: plan.name,
-    plan_start: plan_start.toISOString(),
-    plan_end: plan_end.toISOString(),
-  }).eq('id', userId);
-  if (userError) throw new Error(userError.message);
+  if (error) {
+    console.error('RPC Error:', error);
+    throw new Error(`Failed to approve payment: ${error.message}`);
+  }
 
   revalidatePath('/admin');
+  revalidatePath('/(app)/dashboard');
 }
 
 export async function rejectPayment(formData: FormData) {
@@ -66,6 +61,8 @@ export async function rejectWithdrawal(formData: FormData) {
   const supabase = await verifyAdmin();
   const withdrawalId = formData.get('withdrawalId') as string;
 
+  // In a real app, you would also need to return the amount to the user's balance.
+  // This is a simplified example.
   const { error } = await supabase.from('withdrawals').update({ status: 'rejected' }).eq('id', withdrawalId);
   if (error) throw new Error(error.message);
 

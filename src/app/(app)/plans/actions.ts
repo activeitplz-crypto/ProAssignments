@@ -1,3 +1,4 @@
+
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
@@ -14,7 +15,6 @@ export async function purchasePlan(formData: FormData) {
 
   const planId = formData.get('plan_id') as string;
   const paymentUid = formData.get('payment_uid') as string;
-  const planName = formData.get('plan_name') as string;
 
   if (!planId || !paymentUid) {
     return { error: 'Missing plan information or payment UID.' };
@@ -32,5 +32,6 @@ export async function purchasePlan(formData: FormData) {
   }
 
   revalidatePath('/plans');
+  revalidatePath('/dashboard');
   redirect('/dashboard');
 }

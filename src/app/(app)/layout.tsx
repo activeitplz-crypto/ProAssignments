@@ -1,7 +1,7 @@
 
 'use client';
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/client';
 import { redirect } from 'next/navigation';
 import { Logo } from '@/components/logo';
 import { UserNav } from '@/components/user-nav';
@@ -34,7 +34,7 @@ const navItems = [
     { href: '/referrals', label: 'Referrals', icon: Users },
   ];
 
-function MobileNav({ children }: { children: React.ReactNode }) {
+function MobileNav() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -50,9 +50,9 @@ function MobileNav({ children }: { children: React.ReactNode }) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="flex flex-col">
-        <SheetHeader className="sr-only">
-          <SheetTitle>Navigation Menu</SheetTitle>
-          <SheetDescription>
+        <SheetHeader>
+          <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+          <SheetDescription className="sr-only">
             Main navigation links for the application.
           </SheetDescription>
         </SheetHeader>
@@ -147,9 +147,7 @@ export default function AppLayout({
       </div>
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:h-[60px] lg:px-6">
-          <MobileNav>
-            {/* The MobileNav component now handles its own state */}
-          </MobileNav>
+          <MobileNav />
           <div className="w-full flex-1" />
           <UserNav
             name={userProfile?.name ?? 'User'}

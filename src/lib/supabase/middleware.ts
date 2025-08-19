@@ -3,9 +3,15 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { type NextRequest, type NextResponse } from 'next/server';
 import type { Database } from '../database.types';
 
-export async function createClient(request: NextRequest, response: NextResponse) {
-  let
-   { supabase, response: newResponse } = createServerClient<Database>(
+export function createClient(request: NextRequest) {
+  // Create an unmodified response
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
+
+  const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -14,12 +20,17 @@ export async function createClient(request: NextRequest, response: NextResponse)
           return request.cookies.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
+          // If the cookie is set, update the request cookies and response cookies
           request.cookies.set({
             name,
             value,
             ...options,
           });
-          response = new NextResponse(response.body, response);
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
           response.cookies.set({
             name,
             value,
@@ -27,12 +38,17 @@ export async function createClient(request: NextRequest, response: NextResponse)
           });
         },
         remove(name: string, options: CookieOptions) {
+          // If the cookie is removed, update the request cookies and response cookies
           request.cookies.set({
             name,
             value: '',
             ...options,
           });
-          response = new NextResponse(response.body, response);
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
           response.cookies.set({
             name,
             value: '',
@@ -43,5 +59,5 @@ export async function createClient(request: NextRequest, response: NextResponse)
     }
   );
 
-  return { supabase, response: newResponse };
+  return { supabase, response };
 }

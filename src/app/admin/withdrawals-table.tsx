@@ -101,18 +101,26 @@ export function WithdrawalsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {withdrawals?.map((w) => (
-          <TableRow key={w.id}>
-            <TableCell>{w.profiles?.name || 'N/A'}</TableCell>
-            <TableCell>PKR {w.amount.toFixed(2)}</TableCell>
-            <TableCell>{w.account_info.bank_name} - {w.account_info.holder_name}</TableCell>
-            <TableCell><Badge variant={w.status === 'pending' ? 'secondary' : w.status === 'approved' ? 'default' : 'destructive'}>{w.status}</Badge></TableCell>
-            <TableCell>{format(new Date(w.created_at), 'PPP')}</TableCell>
-            <TableCell className="space-x-2">
-              {w.status === 'pending' && <AdminActionForms withdrawalId={w.id} />}
+        {withdrawals.length > 0 ? (
+          withdrawals.map((w) => (
+            <TableRow key={w.id}>
+              <TableCell>{w.profiles?.name || 'N/A'}</TableCell>
+              <TableCell>PKR {w.amount.toFixed(2)}</TableCell>
+              <TableCell>{w.account_info.bank_name} - {w.account_info.holder_name}</TableCell>
+              <TableCell><Badge variant={w.status === 'pending' ? 'secondary' : w.status === 'approved' ? 'default' : 'destructive'}>{w.status}</Badge></TableCell>
+              <TableCell>{format(new Date(w.created_at), 'PPP')}</TableCell>
+              <TableCell className="space-x-2">
+                {w.status === 'pending' && <AdminActionForms withdrawalId={w.id} />}
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={6} className="h-24 text-center">
+              No withdrawal requests found.
             </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

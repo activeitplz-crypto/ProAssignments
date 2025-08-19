@@ -91,15 +91,23 @@ export function UsersTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users?.map((u) => (
-          <TableRow key={u.id}>
-            <TableCell>{u.name}</TableCell>
-            <TableCell>{u.email}</TableCell>
-            <TableCell><Badge variant="secondary">{u.current_plan || 'None'}</Badge></TableCell>
-            <TableCell>PKR {u.current_balance.toFixed(2)}</TableCell>
-            <TableCell>PKR {u.total_earning.toFixed(2)}</TableCell>
+        {users.length > 0 ? (
+          users.map((u) => (
+            <TableRow key={u.id}>
+              <TableCell>{u.name}</TableCell>
+              <TableCell>{u.email}</TableCell>
+              <TableCell><Badge variant="secondary">{u.current_plan || 'None'}</Badge></TableCell>
+              <TableCell>PKR {u.current_balance.toFixed(2)}</TableCell>
+              <TableCell>PKR {u.total_earning.toFixed(2)}</TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={5} className="h-24 text-center">
+              No users found.
+            </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

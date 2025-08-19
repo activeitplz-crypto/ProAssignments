@@ -99,18 +99,26 @@ export function PaymentsTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {payments?.map((p) => (
-          <TableRow key={p.id}>
-            <TableCell>{p.profiles?.name || 'N/A'}</TableCell>
-            <TableCell>{p.plans?.name || 'N/A'}</TableCell>
-            <TableCell>{p.payment_uid}</TableCell>
-            <TableCell><Badge variant={p.status === 'pending' ? 'secondary' : p.status === 'approved' ? 'default' : 'destructive'}>{p.status}</Badge></TableCell>
-            <TableCell>{format(new Date(p.created_at), 'PPP')}</TableCell>
-            <TableCell className="space-x-2">
-              {p.status === 'pending' && <AdminActionForms paymentId={p.id} />}
+        {payments.length > 0 ? (
+          payments.map((p) => (
+            <TableRow key={p.id}>
+              <TableCell>{p.profiles?.name || 'N/A'}</TableCell>
+              <TableCell>{p.plans?.name || 'N/A'}</TableCell>
+              <TableCell>{p.payment_uid}</TableCell>
+              <TableCell><Badge variant={p.status === 'pending' ? 'secondary' : p.status === 'approved' ? 'default' : 'destructive'}>{p.status}</Badge></TableCell>
+              <TableCell>{format(new Date(p.created_at), 'PPP')}</TableCell>
+              <TableCell className="space-x-2">
+                {p.status === 'pending' && <AdminActionForms paymentId={p.id} />}
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={6} className="h-24 text-center">
+              No payment requests found.
             </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

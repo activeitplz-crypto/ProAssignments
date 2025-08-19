@@ -16,6 +16,9 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
 
@@ -84,6 +87,12 @@ export default async function AppLayout({
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
+               <SheetHeader className="sr-only">
+                  <SheetTitle>Navigation Menu</SheetTitle>
+                  <SheetDescription>
+                    Main navigation links for the application.
+                  </SheetDescription>
+                </SheetHeader>
               <nav className="grid gap-2 text-lg font-medium">
                 <div className="mb-4">
                   <Logo />

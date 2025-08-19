@@ -16,13 +16,14 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { approvePayment, rejectPayment, approveWithdrawal, rejectWithdrawal } from './actions';
-import type { Payment, Withdrawal, UserProfile } from '@/lib/types';
+import { approvePayment, rejectPayment, approveWithdrawal, rejectWithdrawal, seedInitialPlans } from './actions';
+import type { Payment, Withdrawal, UserProfile, Plan } from '@/lib/types';
 import { format } from 'date-fns';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 
 type AdminPageProps = {
   searchParams: {
-    tab: 'payments' | 'withdrawals' | 'users';
+    tab: 'payments' | 'withdrawals' | 'users' | 'plans';
   };
 };
 
@@ -40,10 +41,13 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     .select('*, users(name)');
 
   const { data: usersData } = await supabase.from('users').select('*');
+  const { data: plansData } = await supabase.from('plans').select('*').order('investment');
+
 
   const payments = paymentsData as Payment[] || [];
   const withdrawals = withdrawalsData as (Omit<Withdrawal, 'account_info'> & { account_info: any })[] || [];
   const users = usersData as UserProfile[] || [];
+  const plans = plansData as Plan[] || [];
 
 
   return (
@@ -52,6 +56,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <TabsTrigger value="payments">Plan Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
         <TabsTrigger value="users">All Users</TabsTrigger>
+        <TabsTrigger value="plans">Manage Plans</TabsTrigger>
       </TabsList>
 
       <TabsContent value="payments">
@@ -145,6 +150,52 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             ))}
           </TableBody>
         </Table>
+      </TabsContent>
+
+      <TabsContent value="plans">
+        <Card>
+            <CardHeader>
+                <CardTitle>Manage Investment Plans</CardTitle>
+                <CardDescription>View, add, or edit investment plans. Be careful, changes here are live.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Investment</TableHead>
+                            <TableHead>Daily Earning</TableHead>
+                            <TableHead>Period</TableHead>
+                            <TableHead>Total Return</TableHead>
+                            <TableHead>Referral Bonus</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {plans.length > 0 ? plans.map((p) => (
+                             <TableRow key={p.id}>
+                                <TableCell>{p.name}</TableCell>
+                                <TableCell>PKR {p.investment}</TableCell>
+                                <TableCell>PKR {p.daily_earning}</TableCell>
+                                <TableCell>{p.period_days} days</TableCell>
+                                <TableCell>PKR {p.total_return}</TableCell>
+                                <TableCell>PKR {p.referral_bonus}</TableCell>
+                            </TableRow>
+                        )) : (
+                            <TableRow>
+                                <TableCell colSpan={6} className="text-center">No plans found.</TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </CardContent>
+            <CardFooter>
+                {plans.length === 0 && (
+                    <form action={seedInitialPlans}>
+                        <Button>Seed Initial Plans</Button>
+                    </form>
+                )}
+            </CardFooter>
+        </Card>
       </TabsContent>
     </Tabs>
   );

@@ -23,39 +23,19 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { purchasePlan } from './actions';
 
-const initialPlans: Omit<Plan, 'id' | 'created_at'>[] = [
-  { name: 'Basic Plan', investment: 1000, daily_earning: 200, period_days: 90, total_return: 18000, referral_bonus: 200 },
-  { name: 'Standard Plan', investment: 1500, daily_earning: 300, period_days: 90, total_return: 27000, referral_bonus: 300 },
-  { name: 'Advanced Plan', investment: 2000, daily_earning: 400, period_days: 90, total_return: 36000, referral_bonus: 400 },
-  { name: 'Premium Plan', investment: 3000, daily_earning: 600, period_days: 90, total_return: 54000, referral_bonus: 600 },
-  { name: 'Elite Plan', investment: 4500, daily_earning: 900, period_days: 90, total_return: 81000, referral_bonus: 900 },
-  { name: 'Pro Plan', investment: 7000, daily_earning: 1400, period_days: 90, total_return: 126000, referral_bonus: 1400 },
-  { name: 'Business Plan', investment: 10000, daily_earning: 2000, period_days: 90, total_return: 180000, referral_bonus: 2000 },
-  { name: 'Ultimate Plan', investment: 40000, daily_earning: 8000, period_days: 90, total_return: 720000, referral_bonus: 8000 },
-];
-
-
 export default async function PlansPage() {
   const supabase = createClient();
 
-  // Let's check if plans exist. If not, we can seed them.
-  let { data: plans, error: fetchError } = await supabase.from('plans').select('*').order('investment', { ascending: true });
+  const { data: plans, error } = await supabase
+    .from('plans')
+    .select('*')
+    .order('investment', { ascending: true });
 
-  if(fetchError) console.error("Error fetching plans", fetchError);
-
-  if (!plans || plans.length === 0) {
-    console.log("No plans found, seeding initial plans.");
-    const { error: insertError } = await supabase.from('plans').insert(initialPlans);
-    if (insertError) {
-        console.error("Error seeding plans:", insertError);
-    } else {
-        // Refetch plans after seeding
-        const { data: refetchedPlans, error: refetchError } = await supabase.from('plans').select('*').order('investment', { ascending: true });
-        if (refetchError) console.error("Error refetching plans:", refetchError);
-        plans = refetchedPlans;
-    }
+  if (error) {
+    console.error('Error fetching plans:', error);
+    // You could return a friendly error message to the user here
+    return <p>Could not load plans at this time. Please try again later.</p>;
   }
-
 
   return (
     <div className="space-y-6">

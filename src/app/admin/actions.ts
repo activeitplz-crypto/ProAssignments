@@ -68,3 +68,26 @@ export async function rejectWithdrawal(formData: FormData) {
 
   revalidatePath('/admin');
 }
+
+export async function seedInitialPlans() {
+    const supabase = await verifyAdmin();
+    const initialPlans = [
+      { name: 'Basic Plan', investment: 1000, daily_earning: 200, period_days: 90, total_return: 18000, referral_bonus: 200 },
+      { name: 'Standard Plan', investment: 1500, daily_earning: 300, period_days: 90, total_return: 27000, referral_bonus: 300 },
+      { name: 'Advanced Plan', investment: 2000, daily_earning: 400, period_days: 90, total_return: 36000, referral_bonus: 400 },
+      { name: 'Premium Plan', investment: 3000, daily_earning: 600, period_days: 90, total_return: 54000, referral_bonus: 600 },
+      { name: 'Elite Plan', investment: 4500, daily_earning: 900, period_days: 90, total_return: 81000, referral_bonus: 900 },
+      { name: 'Pro Plan', investment: 7000, daily_earning: 1400, period_days: 90, total_return: 126000, referral_bonus: 1400 },
+      { name: 'Business Plan', investment: 10000, daily_earning: 2000, period_days: 90, total_return: 180000, referral_bonus: 2000 },
+      { name: 'Ultimate Plan', investment: 40000, daily_earning: 8000, period_days: 90, total_return: 720000, referral_bonus: 8000 },
+    ];
+
+    const { error } = await supabase.from('plans').insert(initialPlans);
+    if(error){
+        console.error("Error seeding plans from admin", error);
+        throw new Error("Failed to seed plans.");
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/(app)/plans');
+}

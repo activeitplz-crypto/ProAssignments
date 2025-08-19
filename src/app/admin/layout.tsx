@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Logo } from '@/components/logo';
@@ -10,6 +11,7 @@ import {
   Send,
   PanelLeft,
   Home,
+  ClipboardList,
 } from 'lucide-react';
 import {
   Sheet,
@@ -40,6 +42,7 @@ export default async function AdminLayout({
     { href: '/admin', label: 'Payments', icon: CreditCard },
     { href: '/admin?tab=withdrawals', label: 'Withdrawals', icon: Send },
     { href: '/admin?tab=users', label: 'Users', icon: Users },
+    { href: '/admin?tab=plans', label: 'Plans', icon: ClipboardList },
   ];
 
   return (

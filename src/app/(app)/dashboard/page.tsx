@@ -27,20 +27,19 @@ export default async function DashboardPage() {
     .eq('id', user.id)
     .single<UserProfile>();
 
-  if (error || !userProfile) {
-    // Handle case where profile doesn't exist, maybe redirect to a profile creation page
+  // If there's an error and it's not a "not found" error, log it.
+  // A "not found" error is expected for new users.
+  if (error && error.code !== 'PGRST116') {
     console.error('Error fetching user profile:', error);
-    // For now, redirect to login if profile is not found
-    redirect('/login');
   }
 
   const userData = {
-    name: userProfile.name || 'Anonymous',
+    name: userProfile?.name || user?.user_metadata?.name || 'Anonymous',
     username: user.email?.split('@')[0] || 'anonymous',
-    total_earning: userProfile.total_earning || 0,
-    today_earning: userProfile.today_earning || 0,
-    active_plan: userProfile.current_plan || 'None',
-    current_balance: userProfile.current_balance || 0,
+    total_earning: userProfile?.total_earning || 0,
+    today_earning: userProfile?.today_earning || 0,
+    active_plan: userProfile?.current_plan || 'None',
+    current_balance: userProfile?.current_balance || 0,
   };
 
   return (

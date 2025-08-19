@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import {
   Table,
@@ -15,36 +15,41 @@ import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { AdminActionForms } from './admin-action-forms';
 import type { Withdrawal } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
-interface WithdrawalsTableProps {
-  serverWithdrawals: Withdrawal[];
-}
 
-export function WithdrawalsTable({ serverWithdrawals }: WithdrawalsTableProps) {
-  const [withdrawals, setWithdrawals] = useState(serverWithdrawals);
+export function WithdrawalsTable() {
+  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
+  const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
-  useEffect(() => {
-    setWithdrawals(serverWithdrawals);
-  }, [serverWithdrawals]);
+  const fetchWithdrawals = useCallback(async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('withdrawals')
+      .select('*, profiles(name)')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching withdrawals:', error);
+      setWithdrawals([]);
+    } else {
+      setWithdrawals(data as any[]);
+    }
+    setLoading(false);
+  }, [supabase]);
+
 
   useEffect(() => {
+    fetchWithdrawals();
+
     const channel = supabase
       .channel('realtime-withdrawals')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'withdrawals' },
-        async (payload) => {
-           const { data: updatedWithdrawals, error } = await supabase
-            .from('withdrawals')
-            .select('*, profiles(name)')
-            .order('created_at', { ascending: false });
-
-          if (error) {
-            console.error('Error refetching withdrawals:', error);
-          } else {
-            setWithdrawals(updatedWithdrawals as any[]);
-          }
+        (payload) => {
+           fetchWithdrawals();
         }
       )
       .subscribe();
@@ -52,7 +57,36 @@ export function WithdrawalsTable({ serverWithdrawals }: WithdrawalsTableProps) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, [supabase, fetchWithdrawals]);
+
+  if (loading) {
+     return (
+       <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>User</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Bank Info</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {[...Array(3)].map((_, i) => (
+            <TableRow key={i}>
+              <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+              <TableCell><Skeleton className="h-6 w-[80px] rounded-full" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-[90px]" /></TableCell>
+              <TableCell><Skeleton className="h-8 w-[150px]" /></TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    )
+  }
 
   return (
     <Table>
@@ -69,7 +103,7 @@ export function WithdrawalsTable({ serverWithdrawals }: WithdrawalsTableProps) {
       <TableBody>
         {withdrawals?.map((w) => (
           <TableRow key={w.id}>
-            <TableCell>{w.profiles?.name}</TableCell>
+            <TableCell>{w.profiles?.name || 'N/A'}</TableCell>
             <TableCell>PKR {w.amount.toFixed(2)}</TableCell>
             <TableCell>{w.account_info.bank_name} - {w.account_info.holder_name}</TableCell>
             <TableCell><Badge variant={w.status === 'pending' ? 'secondary' : w.status === 'approved' ? 'default' : 'destructive'}>{w.status}</Badge></TableCell>

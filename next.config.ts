@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
     ],
   },
    env: {
-    NEXT_PUBLIC_ADMIN_EMAIL: 'itxprinc440@gmail.com',
+    NEXT_PUBLIC_ADMIN_EMAIL: 'itxjnxb@gmail.com',
   },
 };
 

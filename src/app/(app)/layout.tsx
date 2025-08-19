@@ -10,7 +10,6 @@ import {
   ClipboardList,
   LogOut,
   User as UserIcon,
-  Shield,
   Loader2,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
@@ -33,7 +32,6 @@ export default function AppLayout({
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
   useEffect(() => {
     const getSessionData = async () => {
@@ -42,6 +40,12 @@ export default function AppLayout({
       
       if (!currentSession) {
         router.push('/login');
+        return;
+      }
+      
+      // Redirect admin away from user dashboard
+      if (currentSession.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+        router.push('/admin');
         return;
       }
 
@@ -95,10 +99,6 @@ export default function AppLayout({
   ];
 
   const actionItems = [{ href: '/profile', label: 'Edit Profile', icon: UserIcon }];
-
-  if (user.email === adminEmail) {
-    navItems.push({ href: '/admin', label: 'Admin Panel', icon: Shield });
-  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">

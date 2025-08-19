@@ -14,11 +14,16 @@ const loginSchema = z.object({
 export async function login(formData: z.infer<typeof loginSchema>) {
   const supabase = createClient();
 
-  const { error } = await supabase.auth.signInWithPassword(formData);
+  const { data, error } = await supabase.auth.signInWithPassword(formData);
 
   if (error) {
     console.error('Login Error:', error.message);
     return { error: 'Invalid email or password.' };
+  }
+  
+  if (data.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    revalidatePath('/admin', 'layout');
+    redirect('/admin');
   }
 
   revalidatePath('/', 'layout');
@@ -35,7 +40,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
   const supabase = createClient();
   const referral_code = `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`;
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: formData.email,
     password: formData.password,
     options: {
@@ -50,6 +55,12 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
   if (error) {
     console.error('Signup Error:', error.message);
     return { error: 'Could not create user. Please try again.' };
+  }
+
+  // Handle auto-login for admin
+  if (data.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    revalidatePath('/admin', 'layout');
+    redirect('/admin');
   }
 
   revalidatePath('/', 'layout');

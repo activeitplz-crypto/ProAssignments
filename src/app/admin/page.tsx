@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import {
   Tabs,
@@ -29,32 +30,21 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const supabase = createClient();
   const currentTab = searchParams.tab || 'payments';
 
-  // Mock data - replace with actual queries
-  const payments: Payment[] = [
-    { id: 'p1', user_id: 'u1', plan_id: 'pl1', payment_uid: '123456', status: 'pending', created_at: new Date().toISOString(), users: { name: 'Alice' } as UserProfile, plans: { name: 'Basic' } },
-  ];
-  const withdrawals: Withdrawal[] = [
-    { id: 'w1', user_id: 'u2', amount: 50, bank_name: 'Easypaisa', holder_name: 'Bob', status: 'pending', created_at: new Date().toISOString(), users: { name: 'Bob' } as UserProfile },
-  ];
-  const users: UserProfile[] = [
-    { id: 'u1', name: 'Alice', email: 'alice@example.com', current_plan: 'Basic', total_earning: 100, today_earning: 5, plan_start: new Date().toISOString(), plan_end: new Date().toISOString(), referral_bonus: 10, referral_count: 2 },
-    { id: 'u2', name: 'Bob', email: 'bob@example.com', current_plan: 'Standard', total_earning: 250, today_earning: 10, plan_start: new Date().toISOString(), plan_end: new Date().toISOString(), referral_bonus: 20, referral_count: 4 },
-  ];
-
-  /*
   // Real data fetching logic
-  const { data: payments } = await supabase
+  const { data: paymentsData } = await supabase
     .from('payments')
-    .select('*, users(name), plans(name)')
-    .eq('status', 'pending');
+    .select('*, users(name), plans(name)');
   
-  const { data: withdrawals } = await supabase
+  const { data: withdrawalsData } = await supabase
     .from('withdrawals')
-    .select('*, users(name)')
-    .eq('status', 'pending');
+    .select('*, users(name)');
 
-  const { data: users } = await supabase.from('users').select('*');
-  */
+  const { data: usersData } = await supabase.from('users').select('*');
+
+  const payments = paymentsData as Payment[] || [];
+  const withdrawals = withdrawalsData as (Omit<Withdrawal, 'account_info'> & { account_info: any })[] || [];
+  const users = usersData as UserProfile[] || [];
+
 
   return (
     <Tabs defaultValue={currentTab} className="w-full">
@@ -71,6 +61,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               <TableHead>User</TableHead>
               <TableHead>Plan</TableHead>
               <TableHead>Payment UID</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -81,10 +72,15 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 <TableCell>{p.users?.name}</TableCell>
                 <TableCell>{p.plans?.name}</TableCell>
                 <TableCell>{p.payment_uid}</TableCell>
+                <TableCell><Badge variant={p.status === 'pending' ? 'secondary' : p.status === 'approved' ? 'default' : 'destructive'}>{p.status}</Badge></TableCell>
                 <TableCell>{format(new Date(p.created_at), 'PPP')}</TableCell>
                 <TableCell className="space-x-2">
-                  <form action={approvePayment} className="inline-block"><input type="hidden" name="paymentId" value={p.id}/><input type="hidden" name="userId" value={p.user_id}/><input type="hidden" name="planId" value={p.plan_id}/><Button size="sm" type="submit">Approve</Button></form>
-                  <form action={rejectPayment} className="inline-block"><input type="hidden" name="paymentId" value={p.id}/><Button size="sm" variant="destructive" type="submit">Reject</Button></form>
+                  {p.status === 'pending' && (
+                    <>
+                      <form action={approvePayment} className="inline-block"><input type="hidden" name="paymentId" value={p.id}/><input type="hidden" name="userId" value={p.user_id}/><input type="hidden" name="planId" value={p.plan_id}/><Button size="sm" type="submit">Approve</Button></form>
+                      <form action={rejectPayment} className="inline-block"><input type="hidden" name="paymentId" value={p.id}/><Button size="sm" variant="destructive" type="submit">Reject</Button></form>
+                    </>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -99,6 +95,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               <TableHead>User</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Bank Info</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -107,12 +104,17 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             {withdrawals?.map((w) => (
               <TableRow key={w.id}>
                 <TableCell>{w.users?.name}</TableCell>
-                <TableCell>${w.amount.toFixed(2)}</TableCell>
-                <TableCell>{w.bank_name} - {w.holder_name}</TableCell>
+                <TableCell>PKR {w.amount.toFixed(2)}</TableCell>
+                <TableCell>{w.account_info.bank_name} - {w.account_info.holder_name}</TableCell>
+                 <TableCell><Badge variant={w.status === 'pending' ? 'secondary' : w.status === 'approved' ? 'default' : 'destructive'}>{w.status}</Badge></TableCell>
                 <TableCell>{format(new Date(w.created_at), 'PPP')}</TableCell>
                 <TableCell className="space-x-2">
-                  <form action={approveWithdrawal} className="inline-block"><input type="hidden" name="withdrawalId" value={w.id}/><Button size="sm" type="submit">Approve</Button></form>
-                  <form action={rejectWithdrawal} className="inline-block"><input type="hidden" name="withdrawalId" value={w.id}/><Button size="sm" variant="destructive" type="submit">Reject</Button></form>
+                   {w.status === 'pending' && (
+                    <>
+                      <form action={approveWithdrawal} className="inline-block"><input type="hidden" name="withdrawalId" value={w.id}/><Button size="sm" type="submit">Approve</Button></form>
+                      <form action={rejectWithdrawal} className="inline-block"><input type="hidden" name="withdrawalId" value={w.id}/><Button size="sm" variant="destructive" type="submit">Reject</Button></form>
+                    </>
+                   )}
                 </TableCell>
               </TableRow>
             ))}
@@ -127,6 +129,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Plan</TableHead>
+              <TableHead>Balance</TableHead>
               <TableHead>Total Earnings</TableHead>
             </TableRow>
           </TableHeader>
@@ -136,7 +139,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 <TableCell>{u.name}</TableCell>
                 <TableCell>{u.email}</TableCell>
                 <TableCell><Badge variant="secondary">{u.current_plan || 'None'}</Badge></TableCell>
-                <TableCell>${u.total_earning.toFixed(2)}</TableCell>
+                <TableCell>PKR {u.current_balance.toFixed(2)}</TableCell>
+                <TableCell>PKR {u.total_earning.toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

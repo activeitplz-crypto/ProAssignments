@@ -97,6 +97,7 @@ function PurchasePlanDialog({ plan }: { plan: Plan }) {
           <div className="rounded-lg border bg-muted p-4">
             <h3 className="font-semibold">Payment Details</h3>
             <p><strong>Method:</strong> Easypaisa</p>
+            <p><strong>Account Holder:</strong> Jahanzaib</p>
             <p><strong>Account Number:</strong> 03140147525</p>
           </div>
           <form action={purchasePlan}>

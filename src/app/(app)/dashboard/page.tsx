@@ -18,17 +18,17 @@ export default async function DashboardPage() {
   const userData = {
     name: user?.user_metadata.name || 'Sophia Carter',
     username: user?.email?.split('@')[0] || 'sophia.carter',
-    total_earning: 7890.12,
-    today_earning: 157.89,
-    active_plan: 'Premium',
-    current_balance: 1234.56,
+    total_earning: 0,
+    today_earning: 0,
+    active_plan: 'None',
+    current_balance: 0,
   };
 
   return (
     <div className="flex flex-col gap-6">
       <UserProfileCard name={userData.name} username={userData.username} />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card className="bg-card/80">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-normal text-muted-foreground">
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              ${userData.total_earning.toFixed(2)}
+              PKR {userData.total_earning.toFixed(2)}
             </p>
           </CardContent>
         </Card>
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              ${userData.today_earning.toFixed(2)}
+              PKR {userData.today_earning.toFixed(2)}
             </p>
           </CardContent>
         </Card>
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              ${userData.current_balance.toFixed(2)}
+             PKR {userData.current_balance.toFixed(2)}
             </p>
           </CardContent>
         </Card>

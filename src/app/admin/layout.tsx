@@ -16,6 +16,8 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
 
@@ -82,10 +84,12 @@ export default async function AdminLayout({
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
-              <nav className="grid gap-2 text-lg font-medium">
-                <div className="mb-4">
+               <SheetHeader className="mb-4">
+                <SheetTitle>
                   <Logo />
-                </div>
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="grid gap-2 text-lg font-medium">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}

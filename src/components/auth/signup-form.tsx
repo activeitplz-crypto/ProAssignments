@@ -41,11 +41,19 @@ export function SignupForm() {
     setLoading(true);
     const result = await signup(values);
     if (result?.error) {
-      toast({
-        variant: "destructive",
-        title: "Signup Failed",
-        description: result.error,
-      });
+      if (result.error.includes('rate limit')) {
+        toast({
+          variant: "destructive",
+          title: "Too Many Requests",
+          description: "You are trying to sign up too frequently. Please wait a moment before trying again.",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Signup Failed",
+          description: result.error,
+        });
+      }
     } else {
        toast({
         title: "Check your email",

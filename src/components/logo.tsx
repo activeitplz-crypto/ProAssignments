@@ -1,4 +1,6 @@
 
+'use client';
+
 import Link from 'next/link';
 import { JanzyIcon } from './janzy-icon';
 

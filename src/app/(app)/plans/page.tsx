@@ -21,48 +21,20 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { purchasePlan } from './actions';
-import { createClient } from '@/lib/supabase/server';
 
-const initialPlans: Omit<Plan, 'id' | 'created_at'>[] = [
-    { name: 'Basic Plan', investment: 1000, daily_earning: 200, period_days: 90, total_return: 18000, referral_bonus: 200 },
-    { name: 'Standard Plan', investment: 1500, daily_earning: 300, period_days: 90, total_return: 27000, referral_bonus: 300 },
-    { name: 'Advanced Plan', investment: 2000, daily_earning: 400, period_days: 90, total_return: 36000, referral_bonus: 400 },
-    { name: 'Premium Plan', investment: 3000, daily_earning: 600, period_days: 90, total_return: 54000, referral_bonus: 600 },
-    { name: 'Elite Plan', investment: 4500, daily_earning: 900, period_days: 90, total_return: 81000, referral_bonus: 900 },
-    { name: 'Pro Plan', investment: 7000, daily_earning: 1400, period_days: 90, total_return: 126000, referral_bonus: 1400 },
-    { name: 'Business Plan', investment: 10000, daily_earning: 2000, period_days: 90, total_return: 180000, referral_bonus: 2000 },
-    { name: 'Ultimate Plan', investment: 40000, daily_earning: 8000, period_days: 90, total_return: 720000, referral_bonus: 8000 },
+// Define the plans directly in the page component
+const plans: Plan[] = [
+    { id: '1', name: 'Basic Plan', investment: 1000, daily_earning: 200, period_days: 90, total_return: 18000, referral_bonus: 200, created_at: new Date().toISOString() },
+    { id: '2', name: 'Standard Plan', investment: 1500, daily_earning: 300, period_days: 90, total_return: 27000, referral_bonus: 300, created_at: new Date().toISOString() },
+    { id: '3', name: 'Advanced Plan', investment: 2000, daily_earning: 400, period_days: 90, total_return: 36000, referral_bonus: 400, created_at: new Date().toISOString() },
+    { id: '4', name: 'Premium Plan', investment: 3000, daily_earning: 600, period_days: 90, total_return: 54000, referral_bonus: 600, created_at: new Date().toISOString() },
+    { id: '5', name: 'Elite Plan', investment: 4500, daily_earning: 900, period_days: 90, total_return: 81000, referral_bonus: 900, created_at: new Date().toISOString() },
+    { id: '6', name: 'Pro Plan', investment: 7000, daily_earning: 1400, period_days: 90, total_return: 126000, referral_bonus: 1400, created_at: new Date().toISOString() },
+    { id: '7', name: 'Business Plan', investment: 10000, daily_earning: 2000, period_days: 90, total_return: 180000, referral_bonus: 2000, created_at: new Date().toISOString() },
+    { id: '8', name: 'Ultimate Plan', investment: 40000, daily_earning: 8000, period_days: 90, total_return: 720000, referral_bonus: 8000, created_at: new Date().toISOString() },
 ];
 
-export default async function PlansPage() {
-    const supabase = createClient();
-
-    // Fetch plans from the database
-    const { data: dbPlans, error } = await supabase
-        .from('plans')
-        .select('*')
-        .order('investment', { ascending: true });
-
-    if (error) {
-        console.error('Error fetching plans:', error);
-    }
-
-    let plans: Plan[] = [];
-
-    // If database is empty, use initial plans
-    if (!dbPlans || dbPlans.length === 0) {
-        // The 'id' and 'created_at' will be missing, but we can manage for display purposes.
-        // The purchase dialog will need a valid ID if it interacts with the DB.
-        plans = initialPlans.map((p, index) => ({
-            ...p,
-            id: `${index + 1}`, // Temporary ID
-            created_at: new Date().toISOString(),
-        }));
-    } else {
-        plans = dbPlans as Plan[];
-    }
-
-
+export default function PlansPage() {
   return (
     <div className="space-y-6">
       <div>
@@ -73,7 +45,7 @@ export default async function PlansPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {(plans || []).map((plan) => (
+        {plans.map((plan) => (
           <Card key={plan.id} className="flex flex-col">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
@@ -123,7 +95,7 @@ function PurchasePlanDialog({ plan }: { plan: Plan }) {
         <DialogHeader>
           <DialogTitle className="font-headline">Purchase {plan.name} Plan</DialogTitle>
           <DialogDescription>
-            To activate this plan, send PKR {plan.investment} to the account below and submit your payment Transaction ID.
+            To activate this plan, send PKR {plan.investment.toLocaleString()} to the account below and submit your payment Transaction ID.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">

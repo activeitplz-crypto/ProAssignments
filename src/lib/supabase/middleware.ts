@@ -1,8 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
 
-export const createClient = (request: NextRequest) => {
-  // Create an unmodified response
+export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -18,7 +17,6 @@ export const createClient = (request: NextRequest) => {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          // If the cookie is set, update the request's cookies.
           request.cookies.set({
             name,
             value,
@@ -36,7 +34,6 @@ export const createClient = (request: NextRequest) => {
           })
         },
         remove(name: string, options: CookieOptions) {
-          // If the cookie is removed, update the request's cookies.
           request.cookies.set({
             name,
             value: '',
@@ -57,5 +54,30 @@ export const createClient = (request: NextRequest) => {
     }
   )
 
-  return { supabase, response }
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const { pathname } = request.nextUrl;
+  const authRoutes = ['/login', '/signup'];
+  const isAuthRoute = authRoutes.includes(pathname);
+  const protectedRoutes = ['/dashboard', '/plans', '/withdraw', '/referrals', '/admin'];
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+
+  if (!user && isProtectedRoute) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  if (user && isAuthRoute) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  if (user && pathname.startsWith('/admin')) {
+    if (user.email !== process.env.ADMIN_EMAIL) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+  }
+
+
+  return response
 }

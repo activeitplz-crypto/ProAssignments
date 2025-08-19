@@ -3,7 +3,6 @@
 
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import {
   Home,
   Wallet,

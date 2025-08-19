@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { UserProfileCard } from '@/components/user-profile-card';
+import { DollarSign, Zap, Briefcase, Wallet } from 'lucide-react';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -19,7 +20,8 @@ export default async function DashboardPage() {
     username: user?.email?.split('@')[0] || 'sophia.carter',
     total_earning: 7890.12,
     today_earning: 157.89,
-    assignment: 30,
+    active_plan: 'Premium',
+    current_balance: 1234.56,
   };
 
   return (
@@ -28,41 +30,58 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-2 gap-4">
         <Card className="bg-card/80">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-normal text-muted-foreground">
               Total Earnings
             </CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">
+            <p className="text-2xl font-bold">
               ${userData.total_earning.toFixed(2)}
             </p>
           </CardContent>
         </Card>
         <Card className="bg-card/80">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-normal text-muted-foreground">
               Today's Earnings
             </CardTitle>
+             <Zap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">
+            <p className="text-2xl font-bold">
               ${userData.today_earning.toFixed(2)}
             </p>
           </CardContent>
         </Card>
+         <Card className="bg-card/80">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-normal text-muted-foreground">
+              Active Plan
+            </CardTitle>
+            <Briefcase className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">
+              {userData.active_plan}
+            </p>
+          </CardContent>
+        </Card>
+         <Card className="bg-card/80">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-normal text-muted-foreground">
+              Current Balance
+            </CardTitle>
+            <Wallet className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">
+              ${userData.current_balance.toFixed(2)}
+            </p>
+          </CardContent>
+        </Card>
       </div>
-
-      <Card className="bg-card/80">
-        <CardHeader>
-          <CardTitle className="text-sm font-normal text-muted-foreground">
-            Assignment
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-3xl font-bold">{userData.assignment}</p>
-        </CardContent>
-      </Card>
     </div>
   );
 }

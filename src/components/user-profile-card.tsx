@@ -1,7 +1,6 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChevronRight } from 'lucide-react';
 
 interface UserProfileCardProps {
   name: string;
@@ -26,7 +25,6 @@ export function UserProfileCard({ name, username }: UserProfileCardProps) {
           <p className="text-sm text-muted-foreground">@{username}</p>
         </div>
       </div>
-      <ChevronRight className="h-6 w-6 text-muted-foreground" />
     </div>
   );
 }

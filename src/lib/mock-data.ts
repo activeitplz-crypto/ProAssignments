@@ -2,7 +2,7 @@
 import type { Plan, UserProfile, Payment, Withdrawal } from './types';
 
 export const MOCK_AUTH_COOKIE_NAME = 'mock-auth-token';
-export const MOCK_ADMIN_EMAIL = 'jnzb505@gmail.com';
+export const MOCK_ADMIN_EMAIL = 'itxprinc440@gmail.com';
 
 // This is now our mock "database" of users
 export const MOCK_USERS: UserProfile[] = [

@@ -1,6 +1,6 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
-import { MOCK_AUTH_COOKIE_NAME, MOCK_ADMIN_EMAIL } from './lib/mock-data';
+import { MOCK_ADMIN_EMAIL } from './lib/mock-data';
 import { getSession } from '@/lib/session';
 
 export async function middleware(request: NextRequest) {

@@ -33,6 +33,7 @@ export default function AppLayout({
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
   useEffect(() => {
     const getSessionData = async () => {
@@ -95,7 +96,7 @@ export default function AppLayout({
 
   const actionItems = [{ href: '/profile', label: 'Edit Profile', icon: UserIcon }];
 
-  if (user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+  if (user.email === adminEmail) {
     navItems.push({ href: '/admin', label: 'Admin Panel', icon: Shield });
   }
 
@@ -159,23 +160,18 @@ export default function AppLayout({
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
         <div className="flex h-16 items-center justify-around">
-          {navItems.map((item) => {
-            if (item.href === '/admin' && user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-              return null;
-            }
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  'flex flex-col items-center gap-1 p-2 text-muted-foreground'
-                )}
-              >
-                <item.icon className="h-6 w-6" />
-                <span className="text-xs">{item.label}</span>
-              </Link>
-            );
-          })}
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex flex-col items-center gap-1 p-2 text-muted-foreground'
+              )}
+            >
+              <item.icon className="h-6 w-6" />
+              <span className="text-xs">{item.label}</span>
+            </Link>
+          ))}
         </div>
       </nav>
     </div>

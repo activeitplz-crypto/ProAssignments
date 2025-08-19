@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useFormState } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -15,17 +15,29 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { login } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
 });
 
+function SubmitButton() {
+    const { pending } = useFormState(login);
+
+    return (
+        <Button type="submit" className="w-full" disabled={pending}>
+            {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Log In
+        </Button>
+    )
+}
+
 export function LoginForm() {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,22 +47,21 @@ export function LoginForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    const result = await login(values);
-    if (result?.error) {
-      toast({
-        variant: "destructive",
-        title: "Login Failed",
-        description: result.error,
-      });
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if(error){
+        toast({
+            variant: "destructive",
+            title: "Login Failed",
+            description: decodeURIComponent(error),
+        })
     }
-    setLoading(false);
-  }
+  }, [searchParams, toast]);
+
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form action={login} className="space-y-6">
         <FormField
           control={form.control}
           name="email"
@@ -77,10 +88,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Log In
-        </Button>
+        <SubmitButton />
       </form>
     </Form>
   );

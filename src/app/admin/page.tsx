@@ -24,6 +24,7 @@ import { format } from 'date-fns';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { useEffect, useState, useTransition } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { ManagePlansForm } from './manage-plans-form';
 
 export default function AdminPage() {
   const defaultTab = useSearchParams().get('tab') || 'payments';
@@ -39,7 +40,7 @@ export default function AdminPage() {
     const { data: paymentsData } = await supabase.from('payments').select('*, profiles(name), plans(name)');
     const { data: withdrawalsData } = await supabase.from('withdrawals').select('*, profiles(name)');
     const { data: usersData } = await supabase.from('profiles').select('*');
-    const { data: plansData } = await supabase.from('plans').select('*');
+    const { data: plansData } = await supabase.from('plans').select('*').order('investment');
     
     setPayments(paymentsData as any || []);
     setWithdrawals(withdrawalsData as any || []);
@@ -169,42 +170,7 @@ export default function AdminPage() {
       </TabsContent>
 
       <TabsContent value="plans">
-        <Card>
-            <CardHeader>
-                <CardTitle>Manage Investment Plans</CardTitle>
-                <CardDescription>View investment plans. Changes must be made in the database.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Investment</TableHead>
-                            <TableHead>Daily Earning</TableHead>
-                            <TableHead>Period</TableHead>
-                            <TableHead>Total Return</TableHead>
-                            <TableHead>Referral Bonus</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {plans.length > 0 ? plans.map((p) => (
-                             <TableRow key={p.id}>
-                                <TableCell>{p.name}</TableCell>
-                                <TableCell>PKR {p.investment}</TableCell>
-                                <TableCell>PKR {p.daily_earning}</TableCell>
-                                <TableCell>{p.period_days} days</TableCell>
-                                <TableCell>PKR {p.total_return}</TableCell>
-                                <TableCell>PKR {p.referral_bonus}</TableCell>
-                            </TableRow>
-                        )) : (
-                            <TableRow>
-                                <TableCell colSpan={6} className="text-center">No plans found.</TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
+        <ManagePlansForm plans={plans} />
       </TabsContent>
     </Tabs>
   );

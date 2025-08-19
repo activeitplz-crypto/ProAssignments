@@ -3,6 +3,8 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import type { Plan } from '@/lib/types';
+import { z } from 'zod';
 
 async function verifyAdmin() {
   const supabase = createClient();
@@ -10,12 +12,12 @@ async function verifyAdmin() {
   if (!user || user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
     throw new Error('Not authorized');
   }
+  return supabase;
 }
 
 export async function approvePayment(formData: FormData) {
-  await verifyAdmin();
+  const supabase = await verifyAdmin();
   const paymentId = formData.get('paymentId') as string;
-  const supabase = createClient();
   
   const { error } = await supabase
     .from('payments')
@@ -31,9 +33,8 @@ export async function approvePayment(formData: FormData) {
 }
 
 export async function rejectPayment(formData: FormData) {
-  await verifyAdmin();
+  const supabase = await verifyAdmin();
   const paymentId = formData.get('paymentId') as string;
-  const supabase = createClient();
 
   const { error } = await supabase
     .from('payments')
@@ -46,9 +47,8 @@ export async function rejectPayment(formData: FormData) {
 }
 
 export async function approveWithdrawal(formData: FormData) {
-  await verifyAdmin();
+  const supabase = await verifyAdmin();
   const withdrawalId = formData.get('withdrawalId') as string;
-  const supabase = createClient();
   
   // First, get the withdrawal amount and user_id
   const { data: withdrawal } = await supabase
@@ -85,9 +85,8 @@ export async function approveWithdrawal(formData: FormData) {
 }
 
 export async function rejectWithdrawal(formData: FormData) {
-  await verifyAdmin();
+  const supabase = await verifyAdmin();
   const withdrawalId = formData.get('withdrawalId') as string;
-  const supabase = createClient();
 
   const { error } = await supabase
     .from('withdrawals')
@@ -97,4 +96,39 @@ export async function rejectWithdrawal(formData: FormData) {
   if (error) console.error('Reject Withdrawal Error:', error);
 
   revalidatePath('/admin');
+}
+
+const planSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(1, 'Plan name is required'),
+    investment: z.coerce.number().positive('Investment must be a positive number'),
+    daily_earning: z.coerce.number().positive('Daily earning must be a positive number'),
+    period_days: z.coerce.number().int().positive('Period must be a positive integer'),
+    total_return: z.coerce.number().positive('Total return must be a positive number'),
+    referral_bonus: z.coerce.number().positive('Referral bonus must be a positive number'),
+});
+
+export async function savePlan(formData: z.infer<typeof planSchema>) {
+    const supabase = await verifyAdmin();
+    const validatedData = planSchema.parse(formData);
+    const { id, ...planData } = validatedData;
+
+    if (id) {
+        // Update existing plan
+        const { error } = await supabase.from('plans').update(planData).eq('id', id);
+        if (error) {
+            console.error('Update Plan Error:', error);
+            return { error: 'Failed to update plan.' };
+        }
+    } else {
+        // Create new plan
+        const { error } = await supabase.from('plans').insert(planData);
+        if (error) {
+            console.error('Create Plan Error:', error);
+            return { error: 'Failed to create plan.' };
+        }
+    }
+
+    revalidatePath('/admin');
+    return { error: null };
 }

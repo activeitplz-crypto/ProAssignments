@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -61,8 +61,21 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
     name: 'plans',
   });
   
-  // Watch for changes to automatically calculate total_return
   const watchedFields = form.watch('plans');
+
+  useEffect(() => {
+    watchedFields.forEach((field, index) => {
+      const dailyEarning = field.daily_earning || 0;
+      const periodDays = field.period_days || 0;
+      const totalReturn = dailyEarning * periodDays;
+      const currentTotalReturn = form.getValues(`plans.${index}.total_return`);
+      
+      if (totalReturn !== currentTotalReturn) {
+          form.setValue(`plans.${index}.total_return`, totalReturn, { shouldValidate: true });
+      }
+    });
+  }, [watchedFields, form]);
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
@@ -95,15 +108,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {fields.map((field, index) => {
-               const dailyEarning = watchedFields[index]?.daily_earning || 0;
-               const periodDays = watchedFields[index]?.period_days || 0;
-               const totalReturn = dailyEarning * periodDays;
-               
-               // Set the value in the form state
-               form.setValue(`plans.${index}.total_return`, totalReturn);
-
-              return (
+            {fields.map((field, index) => (
               <Card key={field.id} className="relative p-4">
                 <div className="grid grid-cols-2 gap-4">
                   <input
@@ -199,7 +204,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                     <Trash2 className="h-4 w-4" />
                   </Button>
               </Card>
-            )})}
+            ))}
             <div className="flex items-center gap-4">
                 <Button
                 type="button"

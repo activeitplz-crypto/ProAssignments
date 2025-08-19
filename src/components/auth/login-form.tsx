@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -15,9 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { login } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { Loader2 } from "lucide-react";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -26,6 +27,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
@@ -50,7 +52,20 @@ export function LoginForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      await login(values);
+      const result = await login(values);
+      if (result?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: result.error,
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: 'Logged in successfully.',
+        });
+        router.push('/dashboard');
+      }
     });
   }
 

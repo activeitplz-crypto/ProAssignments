@@ -1,3 +1,4 @@
+
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
@@ -16,11 +17,12 @@ export async function login(formData: z.infer<typeof loginSchema>) {
   const { error } = await supabase.auth.signInWithPassword(formData);
 
   if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    return { error: error.message };
   }
 
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  // Redirect is handled client-side on success
+  return { error: null };
 }
 
 const signupSchema = z.object({

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -15,8 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signup } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useTransition } from "react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -26,7 +28,8 @@ const formSchema = z.object({
 
 export function SignupForm() {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,30 +41,22 @@ export function SignupForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
-    const result = await signup(values);
-    if (result?.error) {
-      if (result.error.includes('rate limit')) {
-        toast({
-          variant: "destructive",
-          title: "Too Many Requests",
-          description: "You are trying to sign up too frequently. Please wait a moment before trying again.",
-        });
-      } else {
+    startTransition(async () => {
+      const result = await signup(values);
+      if (result?.error) {
         toast({
           variant: "destructive",
           title: "Signup Failed",
           description: result.error,
         });
+      } else {
+        toast({
+          title: "Success!",
+          description: "You are now logged in. Redirecting...",
+        });
+        router.push('/dashboard');
       }
-    } else {
-       toast({
-        title: "Check your email",
-        description: "A confirmation link has been sent to your email address.",
-      });
-      form.reset();
-    }
-    setLoading(false);
+    });
   }
 
   return (
@@ -106,8 +101,8 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button type="submit" className="w-full" disabled={isPending}>
+          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Sign Up
         </Button>
       </form>

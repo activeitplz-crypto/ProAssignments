@@ -1,5 +1,4 @@
 
-import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
@@ -9,16 +8,12 @@ import {
 } from '@/components/ui/card';
 import { UserProfileCard } from '@/components/user-profile-card';
 import { ProfileForm } from './profile-form';
+import { MOCK_USER } from '@/lib/mock-data';
 
 export default async function ProfilePage() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const userProfile = {
-    name: user?.user_metadata.name || 'Anonymous',
-    username: user?.email?.split('@')[0] || 'anonymous',
+    name: MOCK_USER.name || 'Anonymous',
+    username: MOCK_USER.email?.split('@')[0] || 'anonymous',
   };
 
   return (

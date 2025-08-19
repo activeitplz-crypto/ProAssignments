@@ -25,11 +25,6 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  env: {
-    NEXT_PUBLIC_SUPABASE_URL: 'https://jprskuodyqaduqcsuyxa.supabase.co',
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwcnNrdW9keXFhZHVxY3N1eXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjMwNjY3MTYsImV4cCI6MjAzODY0MjcxNn0.oB8t3x3NBrn7kRnhzMprxL2frA-KFxz30-22cCGiT28',
-    ADMIN_EMAIL: 'jaanzaib1212@gmail.com',
-  }
 };
 
 export default nextConfig;

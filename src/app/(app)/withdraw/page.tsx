@@ -1,5 +1,4 @@
 
-import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
@@ -8,24 +7,10 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { WithdrawForm } from './withdraw-form';
-import type { UserProfile } from '@/lib/types';
-import { redirect } from 'next/navigation';
+import { MOCK_USER } from '@/lib/mock-data';
 
 export default async function WithdrawPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/login');
-  }
-
-  const { data: userProfile } = await supabase
-    .from('users')
-    .select('current_balance')
-    .eq('id', user.id)
-    .single<Pick<UserProfile, 'current_balance'>>();
-
-  const availableBalance = userProfile?.current_balance || 0;
+  const availableBalance = MOCK_USER.current_balance;
 
   return (
     <div className="flex justify-center">

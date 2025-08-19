@@ -1,8 +1,7 @@
 
 'use client';
 
-import { createClient } from '@/lib/supabase/client';
-import { redirect, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,11 +14,11 @@ import {
   User as UserIcon
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import type { User } from '@supabase/supabase-js';
 import { cn } from '@/lib/utils';
 import { JanzyIcon } from '@/components/janzy-icon';
 import { MobileNav } from '@/components/mobile-nav';
 import { logout } from '@/app/auth/actions';
+import { MOCK_USER } from '@/lib/mock-data';
 
 const navItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -37,38 +36,7 @@ export default function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        redirect('/login');
-        return;
-      }
-      setUser(user);
-      setLoading(false);
-    };
-
-    fetchUser();
-  }, []);
-
-  if (loading) {
-    // You can return a loading spinner here
-    return <div>Loading...</div>;
-  }
-
-  if (!user) {
-    // This should theoretically not be reached due to the redirect inside useEffect,
-    // but it's good practice for robustness.
-    return null;
-  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">

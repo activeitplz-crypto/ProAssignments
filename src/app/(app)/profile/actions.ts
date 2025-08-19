@@ -1,7 +1,6 @@
 
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -10,35 +9,11 @@ const updateProfileSchema = z.object({
 });
 
 export async function updateProfile(formData: z.infer<typeof updateProfileSchema>) {
-  const supabase = createClient();
+  // This is a mock action. In a real app, you would update the database.
+  console.log(`Mock Update: User profile updated with name: ${formData.name}`);
 
-   const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { error: 'You must be logged in to update your profile.' };
-  }
-
-  const { error } = await supabase.auth.updateUser({
-      data: {
-          name: formData.name,
-      }
-  })
-
-  if (error) {
-    return { error: error.message };
-  }
-
-  // Also update the public users table
-   const { error: profileError } = await supabase.from('users').update({
-       name: formData.name
-   }).eq('id', user.id);
-
-    if (profileError) {
-        return { error: `Profile update failed: ${profileError.message}` };
-    }
-
+  // You might want to update the mock data here if you want it to persist across reloads
+  // but for this example, we will just log it.
 
   revalidatePath('/profile');
   revalidatePath('/(app)', 'layout'); // Revalidate the layout to update user name in header

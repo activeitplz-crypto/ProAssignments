@@ -1,5 +1,4 @@
 
-import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
@@ -16,34 +15,21 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { UserProfile } from '@/lib/types';
 import { ReferralLinkCard } from '@/components/referral-link-card';
+import { MOCK_USER } from '@/lib/mock-data';
 
 export default async function ReferralsPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  const userId = user?.id;
-  const referralLink = userId
-    ? `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/signup?ref=${userId}`
-    : 'Loading...';
-
-  // Fetch real data
-  const { data: userProfile, error: profileError } = await supabase
-    .from('users')
-    .select('referral_count, referral_bonus')
-    .eq('id', userId)
-    .single<Pick<UserProfile, 'referral_count' | 'referral_bonus'>>();
+  const referralLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/signup?ref=${MOCK_USER.id}`;
 
   const referralStats = {
-    count: userProfile?.referral_count || 0,
-    bonus: userProfile?.referral_bonus || 0,
+    count: MOCK_USER.referral_count,
+    bonus: MOCK_USER.referral_bonus,
   };
   
-  // Mock recent referrals for now as referral tracking logic is complex
-  // In a real app, you would have a 'referrals' table to query from.
   const recentReferrals: { name: string; plan: string; bonus: number; date: string }[] = [
-    // { name: 'Jane Doe', plan: 'Standard', bonus: 15.00, date: '2023-10-26' },
+    { name: 'Ali Khan', plan: 'Standard Plan', bonus: 300.00, date: '2023-10-26' },
+    { name: 'Fatima Ahmed', plan: 'Basic Plan', bonus: 200.00, date: '2023-10-25' },
+    { name: 'Zainab Bibi', plan: 'Premium Plan', bonus: 600.00, date: '2023-10-22' },
   ];
 
   return (
@@ -87,7 +73,7 @@ export default async function ReferralsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="font-headline">Recent Referrals</CardTitle>
-           <CardDescription>This section is a placeholder for now.</CardDescription>
+           <CardDescription>Your recent successful referrals.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>

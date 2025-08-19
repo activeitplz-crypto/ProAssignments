@@ -16,39 +16,27 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { login } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect, useTransition } from "react";
+import { useTransition } from "react";
 import { Loader2 } from "lucide-react";
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(1, { message: "Password is required." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
 });
 
 export function LoginForm() {
   const { toast } = useToast();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "jaanzaib1212@gmail.com",
+      password: "password123",
     },
   });
-
-  useEffect(() => {
-    const error = searchParams.get('error');
-    if(error){
-        toast({
-            variant: "destructive",
-            title: "Login Failed",
-            description: decodeURIComponent(error),
-        })
-    }
-  }, [searchParams, toast]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
@@ -65,6 +53,7 @@ export function LoginForm() {
           description: 'Logged in successfully. Redirecting...',
         });
         router.push('/dashboard');
+        router.refresh(); // This ensures the layout re-renders with the user state
       }
     });
   }
@@ -81,7 +70,7 @@ export function LoginForm() {
               <FormControl>
                 <Input placeholder="name@example.com" {...field} />
               </FormControl>
-              <FormMessage />
+               <FormMessage />
             </FormItem>
           )}
         />

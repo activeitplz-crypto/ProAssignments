@@ -41,7 +41,7 @@ export function WithdrawForm({ currentBalance }: WithdrawFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: undefined,
+      amount: '' as any,
       bank_name: '',
       holder_name: '',
       account_number: '',

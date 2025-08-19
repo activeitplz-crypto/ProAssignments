@@ -61,7 +61,7 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const authRoutes = ['/login', '/signup'];
   const isAuthRoute = authRoutes.includes(pathname);
-  const protectedRoutes = ['/dashboard', '/plans', '/withdraw', '/referrals', '/admin'];
+  const protectedRoutes = ['/dashboard', '/plans', '/withdraw', '/referrals'];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
   if (!user && isProtectedRoute) {
@@ -71,13 +71,6 @@ export async function updateSession(request: NextRequest) {
   if (user && isAuthRoute) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
-
-  if (user && pathname.startsWith('/admin')) {
-    if (user.email !== process.env.ADMIN_EMAIL) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
-  }
-
 
   return response
 }

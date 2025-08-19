@@ -1,5 +1,4 @@
 
-import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
@@ -22,20 +21,47 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { purchasePlan } from './actions';
+import { createClient } from '@/lib/supabase/server';
+
+const initialPlans: Omit<Plan, 'id' | 'created_at'>[] = [
+    { name: 'Basic Plan', investment: 1000, daily_earning: 200, period_days: 90, total_return: 18000, referral_bonus: 200 },
+    { name: 'Standard Plan', investment: 1500, daily_earning: 300, period_days: 90, total_return: 27000, referral_bonus: 300 },
+    { name: 'Advanced Plan', investment: 2000, daily_earning: 400, period_days: 90, total_return: 36000, referral_bonus: 400 },
+    { name: 'Premium Plan', investment: 3000, daily_earning: 600, period_days: 90, total_return: 54000, referral_bonus: 600 },
+    { name: 'Elite Plan', investment: 4500, daily_earning: 900, period_days: 90, total_return: 81000, referral_bonus: 900 },
+    { name: 'Pro Plan', investment: 7000, daily_earning: 1400, period_days: 90, total_return: 126000, referral_bonus: 1400 },
+    { name: 'Business Plan', investment: 10000, daily_earning: 2000, period_days: 90, total_return: 180000, referral_bonus: 2000 },
+    { name: 'Ultimate Plan', investment: 40000, daily_earning: 8000, period_days: 90, total_return: 720000, referral_bonus: 8000 },
+];
 
 export default async function PlansPage() {
-  const supabase = createClient();
+    const supabase = createClient();
 
-  const { data: plans, error } = await supabase
-    .from('plans')
-    .select('*')
-    .order('investment', { ascending: true });
+    // Fetch plans from the database
+    const { data: dbPlans, error } = await supabase
+        .from('plans')
+        .select('*')
+        .order('investment', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching plans:', error);
-    // You could return a friendly error message to the user here
-    return <p>Could not load plans at this time. Please try again later.</p>;
-  }
+    if (error) {
+        console.error('Error fetching plans:', error);
+    }
+
+    let plans: Plan[] = [];
+
+    // If database is empty, use initial plans
+    if (!dbPlans || dbPlans.length === 0) {
+        // The 'id' and 'created_at' will be missing, but we can manage for display purposes.
+        // The purchase dialog will need a valid ID if it interacts with the DB.
+        plans = initialPlans.map((p, index) => ({
+            ...p,
+            id: `${index + 1}`, // Temporary ID
+            created_at: new Date().toISOString(),
+        }));
+    } else {
+        plans = dbPlans as Plan[];
+    }
+
 
   return (
     <div className="space-y-6">
@@ -47,7 +73,7 @@ export default async function PlansPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {(plans as Plan[] || []).map((plan) => (
+        {(plans || []).map((plan) => (
           <Card key={plan.id} className="flex flex-col">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>

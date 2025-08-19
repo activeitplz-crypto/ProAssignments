@@ -18,7 +18,7 @@ import { login } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useTransition } from "react";
 import { Loader2 } from "lucide-react";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -27,6 +27,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
@@ -61,10 +62,9 @@ export function LoginForm() {
       } else {
         toast({
           title: 'Success',
-          description: 'Logged in successfully.',
+          description: 'Logged in successfully. Redirecting...',
         });
-        // Force a redirect to the dashboard.
-        window.location.href = '/dashboard';
+        router.push('/dashboard');
       }
     });
   }

@@ -19,7 +19,6 @@ export default async function AdminPage({
   const defaultTab = searchParams.tab || 'payments';
   const supabase = createClient();
   
-  // Plans are less dynamic, so we can fetch them on the server.
   const { data: plansData } = await supabase.from('plans').select('*').order('investment');
   const plans = plansData || [];
 

@@ -37,7 +37,7 @@ export function UsersTable() {
     fetchUsers();
 
     const channel = supabase
-      .channel('realtime-users')
+      .channel('realtime-profiles')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'profiles' },

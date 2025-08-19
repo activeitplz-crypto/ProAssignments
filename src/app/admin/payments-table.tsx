@@ -14,11 +14,16 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { AdminActionForms } from './admin-action-forms';
-import type { Payment } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { Payment } from '@/lib/types';
+
+type EnrichedPayment = Payment & {
+  profiles: { name: string | null } | null;
+  plans: { name: string | null } | null;
+};
 
 export function PaymentsTable() {
-  const [payments, setPayments] = useState<Payment[]>([]);
+  const [payments, setPayments] = useState<EnrichedPayment[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -33,7 +38,7 @@ export function PaymentsTable() {
       console.error('Error fetching payments:', error);
       setPayments([]);
     } else {
-      setPayments(data as any[]);
+      setPayments(data as EnrichedPayment[]);
     }
     setLoading(false);
   }, [supabase]);
@@ -47,7 +52,7 @@ export function PaymentsTable() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'payments' },
         (payload) => {
-          fetchPayments(); // Refetch all data on any change
+          fetchPayments();
         }
       )
       .subscribe();

@@ -14,12 +14,16 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { AdminActionForms } from './admin-action-forms';
-import type { Withdrawal } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { Withdrawal } from '@/lib/types';
+
+type EnrichedWithdrawal = Withdrawal & {
+  profiles: { name: string | null } | null;
+};
 
 
 export function WithdrawalsTable() {
-  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
+  const [withdrawals, setWithdrawals] = useState<EnrichedWithdrawal[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -34,7 +38,7 @@ export function WithdrawalsTable() {
       console.error('Error fetching withdrawals:', error);
       setWithdrawals([]);
     } else {
-      setWithdrawals(data as any[]);
+      setWithdrawals(data as EnrichedWithdrawal[]);
     }
     setLoading(false);
   }, [supabase]);

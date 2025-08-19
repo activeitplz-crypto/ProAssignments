@@ -9,13 +9,22 @@ import {
   Home,
   Wallet,
   Users,
-  ClipboardList
+  ClipboardList,
+  Menu,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { cn } from '@/lib/utils';
 import { UserNav } from '@/components/user-nav';
 import { JanzyIcon } from '@/components/janzy-icon';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { MobileNav } from '@/components/mobile-nav';
 
 const navItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -24,30 +33,6 @@ const navItems = [
   { href: '/plans', label: 'Plans', icon: ClipboardList },
 ];
 
-function BottomNav() {
-  const pathname = usePathname();
-
-  return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
-      <div className="grid h-16 grid-cols-4 items-center text-center">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              'flex flex-col items-center justify-center gap-1 text-muted-foreground',
-              pathname === item.href && 'text-primary'
-            )}
-          >
-            <item.icon className="h-5 w-5" />
-            <span className="text-xs">{item.label}</span>
-          </Link>
-        ))}
-      </div>
-    </nav>
-  );
-}
-
 export default function AppLayout({
   children,
 }: {
@@ -55,6 +40,7 @@ export default function AppLayout({
 }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -101,7 +87,7 @@ export default function AppLayout({
                 href={item.href}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                  usePathname() === item.href && 'bg-muted text-primary'
+                  pathname === item.href && 'bg-muted text-primary'
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -112,16 +98,18 @@ export default function AppLayout({
         </div>
       </nav>
 
-       <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur-sm md:justify-end md:px-6">
-        <Link href="/dashboard" className="flex items-center gap-2 md:hidden">
-          <JanzyIcon className="h-7 w-7" />
-          <span className="font-bold">Janzy</span>
-        </Link>
-        <UserNav name={user.user_metadata.name ?? 'User'} email={user.email ?? ''} />
+       <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur-sm md:justify-end md:px-6">
+        <div className="flex items-center gap-2 md:hidden">
+            <JanzyIcon className="h-7 w-7" />
+            <span className="font-bold">Janzy</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+            <UserNav name={user.user_metadata.name ?? 'User'} email={user.email ?? ''} />
+            <MobileNav navItems={navItems} />
+        </div>
       </header>
       <main className="flex-1 p-4 lg:p-6">{children}</main>
-      <div className="h-16 md:hidden" />
-      <BottomNav />
     </div>
   );
 }

@@ -33,8 +33,8 @@ export interface Payment {
   payment_uid: string;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
-  profiles?: Pick<Profile, 'name'>;
-  plans?: Pick<Plan, 'name'>;
+  profiles?: { name: string | null };
+  plans?: { name: string | null };
 }
 
 export interface Withdrawal {
@@ -48,5 +48,5 @@ export interface Withdrawal {
   };
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
-  profiles?: Pick<Profile, 'name'>;
+  profiles?: { name: string | null };
 }

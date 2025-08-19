@@ -1,7 +1,5 @@
 
-'use client';
-
-import { usePathname } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,49 +7,46 @@ import {
   Wallet,
   Users,
   ClipboardList,
-  MoreVertical,
   LogOut,
   User as UserIcon,
   Shield,
 } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { JanzyIcon } from '@/components/janzy-icon';
 import { MobileNav } from '@/components/mobile-nav';
 import { logout } from '@/app/auth/actions';
-import { MOCK_USERS } from '@/lib/mock-data';
 import { UserNav } from '@/components/user-nav';
-import type { UserProfile } from '@/lib/types';
-import { getSession } from '@/lib/session';
+import { redirect } from 'next/navigation';
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const supabase = createClient();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const session = await getSession();
-      if (session?.email) {
-        // In a real app, you'd fetch from a DB. Here we find in mock data.
-        const currentUser = MOCK_USERS.find(u => u.email === session.email) || null;
-        
-        // Also check localStorage for client-side updates (like avatar)
-        const storedUserStr = localStorage.getItem(`user-profile-${session.email}`);
-        if (storedUserStr) {
-          const storedUser = JSON.parse(storedUserStr);
-          setUser({...currentUser, ...storedUser});
-        } else {
-          setUser(currentUser);
-        }
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-      }
-    };
-    fetchUser();
-  }, [pathname]);
+  if (!session) {
+    redirect('/login');
+  }
+
+  const { data: user, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+
+  if (error || !user) {
+    // This could happen if the profile wasn't created yet
+    // or if there's a network error.
+    console.error('Error fetching profile:', error);
+    // You might want to handle this more gracefully
+    return <div className="p-4">Error loading user profile. Please try logging out and back in.</div>
+  }
 
   const navItems = [
     { href: '/dashboard', label: 'Home', icon: Home },
@@ -62,20 +57,12 @@ export default function AppLayout({
 
   const actionItems = [{ href: '/profile', label: 'Edit Profile', icon: UserIcon }];
 
-  // Add admin link only if the user is an admin
-  if (user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+  if (user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
     navItems.push({ href: '/admin', label: 'Admin Panel', icon: Shield });
   }
 
-  if (!user) {
-    // Optional: Show a loading state
-    return <div className="flex min-h-screen w-full items-center justify-center">Loading...</div>;
-  }
-
-
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">
-      {/* Static sidebar for larger screens */}
       <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-60 md:flex-col md:border-r">
         <div className="flex h-16 items-center gap-2 border-b px-6">
           <JanzyIcon className="h-8 w-8" />
@@ -88,8 +75,8 @@ export default function AppLayout({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                  pathname === item.href && 'bg-muted text-primary'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary'
+                  // pathname is not available in server components easily, so active state is removed for now
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -103,8 +90,7 @@ export default function AppLayout({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                  pathname === item.href && 'bg-muted text-primary'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary'
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -128,13 +114,12 @@ export default function AppLayout({
         </div>
 
         <div className="flex items-center gap-2">
-            <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatarUrl} />
+            <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
             <MobileNav navItems={navItems} actionItems={actionItems} />
         </div>
       </header>
       <main className="flex-1 p-4 lg:p-6">{children}</main>
 
-       {/* Mobile Bottom Navigation */}
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
         <div className="flex h-16 items-center justify-around">
           {navItems.map((item) => {
@@ -146,8 +131,7 @@ export default function AppLayout({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center gap-1 p-2 text-muted-foreground',
-                  pathname === item.href ? 'text-primary' : 'hover:text-primary'
+                  'flex flex-col items-center gap-1 p-2 text-muted-foreground'
                 )}
               >
                 <item.icon className="h-6 w-6" />

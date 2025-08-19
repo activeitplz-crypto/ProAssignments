@@ -1,6 +1,6 @@
 
-'use client';
-
+import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import { Logo } from '@/components/logo';
 import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
@@ -18,31 +18,18 @@ import {
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { getSession } from '@/lib/session';
-import { useEffect, useState } from 'react';
 
-type Session = {
-  isLoggedIn: boolean;
-  email?: string | null;
-  name?: string | null;
-};
-
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = createClient();
+  const { data: { session }} = await supabase.auth.getSession();
 
-  const [session, setSession] = useState<Session | null>(null);
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const sessionData = await getSession();
-      setSession(sessionData);
-    };
-    fetchSession();
-  }, []);
-
+  if (!session || session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    redirect('/login');
+  }
 
   const navItems = [
     { href: '/admin?tab=payments', label: 'Payments', icon: CreditCard },
@@ -51,10 +38,6 @@ export default function AdminLayout({
     { href: '/admin?tab=plans', label: 'Plans', icon: ClipboardList },
   ];
   
-  if (!session) {
-      return <div>Loading admin panel...</div>
-  }
-
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-card md:block">
@@ -126,7 +109,7 @@ export default function AdminLayout({
           <div className="w-full flex-1">
             <h1 className="font-headline text-lg font-semibold">Admin Panel</h1>
           </div>
-          <UserNav name="Admin" email={session?.email ?? ''} />
+          <UserNav name="Admin" email={session.user.email ?? ''} />
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}

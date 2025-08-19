@@ -1,6 +1,5 @@
 
-'use client';
-
+import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
@@ -18,33 +17,30 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ReferralLinkCard } from '@/components/referral-link-card';
-import { MOCK_USERS } from '@/lib/mock-data';
-import { useState, useEffect } from 'react';
-import type { UserProfile } from '@/lib/types';
-import { getSession } from '@/lib/session';
+import { redirect } from 'next/navigation';
 
-export default function ReferralsPage() {
-  const [user, setUser] = useState<UserProfile | null>(null);
+export default async function ReferralsPage() {
+  const supabase = createClient();
+  const { data: { session }} = await supabase.auth.getSession();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const session = await getSession();
-      if (session?.email) {
-        setUser(MOCK_USERS.find(u => u.email === session.email) || null);
-      }
-    };
-    fetchUser();
-  }, []);
-  
-  const recentReferrals: { name: string; plan: string; bonus: number; date: string }[] = [
-    { name: 'Ali Khan', plan: 'Standard Plan', bonus: 300.00, date: '2023-10-26' },
-    { name: 'Fatima Ahmed', plan: 'Basic Plan', bonus: 200.00, date: '2023-10-25' },
-    { name: 'Zainab Bibi', plan: 'Premium Plan', bonus: 600.00, date: '2023-10-22' },
-  ];
-
-  if (!user) {
-    return <div>Loading referrals...</div>;
+  if (!session) {
+    redirect('/login');
   }
+
+  const { data: user, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+
+  if (error || !user) {
+    console.error('Referrals Error:', error);
+    return <div>Could not load user data.</div>;
+  }
+  
+  // Note: Recent referrals data would need to be fetched from your database.
+  // This is a placeholder as the logic for tracking who referred whom isn't fully implemented.
+  const recentReferrals: { name: string; plan: string; bonus: number; date: string }[] = [];
 
   const referralLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/signup?ref=${user.referral_code}`;
 

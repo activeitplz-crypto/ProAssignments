@@ -1,6 +1,5 @@
 
-'use client';
-
+import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
@@ -9,26 +8,23 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { WithdrawForm } from './withdraw-form';
-import { MOCK_USERS } from '@/lib/mock-data';
-import { useState, useEffect } from 'react';
-import { getSession } from '@/lib/session';
-import type { UserProfile } from '@/lib/types';
+import { redirect } from 'next/navigation';
 
+export default async function WithdrawPage() {
+  const supabase = createClient();
+  const { data: { session }} = await supabase.auth.getSession();
 
-export default function WithdrawPage() {
-  const [user, setUser] = useState<UserProfile | null>(null);
+  if (!session) {
+    redirect('/login');
+  }
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const session = await getSession();
-      if (session?.email) {
-        setUser(MOCK_USERS.find(u => u.email === session.email) || null);
-      }
-    };
-    fetchUser();
-  }, []);
+  const { data: user, error } = await supabase
+    .from('profiles')
+    .select('current_balance')
+    .eq('id', session.user.id)
+    .single();
 
-  if (!user) {
+  if (error || !user) {
     return <div>Loading...</div>;
   }
 

@@ -10,10 +10,11 @@ export interface Plan {
   created_at: string;
 }
 
-export interface UserProfile {
+export interface Profile {
   id: string;
   name: string | null;
   email: string | null;
+  avatar_url: string | null;
   current_plan: string | null;
   plan_start: string | null;
   plan_end: string | null;
@@ -23,7 +24,6 @@ export interface UserProfile {
   referral_bonus: number;
   current_balance: number;
   referral_code: string;
-  avatarUrl?: string | null;
 }
 
 export interface Payment {
@@ -33,7 +33,7 @@ export interface Payment {
   payment_uid: string;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
-  users?: Pick<UserProfile, 'name'>;
+  profiles?: Pick<Profile, 'name'>;
   plans?: Pick<Plan, 'name'>;
 }
 
@@ -48,5 +48,5 @@ export interface Withdrawal {
   };
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
-  users?: Pick<UserProfile, 'name'>;
+  profiles?: Pick<Profile, 'name'>;
 }

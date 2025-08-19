@@ -17,27 +17,26 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useRef, useTransition, useState } from 'react';
 import { Loader2, Upload } from 'lucide-react';
-import { updateProfile } from './actions';
+import { updateProfile, uploadAvatar } from './actions';
 import { useRouter } from 'next/navigation';
-import type { UserProfile } from '@/lib/types';
+import type { Profile } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
 });
 
 interface ProfileFormProps {
-    user: UserProfile;
-    onUpdate: (data: Partial<UserProfile>) => void;
+    user: Profile;
 }
 
-export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
+export function ProfileForm({ user }: ProfileFormProps) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(user.avatarUrl || null);
+  const [preview, setPreview] = useState<string | null>(user.avatar_url || null);
+  const [avatarUrlToSave, setAvatarUrlToSave] = useState<string | null>(user.avatar_url || null);
   
   const initials = user.name?.split(' ').map((n) => n[0]).join('') || '';
 
@@ -48,22 +47,30 @@ export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
     },
   });
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setPreview(result);
-        onUpdate({ avatarUrl: result });
-      };
-      reader.readAsDataURL(file);
+      setPreview(URL.createObjectURL(file)); // Show preview immediately
+      
+      startTransition(async () => {
+        const { publicUrl, error } = await uploadAvatar(file);
+        if (error) {
+          toast({ variant: 'destructive', title: 'Upload Failed', description: error });
+          setPreview(user.avatar_url); // Revert preview on failure
+        } else {
+          setAvatarUrlToSave(publicUrl);
+          toast({ title: 'Success', description: 'Avatar uploaded. Save changes to apply.' });
+        }
+      });
     }
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      const result = await updateProfile(values);
+      const result = await updateProfile({
+        ...values,
+        avatar_url: avatarUrlToSave
+      });
       if (result?.error) {
         toast({
           variant: 'destructive',
@@ -71,7 +78,6 @@ export function ProfileForm({ user, onUpdate }: ProfileFormProps) {
           description: result.error,
         });
       } else {
-        onUpdate(values);
         toast({
           title: 'Success',
           description: 'Your profile has been updated.',

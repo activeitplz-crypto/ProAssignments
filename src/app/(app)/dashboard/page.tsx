@@ -1,6 +1,5 @@
 
-'use client';
-
+import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
@@ -9,43 +8,31 @@ import {
 } from '@/components/ui/card';
 import { UserProfileCard } from '@/components/user-profile-card';
 import { DollarSign, Zap, Briefcase, Wallet } from 'lucide-react';
-import { MOCK_USERS } from '@/lib/mock-data';
-import { useEffect, useState } from 'react';
-import type { UserProfile } from '@/lib/types';
-import { getSession } from '@/lib/session';
+import { redirect } from 'next/navigation';
 
+export default async function DashboardPage() {
+  const supabase = createClient();
+  const { data: { session }} = await supabase.auth.getSession();
 
-export default function DashboardPage() {
-  const [user, setUser] = useState<UserProfile | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const session = await getSession();
-      if (session?.email) {
-        // Find the base user from mock data
-        const baseUser = MOCK_USERS.find(u => u.email === session.email);
-        
-        // Check local storage for any client-side updates (like name or avatar)
-        const storedUserStr = localStorage.getItem(`user-profile-${session.email}`);
-        const storedUser = storedUserStr ? JSON.parse(storedUserStr) : {};
-
-        // Merge base user with stored updates
-        if (baseUser) {
-           setUser({ ...baseUser, ...storedUser });
-        }
-      }
-    };
-    fetchUser();
-  }, []);
-
-  if (!user) {
-    return <div>Loading dashboard...</div>;
+  if (!session) {
+    redirect('/login');
   }
 
+  const { data: user, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+  
+  if (error || !user) {
+    console.error('Dashboard Error:', error);
+    return <div>Could not load user data. Please try refreshing.</div>;
+  }
+  
   const userData = {
     name: user.name || 'Anonymous',
     username: user.email?.split('@')[0] || 'anonymous',
-    avatarUrl: user.avatarUrl,
+    avatarUrl: user.avatar_url,
     total_earning: user.total_earning,
     today_earning: user.today_earning,
     active_plan: user.current_plan || 'None',

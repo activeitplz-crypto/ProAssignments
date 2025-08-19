@@ -18,7 +18,6 @@ import { signup } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -28,7 +27,6 @@ const formSchema = z.object({
 
 export function SignupForm() {
   const { toast } = useToast();
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,13 +47,6 @@ export function SignupForm() {
           title: "Signup Failed",
           description: result.error,
         });
-      } else {
-        toast({
-          title: "Success!",
-          description: "You are now logged in. Redirecting...",
-        });
-        router.push('/dashboard');
-        router.refresh();
       }
     });
   }

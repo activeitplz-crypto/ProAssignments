@@ -18,7 +18,6 @@ import { login } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -27,7 +26,6 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const { toast } = useToast();
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,13 +45,6 @@ export function LoginForm() {
           title: 'Login Failed',
           description: result.error,
         });
-      } else {
-        toast({
-          title: 'Success',
-          description: 'Logged in successfully. Redirecting...',
-        });
-        router.push('/dashboard');
-        router.refresh(); 
       }
     });
   }

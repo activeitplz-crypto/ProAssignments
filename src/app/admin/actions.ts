@@ -3,7 +3,6 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
-import type { Plan } from '@/lib/types';
 import { z } from 'zod';
 
 async function verifyAdmin() {
@@ -23,9 +22,7 @@ export async function approvePayment(formData: FormData) {
     return { error: 'Payment ID is missing.' };
   }
 
-  // Start a transaction-like process
   try {
-    // 1. Get payment details (user_id, plan_id)
     const { data: payment, error: paymentError } = await supabase
       .from('payments')
       .select('user_id, plan_id')
@@ -39,7 +36,6 @@ export async function approvePayment(formData: FormData) {
 
     const { user_id, plan_id } = payment;
 
-    // 2. Get plan details (name, period_days)
     const { data: plan, error: planError } = await supabase
       .from('plans')
       .select('name, period_days')
@@ -49,8 +45,7 @@ export async function approvePayment(formData: FormData) {
     if (planError || !plan) {
       throw new Error('Plan details not found.');
     }
-    
-    // 3. Update the user's profile to activate the plan
+
     const { error: profileError } = await supabase
       .from('profiles')
       .update({
@@ -64,7 +59,6 @@ export async function approvePayment(formData: FormData) {
       throw new Error('Failed to update user profile with new plan.');
     }
 
-    // 4. Update the payment status to 'approved'
     const { error: updatePaymentError } = await supabase
       .from('payments')
       .update({ status: 'approved' })
@@ -79,9 +73,8 @@ export async function approvePayment(formData: FormData) {
     return { error: error.message };
   }
   
-  // Revalidate paths to show changes
   revalidatePath('/admin');
-  revalidatePath('/dashboard');
+  revalidatePath('/admin?tab=payments', 'page');
 }
 
 
@@ -94,46 +87,61 @@ export async function rejectPayment(formData: FormData) {
     .update({ status: 'rejected' })
     .eq('id', paymentId);
     
-  if (error) console.error('Reject Payment Error:', error);
+  if (error) {
+    console.error('Reject Payment Error:', error);
+    return { error: 'Failed to reject payment.' };
+  }
 
   revalidatePath('/admin');
+  revalidatePath('/admin?tab=payments', 'page');
 }
 
 export async function approveWithdrawal(formData: FormData) {
   const supabase = await verifyAdmin();
   const withdrawalId = formData.get('withdrawalId') as string;
   
-  // First, get the withdrawal amount and user_id
-  const { data: withdrawal } = await supabase
-    .from('withdrawals')
-    .select('amount, user_id')
-    .eq('id', withdrawalId)
-    .single();
+  try {
+    const { data: withdrawal, error: wError } = await supabase
+      .from('withdrawals')
+      .select('amount, user_id')
+      .eq('id', withdrawalId)
+      .eq('status', 'pending')
+      .single();
 
-  if (!withdrawal) return;
+    if (wError || !withdrawal) throw new Error('Pending withdrawal not found.');
 
-  // Next, subtract the amount from user's balance
-  // Note: This should ideally be a database transaction or an RPC call
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('current_balance')
-    .eq('id', withdrawal.user_id)
-    .single();
+    const { data: profile, error: pError } = await supabase
+      .from('profiles')
+      .select('current_balance')
+      .eq('id', withdrawal.user_id)
+      .single();
     
-  if (profile) {
+    if (pError || !profile) throw new Error('User profile not found.');
+
     const newBalance = profile.current_balance - withdrawal.amount;
-    await supabase.from('profiles').update({ current_balance: newBalance }).eq('id', withdrawal.user_id);
+    if (newBalance < 0) throw new Error('User has insufficient funds for this withdrawal.');
+
+    const { error: profileUpdateError } = await supabase
+      .from('profiles')
+      .update({ current_balance: newBalance })
+      .eq('id', withdrawal.user_id);
+
+    if (profileUpdateError) throw new Error('Failed to update user balance.');
+
+    const { error: withdrawalUpdateError } = await supabase
+      .from('withdrawals')
+      .update({ status: 'approved' })
+      .eq('id', withdrawalId);
+
+    if (withdrawalUpdateError) throw new Error('Failed to update withdrawal status.');
+
+  } catch (error: any) {
+     console.error('Approve Withdrawal Error:', error);
+     return { error: error.message };
   }
-
-  // Finally, update the withdrawal status
-  const { error } = await supabase
-    .from('withdrawals')
-    .update({ status: 'approved' })
-    .eq('id', withdrawalId);
-
-  if (error) console.error('Approve Withdrawal Error:', error);
   
   revalidatePath('/admin');
+  revalidatePath('/admin?tab=withdrawals', 'page');
   revalidatePath('/dashboard');
 }
 
@@ -146,9 +154,13 @@ export async function rejectWithdrawal(formData: FormData) {
     .update({ status: 'rejected' })
     .eq('id', withdrawalId);
 
-  if (error) console.error('Reject Withdrawal Error:', error);
+  if (error) {
+    console.error('Reject Withdrawal Error:', error);
+    return { error: 'Failed to reject withdrawal.' };
+  }
 
   revalidatePath('/admin');
+  revalidatePath('/admin?tab=withdrawals', 'page');
 }
 
 const planSchema = z.object({
@@ -166,22 +178,21 @@ export async function savePlan(formData: z.infer<typeof planSchema>) {
     const validatedData = planSchema.parse(formData);
     const { id, ...planData } = validatedData;
 
-    if (id) {
-        // Update existing plan
-        const { error } = await supabase.from('plans').update(planData).eq('id', id);
-        if (error) {
-            console.error('Update Plan Error:', error);
-            return { error: 'Failed to update plan.' };
+    try {
+        if (id) {
+            const { error } = await supabase.from('plans').update(planData).eq('id', id);
+            if (error) throw error;
+        } else {
+            const { error } = await supabase.from('plans').insert(planData);
+            if (error) throw error;
         }
-    } else {
-        // Create new plan
-        const { error } = await supabase.from('plans').insert(planData);
-        if (error) {
-            console.error('Create Plan Error:', error);
-            return { error: 'Failed to create plan.' };
-        }
+    } catch (error: any) {
+        console.error('Save Plan Error:', error);
+        return { error: `Failed to save plan. Database error: ${error.message}` };
     }
 
     revalidatePath('/admin');
+    revalidatePath('/admin?tab=plans', 'page');
+    revalidatePath('/plans');
     return { error: null };
 }

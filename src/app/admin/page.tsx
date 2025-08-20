@@ -10,7 +10,7 @@ import { ManagePlansForm } from './manage-plans-form';
 import { PaymentsTable } from './payments-table';
 import { WithdrawalsTable } from './withdrawals-table';
 import { UsersTable } from './users-table';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default async function AdminPage({
   searchParams,
@@ -46,7 +46,9 @@ export default async function AdminPage({
             <CardTitle>All Users</CardTitle>
             <CardDescription>A complete list of all registered users in the system.</CardDescription>
           </CardHeader>
-          <UsersTable />
+          <CardContent>
+            <UsersTable />
+          </CardContent>
         </Card>
       </TabsContent>
 
@@ -56,4 +58,3 @@ export default async function AdminPage({
     </Tabs>
   );
 }
-

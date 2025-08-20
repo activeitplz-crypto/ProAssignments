@@ -16,8 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signup } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useTransition } from "react";
-import { Loader2 } from "lucide-react";
+import { useState, useTransition } from "react";
+import { Loader2, MailCheck } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -28,6 +29,7 @@ const formSchema = z.object({
 export function SignupForm() {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,8 +50,27 @@ export function SignupForm() {
           description: result.error,
         });
       }
+      if (result?.success) {
+        setIsSuccess(true);
+      }
     });
   }
+
+  if (isSuccess) {
+    return (
+      <Alert variant="default" className="text-center">
+        <MailCheck className="mx-auto h-8 w-8 text-green-500" />
+        <AlertTitle className="mt-4 font-headline text-xl">
+          Check your email
+        </AlertTitle>
+        <AlertDescription className="mt-2">
+          We've sent a verification link to your email address. Please click the
+          link to complete your registration.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
 
   return (
     <Form {...form}>

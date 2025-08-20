@@ -40,7 +40,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
   const supabase = createClient();
   const referral_code = `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`;
 
-  const { data, error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.signUp({
     email: formData.email,
     password: formData.password,
     options: {
@@ -54,17 +54,10 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
 
   if (error) {
     console.error('Signup Error:', error.message);
-    return { error: 'Could not create user. Please try again.' };
+    return { error: 'Could not create user. Please try again.', success: false };
   }
 
-  // Handle auto-login for admin
-  if (data.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-    revalidatePath('/admin', 'layout');
-    redirect('/admin');
-  }
-
-  revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  return { error: null, success: true };
 }
 
 

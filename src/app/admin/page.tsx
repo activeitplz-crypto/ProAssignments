@@ -10,6 +10,7 @@ import { ManagePlansForm } from './manage-plans-form';
 import { PaymentsTable } from './payments-table';
 import { WithdrawalsTable } from './withdrawals-table';
 import { UsersTable } from './users-table';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default async function AdminPage({
   searchParams,
@@ -24,7 +25,7 @@ export default async function AdminPage({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList>
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="payments">Plan Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
         <TabsTrigger value="users">All Users</TabsTrigger>
@@ -40,7 +41,13 @@ export default async function AdminPage({
       </TabsContent>
       
       <TabsContent value="users">
-        <UsersTable />
+        <Card>
+          <CardHeader>
+            <CardTitle>All Users</CardTitle>
+            <CardDescription>A complete list of all registered users in the system.</CardDescription>
+          </CardHeader>
+          <UsersTable />
+        </Card>
       </TabsContent>
 
       <TabsContent value="plans">
@@ -49,3 +56,4 @@ export default async function AdminPage({
     </Tabs>
   );
 }
+

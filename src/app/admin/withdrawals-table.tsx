@@ -110,7 +110,7 @@ export function WithdrawalsTable() {
             <TableRow key={w.id}>
               <TableCell>{w.profiles?.name || 'N/A'}</TableCell>
               <TableCell>PKR {w.amount.toFixed(2)}</TableCell>
-              <TableCell>{w.account_info.bank_name} - {w.account_info.holder_name}</TableCell>
+              <TableCell>{w.account_info.bank_name} - {w.account_info.holder_name} - {w.account_info.account_number}</TableCell>
               <TableCell><Badge variant={w.status === 'pending' ? 'secondary' : w.status === 'approved' ? 'default' : 'destructive'}>{w.status}</Badge></TableCell>
               <TableCell>{format(new Date(w.created_at), 'PPP')}</TableCell>
               <TableCell className="space-x-2">

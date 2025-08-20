@@ -94,8 +94,8 @@ export function UsersTable() {
         {users.length > 0 ? (
           users.map((u) => (
             <TableRow key={u.id}>
-              <TableCell>{u.name}</TableCell>
-              <TableCell>{u.email}</TableCell>
+              <TableCell>{u.name || 'N/A'}</TableCell>
+              <TableCell>{u.email || 'N/A'}</TableCell>
               <TableCell><Badge variant="secondary">{u.current_plan || 'None'}</Badge></TableCell>
               <TableCell>PKR {u.current_balance.toFixed(2)}</TableCell>
               <TableCell>PKR {u.total_earning.toFixed(2)}</TableCell>

@@ -77,9 +77,11 @@ export function WithdrawalsTable() {
               <TableRow>
                 <TableHead>User</TableHead>
                 <TableHead>Amount</TableHead>
-                <TableHead>Bank Info</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Bank/Service</TableHead>
+                <TableHead>Account Name</TableHead>
+                <TableHead>Account Number</TableHead>
                 <TableHead>Date</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -88,9 +90,11 @@ export function WithdrawalsTable() {
                 <TableRow key={i}>
                   <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
-                  <TableCell><Skeleton className="h-6 w-[80px] rounded-full" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-[90px]" /></TableCell>
+                  <TableCell><Skeleton className="h-6 w-[80px] rounded-full" /></TableCell>
                   <TableCell><Skeleton className="h-8 w-[170px]" /></TableCell>
                 </TableRow>
               ))}
@@ -113,7 +117,9 @@ export function WithdrawalsTable() {
             <TableRow>
               <TableHead>User</TableHead>
               <TableHead>Amount</TableHead>
-              <TableHead>Bank Info</TableHead>
+              <TableHead>Bank/Service</TableHead>
+              <TableHead>Account Name</TableHead>
+              <TableHead>Account Number</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Actions</TableHead>
@@ -128,7 +134,9 @@ export function WithdrawalsTable() {
                       <div className="text-xs text-muted-foreground">{w.profiles?.email}</div>
                   </TableCell>
                   <TableCell>PKR {w.amount.toFixed(2)}</TableCell>
-                  <TableCell>{w.account_info.bank_name} - {w.account_info.holder_name} - {w.account_info.account_number}</TableCell>
+                  <TableCell>{w.account_info.bank_name}</TableCell>
+                  <TableCell>{w.account_info.holder_name}</TableCell>
+                  <TableCell>{w.account_info.account_number}</TableCell>
                   <TableCell>{format(new Date(w.created_at), 'PPP')}</TableCell>
                   <TableCell><Badge variant={w.status === 'pending' ? 'secondary' : w.status === 'approved' ? 'default' : 'destructive'}>{w.status}</Badge></TableCell>
                   <TableCell className="space-x-2">
@@ -138,7 +146,7 @@ export function WithdrawalsTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   No withdrawal requests found.
                 </TableCell>
               </TableRow>

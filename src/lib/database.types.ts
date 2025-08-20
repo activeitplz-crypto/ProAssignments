@@ -100,6 +100,7 @@ export type Database = {
           referral_count: number
           today_earning: number
           total_earning: number
+          referred_by: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -115,6 +116,7 @@ export type Database = {
           referral_count?: number
           today_earning?: number
           total_earning?: number
+          referred_by?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -130,6 +132,7 @@ export type Database = {
           referral_count?: number
           today_earning?: number
           total_earning?: number
+          referred_by?: string | null
         }
         Relationships: [
           {
@@ -139,6 +142,13 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "profiles_referred_by_fkey"
+            columns: ["referred_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
         ]
       }
       withdrawals: {

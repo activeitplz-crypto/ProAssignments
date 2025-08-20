@@ -19,6 +19,7 @@ import {
 import { ReferralLinkCard } from '@/components/referral-link-card';
 import { redirect } from 'next/navigation';
 import { format } from 'date-fns';
+import type { Profile } from '@/lib/types';
 
 export default async function ReferralsPage() {
   const supabase = createClient();
@@ -47,6 +48,7 @@ export default async function ReferralsPage() {
 
   if (referredError) {
     console.error('Error fetching referred users:', referredError);
+     // We can still render the page even if this fails, just show empty lists.
   }
 
   const verifiedReferrals = referredProfiles?.filter(p => p.current_plan) || [];
@@ -110,7 +112,7 @@ export default async function ReferralsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {verifiedReferrals.length > 0 ? verifiedReferrals.map((ref, index) => (
+              {verifiedReferrals.length > 0 ? verifiedReferrals.map((ref: any, index: number) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{ref.name}</TableCell>
                   <TableCell>{ref.current_plan}</TableCell>
@@ -144,7 +146,7 @@ export default async function ReferralsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {unverifiedReferrals.length > 0 ? unverifiedReferrals.map((ref, index) => (
+              {unverifiedReferrals.length > 0 ? unverifiedReferrals.map((ref: any, index: number) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{ref.name}</TableCell>
                   <TableCell>{ref.email}</TableCell>

@@ -24,6 +24,7 @@ export interface Profile {
   referral_bonus: number;
   current_balance: number;
   referral_code: string;
+  referred_by: string | null;
 }
 
 export interface Payment {

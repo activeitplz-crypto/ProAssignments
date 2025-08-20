@@ -18,19 +18,72 @@ async function verifyAdmin() {
 export async function approvePayment(formData: FormData) {
   const supabase = await verifyAdmin();
   const paymentId = formData.get('paymentId') as string;
-  
-  const { error } = await supabase
-    .from('payments')
-    .update({ status: 'approved' })
-    .eq('id', paymentId);
-  
-  if (error) console.error('Approve Payment Error:', error);
 
-  // In a real app, you'd also update the user's plan details in the profiles table.
-  // And start calculating their earnings. This is a complex task for another time.
+  if (!paymentId) {
+    return { error: 'Payment ID is missing.' };
+  }
 
+  // Start a transaction-like process
+  try {
+    // 1. Get payment details (user_id, plan_id)
+    const { data: payment, error: paymentError } = await supabase
+      .from('payments')
+      .select('user_id, plan_id')
+      .eq('id', paymentId)
+      .eq('status', 'pending')
+      .single();
+
+    if (paymentError || !payment) {
+      throw new Error('Pending payment not found or could not be fetched.');
+    }
+
+    const { user_id, plan_id } = payment;
+
+    // 2. Get plan details (name, period_days)
+    const { data: plan, error: planError } = await supabase
+      .from('plans')
+      .select('name, period_days')
+      .eq('id', plan_id)
+      .single();
+
+    if (planError || !plan) {
+      throw new Error('Plan details not found.');
+    }
+    
+    // 3. Update the user's profile to activate the plan
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({
+        current_plan: plan.name,
+        plan_start: new Date().toISOString(),
+        plan_end: new Date(new Date().getTime() + plan.period_days * 24 * 60 * 60 * 1000).toISOString(),
+      })
+      .eq('id', user_id);
+
+    if (profileError) {
+      throw new Error('Failed to update user profile with new plan.');
+    }
+
+    // 4. Update the payment status to 'approved'
+    const { error: updatePaymentError } = await supabase
+      .from('payments')
+      .update({ status: 'approved' })
+      .eq('id', paymentId);
+
+    if (updatePaymentError) {
+      throw new Error('Failed to update payment status.');
+    }
+  
+  } catch (error: any) {
+    console.error('Approve Payment Transaction Error:', error.message);
+    return { error: error.message };
+  }
+  
+  // Revalidate paths to show changes
   revalidatePath('/admin');
+  revalidatePath('/dashboard');
 }
+
 
 export async function rejectPayment(formData: FormData) {
   const supabase = await verifyAdmin();

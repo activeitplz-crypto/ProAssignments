@@ -4,6 +4,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { PostgrestError } from '@supabase/supabase-js';
 
 async function verifyAdmin() {
   const supabase = createClient();
@@ -14,67 +15,73 @@ async function verifyAdmin() {
   return supabase;
 }
 
-export async function approvePayment(formData: FormData) {
-  const supabase = await verifyAdmin();
-  const paymentId = formData.get('paymentId') as string;
-
-  if (!paymentId) {
-    return { error: 'Payment ID is missing.' };
+// Helper function to handle Supabase responses
+async function handleSupabaseResponse<T>(query: Promise<{ data: T | null; error: PostgrestError | null }>): Promise<T> {
+  const { data, error } = await query;
+  if (error) {
+    console.error("Supabase Error:", error.message);
+    throw new Error(error.message);
   }
+  if (!data) {
+    throw new Error("No data returned from the query.");
+  }
+  return data;
+}
 
-  try {
-    const { data: payment, error: paymentError } = await supabase
-      .from('payments')
-      .select('user_id, plan_id')
-      .eq('id', paymentId)
-      .eq('status', 'pending')
-      .single();
 
-    if (paymentError || !payment) {
-      throw new Error('Pending payment not found or could not be fetched.');
-    }
+export async function approvePayment(formData: FormData) {
+  const paymentId = formData.get('paymentId') as string;
+  if (!paymentId) return { error: 'Payment ID is missing.' };
 
-    const { user_id, plan_id } = payment;
-
-    const { data: plan, error: planError } = await supabase
-      .from('plans')
-      .select('name, period_days')
-      .eq('id', plan_id)
-      .single();
-
-    if (planError || !plan) {
-      throw new Error('Plan details not found.');
-    }
-
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .update({
-        current_plan: plan.name,
-        plan_start: new Date().toISOString(),
-        plan_end: new Date(new Date().getTime() + plan.period_days * 24 * 60 * 60 * 1000).toISOString(),
-      })
-      .eq('id', user_id);
-
-    if (profileError) {
-      throw new Error('Failed to update user profile with new plan.');
-    }
-
-    const { error: updatePaymentError } = await supabase
-      .from('payments')
-      .update({ status: 'approved' })
-      .eq('id', paymentId);
-
-    if (updatePaymentError) {
-      throw new Error('Failed to update payment status.');
-    }
+  const supabase = await verifyAdmin();
   
+  try {
+    const payment = await handleSupabaseResponse(
+      supabase
+        .from('payments')
+        .select('user_id, plan_id')
+        .eq('id', paymentId)
+        .eq('status', 'pending')
+        .single()
+    );
+
+    const plan = await handleSupabaseResponse(
+      supabase
+        .from('plans')
+        .select('name, period_days, referral_bonus')
+        .eq('id', payment.plan_id)
+        .single()
+    );
+
+    const profile = await handleSupabaseResponse(
+      supabase
+        .from('profiles')
+        .select('id, referred_by')
+        .eq('id', payment.user_id)
+        .single()
+    );
+      
+    // Use a transaction to ensure all or nothing
+    const { error: transactionError } = await supabase.rpc('approve_payment_and_distribute_bonus', {
+        p_payment_id: paymentId,
+        p_user_id: profile.id,
+        p_plan_name: plan.name,
+        p_plan_period_days: plan.period_days,
+        p_referral_bonus: plan.referral_bonus,
+        p_referred_by_id: profile.referred_by
+    });
+
+    if (transactionError) {
+        throw new Error(`Transaction failed: ${transactionError.message}`);
+    }
+
   } catch (error: any) {
-    console.error('Approve Payment Transaction Error:', error.message);
+    console.error('Approve Payment Logic Error:', error.message);
     return { error: error.message };
   }
   
   revalidatePath('/admin');
-  revalidatePath('/admin?tab=payments', 'page');
+  return { error: null };
 }
 
 
@@ -93,7 +100,6 @@ export async function rejectPayment(formData: FormData) {
   }
 
   revalidatePath('/admin');
-  revalidatePath('/admin?tab=payments', 'page');
 }
 
 export async function approveWithdrawal(formData: FormData) {
@@ -101,47 +107,13 @@ export async function approveWithdrawal(formData: FormData) {
   const withdrawalId = formData.get('withdrawalId') as string;
   
   try {
-    const { data: withdrawal, error: wError } = await supabase
-      .from('withdrawals')
-      .select('amount, user_id')
-      .eq('id', withdrawalId)
-      .eq('status', 'pending')
-      .single();
-
-    if (wError || !withdrawal) throw new Error('Pending withdrawal not found.');
-
-    const { data: profile, error: pError } = await supabase
-      .from('profiles')
-      .select('current_balance')
-      .eq('id', withdrawal.user_id)
-      .single();
-    
-    if (pError || !profile) throw new Error('User profile not found.');
-
-    const newBalance = profile.current_balance - withdrawal.amount;
-    if (newBalance < 0) throw new Error('User has insufficient funds for this withdrawal.');
-
-    const { error: profileUpdateError } = await supabase
-      .from('profiles')
-      .update({ current_balance: newBalance })
-      .eq('id', withdrawal.user_id);
-
-    if (profileUpdateError) throw new Error('Failed to update user balance.');
-
-    const { error: withdrawalUpdateError } = await supabase
-      .from('withdrawals')
-      .update({ status: 'approved' })
-      .eq('id', withdrawalId);
-
-    if (withdrawalUpdateError) throw new Error('Failed to update withdrawal status.');
-
+     await supabase.rpc('approve_withdrawal', { p_withdrawal_id: withdrawalId });
   } catch (error: any) {
      console.error('Approve Withdrawal Error:', error);
      return { error: error.message };
   }
   
   revalidatePath('/admin');
-  revalidatePath('/admin?tab=withdrawals', 'page');
   revalidatePath('/dashboard');
 }
 
@@ -160,7 +132,6 @@ export async function rejectWithdrawal(formData: FormData) {
   }
 
   revalidatePath('/admin');
-  revalidatePath('/admin?tab=withdrawals', 'page');
 }
 
 const planSchema = z.object({

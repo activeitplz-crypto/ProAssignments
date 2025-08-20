@@ -3,53 +3,52 @@
 
 import { useTransition } from 'react';
 import { Button } from '@/components/ui/button';
-import { approvePayment, rejectPayment, approveWithdrawal, rejectWithdrawal } from './actions';
+import { approveWithdrawal, rejectWithdrawal } from './actions';
 import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+
 
 interface AdminActionFormsProps {
-  paymentId?: string;
   withdrawalId?: string;
 }
 
-export function AdminActionForms({ paymentId, withdrawalId }: AdminActionFormsProps) {
+export function AdminActionForms({ withdrawalId }: AdminActionFormsProps) {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
+  const { toast } = useToast();
 
-  const handleAction = (action: (formData: FormData) => Promise<void>) => {
+
+  const handleAction = (action: (formData: FormData) => Promise<{error: string | null} | void>) => {
     const formData = new FormData();
-    if (paymentId) formData.append('paymentId', paymentId);
     if (withdrawalId) formData.append('withdrawalId', withdrawalId);
     
     startTransition(async () => {
-      await action(formData);
-      // We don't need to manually refresh, revalidatePath in actions handles it
+      const result = await action(formData);
+       if (result?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Action Failed',
+          description: result.error,
+        });
+      } else {
+        toast({
+          title: 'Success',
+          description: `Withdrawal request has been updated.`,
+        });
+      }
     });
   };
 
-  if (paymentId) {
-    return (
-      <>
-        <Button size="sm" onClick={() => handleAction(approvePayment)} disabled={isPending}>
-          {isPending && <Loader2 className="animate-spin" />} Approve
-        </Button>
-        <Button size="sm" variant="destructive" onClick={() => handleAction(rejectPayment)} disabled={isPending}>
-          {isPending && <Loader2 className="animate-spin" />} Reject
-        </Button>
-      </>
-    );
-  }
 
   if (withdrawalId) {
     return (
-      <>
+      <div className="flex gap-2">
         <Button size="sm" onClick={() => handleAction(approveWithdrawal)} disabled={isPending}>
            {isPending && <Loader2 className="animate-spin" />} Approve
         </Button>
         <Button size="sm" variant="destructive" onClick={() => handleAction(rejectWithdrawal)} disabled={isPending}>
            {isPending && <Loader2 className="animate-spin" />} Reject
         </Button>
-      </>
+      </div>
     );
   }
 

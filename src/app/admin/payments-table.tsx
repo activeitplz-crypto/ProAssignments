@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useTransition } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import {
   Table,
@@ -12,11 +12,14 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import { AdminActionForms } from './admin-action-forms';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Payment } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { approvePayment, rejectPayment } from './actions';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 type EnrichedPayment = Payment & {
   profiles: { name: string | null; email: string | null } | null;
@@ -54,7 +57,15 @@ export function PaymentsTable() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'payments' },
         (payload) => {
-          fetchPayments();
+          // Instead of full refetch, intelligently update the state
+          const oldRecord = (payload.old as EnrichedPayment);
+          const newRecord = (payload.new as EnrichedPayment);
+
+          if (payload.eventType === 'UPDATE' && oldRecord.status === 'pending' && newRecord.status !== 'pending') {
+             setPayments(currentPayments => currentPayments.filter(p => p.id !== oldRecord.id));
+          } else if (payload.eventType === 'INSERT' && newRecord.status === 'pending') {
+             fetchPayments(); // refetch on new inserts
+          }
         }
       )
       .subscribe();
@@ -119,18 +130,7 @@ export function PaymentsTable() {
             <TableBody>
             {payments.length > 0 ? (
                 payments.map((p) => (
-                <TableRow key={p.id}>
-                    <TableCell>
-                        <div>{p.profiles?.name || 'N/A'}</div>
-                        <div className="text-xs text-muted-foreground">{p.profiles?.email}</div>
-                    </TableCell>
-                    <TableCell>{p.plans?.name || 'N/A'}</TableCell>
-                    <TableCell>{p.payment_uid}</TableCell>
-                    <TableCell>{format(new Date(p.created_at), 'PPP')}</TableCell>
-                    <TableCell className="space-x-2">
-                    <AdminActionForms paymentId={p.id} />
-                    </TableCell>
-                </TableRow>
+                    <PaymentRow key={p.id} payment={p} />
                 ))
             ) : (
                 <TableRow>
@@ -144,4 +144,43 @@ export function PaymentsTable() {
       </CardContent>
     </Card>
   );
+}
+
+function PaymentRow({ payment }: { payment: EnrichedPayment }) {
+    const [isPending, startTransition] = useTransition();
+    const { toast } = useToast();
+
+    const handleAction = async (action: (fd: FormData) => Promise<{error: string | null} | void>) => {
+        const formData = new FormData();
+        formData.append('paymentId', payment.id);
+
+        startTransition(async () => {
+            const result = await action(formData);
+            if (result?.error) {
+                toast({ variant: 'destructive', title: 'Action Failed', description: result.error });
+            } else {
+                 toast({ title: 'Success', description: 'Action completed.' });
+            }
+        });
+    }
+
+    return (
+        <TableRow>
+            <TableCell>
+                <div>{payment.profiles?.name || 'N/A'}</div>
+                <div className="text-xs text-muted-foreground">{payment.profiles?.email}</div>
+            </TableCell>
+            <TableCell>{payment.plans?.name || 'N/A'}</TableCell>
+            <TableCell>{payment.payment_uid}</TableCell>
+            <TableCell>{format(new Date(payment.created_at), 'PPP')}</TableCell>
+            <TableCell className="space-x-2">
+                <Button size="sm" onClick={() => handleAction(approvePayment)} disabled={isPending}>
+                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Approve
+                </Button>
+                <Button size="sm" variant="destructive" onClick={() => handleAction(rejectPayment)} disabled={isPending}>
+                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Reject
+                </Button>
+            </TableCell>
+        </TableRow>
+    )
 }

@@ -105,7 +105,7 @@ export default function AppLayout({
       <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-60 md:flex-col md:border-r">
         <div className="flex h-16 items-center gap-2 border-b px-6">
           <JanzyIcon className="h-8 w-8" />
-          <span className="text-xl font-bold">PlanBase</span>
+          <span className="text-xl font-bold">Janzy</span>
         </div>
         <div className="flex flex-1 flex-col justify-between overflow-auto py-4">
           <div className="flex flex-col gap-2 px-4">
@@ -148,7 +148,7 @@ export default function AppLayout({
        <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur-sm md:justify-end md:px-6">
         <div className="flex items-center gap-2 md:hidden">
             <JanzyIcon className="h-7 w-7" />
-            <span className="font-bold">PlanBase</span>
+            <span className="font-bold">Janzy</span>
         </div>
 
         <div className="flex items-center gap-2">

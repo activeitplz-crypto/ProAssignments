@@ -23,7 +23,7 @@ import { useRouter } from 'next/navigation';
 const formSchema = z.object({
   amount: z.coerce
     .number({ invalid_type_error: 'Please enter a valid number.' })
-    .positive({ message: 'Amount must be greater than zero.' }),
+    .min(700, { message: 'Minimum withdrawal amount is 700 RS.' }),
   bank_name: z.string().min(2, { message: 'Bank/Service name is required.' }),
   holder_name: z.string().min(2, { message: 'Account holder name is required.' }),
   account_number: z.string().min(11, { message: 'Account number is required.'}),
@@ -31,9 +31,10 @@ const formSchema = z.object({
 
 interface WithdrawFormProps {
     currentBalance: number;
+    canWithdraw: boolean;
 }
 
-export function WithdrawForm({ currentBalance }: WithdrawFormProps) {
+export function WithdrawForm({ currentBalance, canWithdraw }: WithdrawFormProps) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -86,7 +87,7 @@ export function WithdrawForm({ currentBalance }: WithdrawFormProps) {
             <FormItem>
               <FormLabel>Amount (PKR)</FormLabel>
               <FormControl>
-                <Input type="number" step="0.01" placeholder="e.g., 50.00" {...field} />
+                <Input type="number" step="0.01" placeholder="e.g., 700.00" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -131,9 +132,9 @@ export function WithdrawForm({ currentBalance }: WithdrawFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" className="w-full" disabled={isPending || !canWithdraw}>
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Submit Request
+          {canWithdraw ? 'Submit Request' : '5 Verified Referrals Required'}
         </Button>
       </form>
     </Form>

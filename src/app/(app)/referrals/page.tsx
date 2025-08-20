@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Users, DollarSign } from 'lucide-react';
+import { Users, DollarSign, UserCheck, UserX } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/table';
 import { ReferralLinkCard } from '@/components/referral-link-card';
 import { redirect } from 'next/navigation';
+import { format } from 'date-fns';
 
 export default async function ReferralsPage() {
   const supabase = createClient();
@@ -27,21 +28,30 @@ export default async function ReferralsPage() {
     redirect('/login');
   }
 
-  const { data: user, error } = await supabase
+  const { data: user, error: userError } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', session.user.id)
     .single();
 
-  if (error || !user) {
-    console.error('Referrals Error:', error);
+  if (userError || !user) {
+    console.error('Referrals Error:', userError);
     return <div>Could not load user data.</div>;
   }
   
-  // Note: Recent referrals data would need to be fetched from your database.
-  // This is a placeholder as the logic for tracking who referred whom isn't fully implemented.
-  const recentReferrals: { name: string; plan: string; bonus: number; date: string }[] = [];
+  // Fetch all users who were referred by the current user
+  const { data: referredProfiles, error: referredError } = await supabase
+    .from('profiles')
+    .select('name, email, current_plan, created_at')
+    .eq('referred_by', user.id);
 
+  if (referredError) {
+    console.error('Error fetching referred users:', referredError);
+  }
+
+  const verifiedReferrals = referredProfiles?.filter(p => p.current_plan) || [];
+  const unverifiedReferrals = referredProfiles?.filter(p => !p.current_plan) || [];
+  
   const referralLink = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002'}/signup?ref=${user.referral_code}`;
 
   return (
@@ -58,13 +68,13 @@ export default async function ReferralsPage() {
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Successful Referrals</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Verified Referrals</CardTitle>
+            <UserCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{user.referral_count}</div>
+            <div className="text-2xl font-bold">{verifiedReferrals.length}</div>
             <p className="text-xs text-muted-foreground">
-              Total friends who joined and invested.
+              Total friends who joined and purchased a plan.
             </p>
           </CardContent>
         </Card>
@@ -84,8 +94,11 @@ export default async function ReferralsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Recent Referrals</CardTitle>
-           <CardDescription>Your recent successful referrals.</CardDescription>
+          <CardTitle className="font-headline flex items-center gap-2">
+            <UserCheck className="h-5 w-5 text-green-500" />
+            Verified Referrals
+          </CardTitle>
+           <CardDescription>Users you referred who have an active plan.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -93,21 +106,53 @@ export default async function ReferralsPage() {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Plan Purchased</TableHead>
-                <TableHead>Bonus Earned</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>Join Date</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {recentReferrals.length > 0 ? recentReferrals.map((ref, index) => (
+              {verifiedReferrals.length > 0 ? verifiedReferrals.map((ref, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{ref.name}</TableCell>
-                  <TableCell>{ref.plan}</TableCell>
-                  <TableCell>PKR {ref.bonus.toFixed(2)}</TableCell>
-                  <TableCell>{ref.date}</TableCell>
+                  <TableCell>{ref.current_plan}</TableCell>
+                  <TableCell>{format(new Date(ref.created_at), 'PPP')}</TableCell>
                 </TableRow>
               )) : (
                 <TableRow>
-                    <TableCell colSpan={4} className="text-center">No recent referrals yet.</TableCell>
+                    <TableCell colSpan={3} className="text-center">No verified referrals yet.</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+      
+       <Card>
+        <CardHeader>
+          <CardTitle className="font-headline flex items-center gap-2">
+             <UserX className="h-5 w-5 text-red-500" />
+            Unverified Referrals
+          </CardTitle>
+           <CardDescription>Users who signed up with your link but haven't purchased a plan.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Join Date</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {unverifiedReferrals.length > 0 ? unverifiedReferrals.map((ref, index) => (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">{ref.name}</TableCell>
+                  <TableCell>{ref.email}</TableCell>
+                  <TableCell>{format(new Date(ref.created_at), 'PPP')}</TableCell>
+                </TableRow>
+              )) : (
+                <TableRow>
+                    <TableCell colSpan={3} className="text-center">No unverified referrals yet.</TableCell>
                 </TableRow>
               )}
             </TableBody>

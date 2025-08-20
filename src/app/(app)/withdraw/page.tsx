@@ -20,6 +20,8 @@ import {
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { Withdrawal } from '@/lib/types';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Info } from 'lucide-react';
 
 export default async function WithdrawPage() {
   const supabase = createClient();
@@ -31,7 +33,7 @@ export default async function WithdrawPage() {
 
   const { data: user, error: userError } = await supabase
     .from('profiles')
-    .select('current_balance')
+    .select('current_balance, referral_count')
     .eq('id', session.user.id)
     .single();
   
@@ -50,9 +52,20 @@ export default async function WithdrawPage() {
   }
 
   const availableBalance = user.current_balance;
+  const verifiedReferrals = user.referral_count;
+  const canWithdraw = verifiedReferrals >= 5;
 
   return (
     <div className="space-y-6">
+       <Alert>
+        <Info className="h-4 w-4" />
+        <AlertTitle>Withdrawal Requirements</AlertTitle>
+        <AlertDescription>
+          You must have at least 5 verified referrals to request a withdrawal. The minimum withdrawal amount is PKR 700.
+           <p className="mt-1 font-semibold">Your Verified Referrals: {verifiedReferrals}</p>
+        </AlertDescription>
+      </Alert>
+
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="font-headline text-3xl">Request Withdrawal</CardTitle>
@@ -61,7 +74,7 @@ export default async function WithdrawPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <WithdrawForm currentBalance={availableBalance} />
+          <WithdrawForm currentBalance={availableBalance} canWithdraw={canWithdraw} />
         </CardContent>
       </Card>
       

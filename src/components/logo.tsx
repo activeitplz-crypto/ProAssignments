@@ -8,7 +8,7 @@ export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2">
       <JanzyIcon className="h-8 w-8" />
-      <span className="font-headline text-2xl font-bold">PlanBase</span>
+      <span className="font-headline text-2xl font-bold">Janzy</span>
     </Link>
   );
 }

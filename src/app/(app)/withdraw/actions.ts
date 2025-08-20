@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 
 const withdrawalSchema = z.object({
-  amount: z.coerce.number().positive('Amount must be positive.'),
+  amount: z.coerce.number().min(700, 'Minimum withdrawal amount is 700 RS.'),
   bank_name: z.string().min(1, 'Bank name is required.'),
   holder_name: z.string().min(1, 'Account holder name is required.'),
   account_number: z.string().min(1, 'Account number is required.'),
@@ -22,12 +22,16 @@ export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchem
   
   const { data: profile } = await supabase
     .from('profiles')
-    .select('current_balance')
+    .select('current_balance, referral_count')
     .eq('id', user.id)
     .single();
 
   if (!profile) {
     return { error: 'User profile not found.' };
+  }
+
+  if (profile.referral_count < 5) {
+      return { error: 'You must have at least 5 verified referrals to withdraw.' };
   }
 
   if (formData.amount > profile.current_balance) {
@@ -52,8 +56,6 @@ export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchem
     return { error: 'Failed to submit withdrawal request.' };
   }
   
-  // In a real app, you might want to optimistically update the balance
-  // or wait for admin approval. For now, we'll revalidate to show the request in admin.
   revalidatePath('/withdraw');
   revalidatePath('/dashboard');
   revalidatePath('/admin');

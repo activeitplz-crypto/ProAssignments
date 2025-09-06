@@ -33,7 +33,7 @@ export default async function WithdrawPage() {
 
   const { data: user, error: userError } = await supabase
     .from('profiles')
-    .select('current_balance, referral_count')
+    .select('current_balance')
     .eq('id', session.user.id)
     .single();
   
@@ -52,17 +52,14 @@ export default async function WithdrawPage() {
   }
 
   const availableBalance = user.current_balance;
-  const verifiedReferrals = user.referral_count;
-  const canWithdraw = verifiedReferrals >= 5;
 
   return (
     <div className="space-y-6">
        <Alert>
         <Info className="h-4 w-4" />
-        <AlertTitle>Withdrawal Requirements</AlertTitle>
+        <AlertTitle>Withdrawal Information</AlertTitle>
         <AlertDescription>
-          You must have at least 5 verified referrals to request a withdrawal. The minimum withdrawal amount is PKR 700.
-           <p className="mt-1 font-semibold">Your Verified Referrals: {verifiedReferrals}</p>
+          The minimum withdrawal amount is PKR 700.
         </AlertDescription>
       </Alert>
 
@@ -74,7 +71,7 @@ export default async function WithdrawPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <WithdrawForm currentBalance={availableBalance} canWithdraw={canWithdraw} />
+          <WithdrawForm currentBalance={availableBalance} canWithdraw={true} />
         </CardContent>
       </Card>
       

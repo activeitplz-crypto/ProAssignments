@@ -22,16 +22,12 @@ export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchem
   
   const { data: profile } = await supabase
     .from('profiles')
-    .select('current_balance, referral_count')
+    .select('current_balance')
     .eq('id', user.id)
     .single();
 
   if (!profile) {
     return { error: 'User profile not found.' };
-  }
-
-  if (profile.referral_count < 5) {
-      return { error: 'You must have at least 5 verified referrals to withdraw.' };
   }
 
   if (formData.amount > profile.current_balance) {

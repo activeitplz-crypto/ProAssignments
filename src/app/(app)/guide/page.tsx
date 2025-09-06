@@ -53,6 +53,14 @@ export default function GuidePage() {
                 When your current balance is at least PKR 700, you can request a withdrawal. Go to the "Withdrawal" page, enter the amount you wish to withdraw, and provide your payment details (e.g., Easypaisa or JazzCash account name and number). We will process your request manually within 24 hours.
               </AccordionContent>
             </AccordionItem>
+            <AccordionItem value="item-6">
+              <AccordionTrigger className="text-lg font-semibold">More Explanation</AccordionTrigger>
+              <AccordionContent className="text-base leading-relaxed space-y-2">
+                <p><strong>Today's Earning vs. Current Balance:</strong> "Today's Earning" shows the amount you have earned from approved assignments for the current day only. "Current Balance" is the total amount of money you have available to withdraw. Once your daily assignments are approved, the earnings are added to your Current Balance.</p>
+                <p><strong>Referral Bonus:</strong> When someone signs up using your referral code and purchases a plan, you receive a bonus. This bonus is automatically added to your "Total Earning" and your "Current Balance" as soon as their plan payment is approved.</p>
+                 <p><strong>Withdrawal Process:</strong> All withdrawal requests are processed manually by our team to ensure security. This typically takes up to 24 hours. Once approved, the funds will be sent to the account you specified. The withdrawn amount will be deducted from your "Current Balance".</p>
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
         </CardContent>
       </Card>

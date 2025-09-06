@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Image as ImageIcon } from 'lucide-react';
 import { logout } from '@/app/auth/actions';
 import Link from 'next/link';
 
@@ -56,6 +56,12 @@ export function UserNav({ name, email, avatarUrl, expiresAt }: UserNavProps) {
             <Link href="/profile" className="flex items-center w-full cursor-pointer">
               <User className="mr-2 h-4 w-4" />
               <span>Edit Profile</span>
+            </Link>
+          </DropdownMenuItem>
+           <DropdownMenuItem asChild>
+            <Link href="https://postimages.org/" target="_blank" rel="noopener noreferrer" className="flex items-center w-full cursor-pointer">
+              <ImageIcon className="mr-2 h-4 w-4" />
+              <span>Postimages</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

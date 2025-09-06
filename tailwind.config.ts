@@ -19,6 +19,7 @@ export default {
       fontFamily: {
         headline: ['Poppins', 'sans-serif'],
         body: ['"PT Sans"', 'sans-serif'],
+        display: ['Bangers', 'cursive'],
       },
       colors: {
         border: 'hsl(var(--border))',

@@ -67,9 +67,9 @@ export default async function PlansPage() {
           <Card key={plan.id} className="flex flex-col">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
-              <CardDescription>
+              <CardDescription className="flex flex-col">
+                <span className="text-xs text-muted-foreground">Investment</span>
                 <span className="text-3xl font-bold text-primary">PKR {plan.investment}</span>
-                <span className="text-muted-foreground"> one-time</span>
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-1 space-y-4">

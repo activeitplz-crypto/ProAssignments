@@ -15,6 +15,7 @@ interface NavItem {
   href: string;
   label: string;
   icon: React.ElementType;
+  target?: string;
 }
 
 interface MobileNavProps {
@@ -64,6 +65,8 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
                 <Link
                 key={item.href}
                 href={item.href}
+                target={item.target}
+                rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
                 onClick={() => setOpen(false)}
                 className={cn(
                     'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',

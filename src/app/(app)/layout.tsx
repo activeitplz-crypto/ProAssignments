@@ -11,6 +11,7 @@ import {
   User as UserIcon,
   Loader2,
   FileCheck2,
+  Image as ImageIcon,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -99,7 +100,10 @@ export default function AppLayout({
     { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
   ];
 
-  const actionItems = [{ href: '/profile', label: 'Edit Profile', icon: UserIcon }];
+  const actionItems = [
+    { href: '/profile', label: 'Edit Profile', icon: UserIcon },
+    { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
+  ];
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">
@@ -128,6 +132,8 @@ export default function AppLayout({
               <Link
                 key={item.href}
                 href={item.href}
+                target={item.target}
+                rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary'
                 )}

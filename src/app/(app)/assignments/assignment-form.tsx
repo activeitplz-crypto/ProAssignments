@@ -20,40 +20,51 @@ import { Loader2 } from 'lucide-react';
 import { submitAssignment } from './actions';
 import { useRouter } from 'next/navigation';
 import type { Profile } from '@/lib/types';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-const formSchema = z.object({
-  title: z.string().min(3, { message: 'Title must be at least 3 characters long.' }),
-  url1: z.string().url({ message: 'Please provide a valid URL.' }),
-  url2: z.string().url().optional().or(z.literal('')),
-  url3: z.string().url().optional().or(z.literal('')),
-  url4: z.string().url().optional().or(z.literal('')),
-  url5: z.string().url().optional().or(z.literal('')),
-});
+// Dynamically create the schema based on the daily limit
+const createFormSchema = (dailyLimit: number) => {
+  let schema = z.object({
+    title: z.string().min(3, { message: 'Title must be at least 3 characters long.' }),
+    url1: z.string().url({ message: 'Please provide a valid URL.' }),
+  });
+
+  // Add optional URL fields up to the daily limit
+  for (let i = 2; i <= dailyLimit; i++) {
+    schema = schema.extend({
+      [`url${i}`]: z.string().url().optional().or(z.literal('')),
+    });
+  }
+
+  return schema;
+};
 
 interface AssignmentFormProps {
   user: Pick<Profile, 'id' | 'name'>;
+  dailyLimit: number;
+  remainingSubmissions: number;
 }
 
-export function AssignmentForm({ user }: AssignmentFormProps) {
+export function AssignmentForm({ user, dailyLimit, remainingSubmissions }: AssignmentFormProps) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
+  const formSchema = createFormSchema(dailyLimit);
+
+  const defaultValues: { [key: string]: string } = { title: '', };
+  for (let i = 1; i <= dailyLimit; i++) {
+    defaultValues[`url${i}`] = '';
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: '',
-      url1: '',
-      url2: '',
-      url3: '',
-      url4: '',
-      url5: '',
-    },
+    defaultValues,
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      const result = await submitAssignment(values);
+      const result = await submitAssignment(values as any); // We cast to any because the server action now handles dynamic urls
       if (result?.error) {
         toast({
           variant: 'destructive',
@@ -69,6 +80,17 @@ export function AssignmentForm({ user }: AssignmentFormProps) {
         router.refresh();
       }
     });
+  }
+  
+  if (remainingSubmissions <= 0) {
+      return (
+          <Alert variant="destructive">
+              <AlertTitle>Daily Limit Reached</AlertTitle>
+              <AlertDescription>
+                  You have already submitted all your assignments for today. Please come back tomorrow.
+              </AlertDescription>
+          </Alert>
+      )
   }
 
   return (
@@ -100,74 +122,28 @@ export function AssignmentForm({ user }: AssignmentFormProps) {
         />
         
         <div className="space-y-3">
-            <FormField
-            control={form.control}
-            name="url1"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Task URL 1 (Required)</FormLabel>
-                <FormControl>
-                    <Input placeholder="https://..." {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-             <FormField
-            control={form.control}
-            name="url2"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Task URL 2 (Optional)</FormLabel>
-                <FormControl>
-                    <Input placeholder="https://..." {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-             <FormField
-            control={form.control}
-            name="url3"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Task URL 3 (Optional)</FormLabel>
-                <FormControl>
-                    <Input placeholder="https://..." {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-             <FormField
-            control={form.control}
-            name="url4"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Task URL 4 (Optional)</FormLabel>
-                <FormControl>
-                    <Input placeholder="https://..." {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-             <FormField
-            control={form.control}
-            name="url5"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Task URL 5 (Optional)</FormLabel>
-                <FormControl>
-                    <Input placeholder="https://..." {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
+            {[...Array(dailyLimit)].map((_, i) => {
+                const urlFieldName = `url${i + 1}` as const;
+                return (
+                     <FormField
+                        key={urlFieldName}
+                        control={form.control}
+                        name={urlFieldName}
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Task URL {i + 1} {i === 0 ? '(Required)' : '(Optional)'}</FormLabel>
+                            <FormControl>
+                                <Input placeholder="https://..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                )
+            })}
         </div>
         
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" className="w-full" disabled={isPending || remainingSubmissions <= 0}>
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Submit Assignment
         </Button>

@@ -7,14 +7,9 @@ import { createClient } from '@/lib/supabase/server';
 
 const assignmentSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters long.'),
-  url1: z.string().url('Please provide a valid URL.'),
-  url2: z.string().url().optional().or(z.literal('')),
-  url3: z.string().url().optional().or(z.literal('')),
-  url4: z.string().url().optional().or(z.literal('')),
-  url5: z.string().url().optional().or(z.literal('')),
-});
+}).catchall(z.string().url().or(z.literal(''))); // Allows url1, url2, etc.
 
-export async function submitAssignment(formData: z.infer<typeof assignmentSchema>) {
+export async function submitAssignment(formData: Record<string, any>) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -22,13 +17,52 @@ export async function submitAssignment(formData: z.infer<typeof assignmentSchema
     return { error: 'You must be logged in to submit an assignment.' };
   }
 
-  const urls = [
-    formData.url1,
-    formData.url2,
-    formData.url3,
-    formData.url4,
-    formData.url5,
-  ].filter(url => url); // Filter out empty strings
+  // Server-side check for daily submission limit
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('current_plan')
+    .eq('id', user.id)
+    .single();
+  
+  if (!profile || !profile.current_plan) {
+    return { error: 'You must have an active plan to submit assignments.' };
+  }
+  
+  const { data: plan } = await supabase
+    .from('plans')
+    .select('daily_assignments')
+    .eq('name', profile.current_plan)
+    .single();
+
+  if (!plan) {
+    return { error: 'Could not find your plan details.' };
+  }
+  
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Start of today in local time
+  const { count, error: countError } = await supabase
+    .from('assignments')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .gte('created_at', today.toISOString());
+
+  if (countError) {
+    console.error('Server-side count error:', countError);
+    return { error: 'Could not verify your submission limit.' };
+  }
+  
+  if (count !== null && count >= plan.daily_assignments) {
+    return { error: 'You have reached your daily submission limit for this plan.' };
+  }
+
+  // Process URLs
+  const urls = Object.keys(formData)
+    .filter(key => key.startsWith('url') && formData[key])
+    .map(key => formData[key]);
+
+  if (urls.length === 0) {
+      return { error: 'You must provide at least one task URL.' };
+  }
 
   const { error } = await supabase
     .from('assignments')

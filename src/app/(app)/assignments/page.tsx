@@ -19,9 +19,9 @@ import {
 } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
-import type { Assignment } from '@/lib/types';
+import type { Assignment, Plan } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { FileCheck2, History } from 'lucide-react';
+import { FileCheck2, History, Info } from 'lucide-react';
 
 export default async function AssignmentsPage() {
   const supabase = createClient();
@@ -31,9 +31,10 @@ export default async function AssignmentsPage() {
     redirect('/login');
   }
   
+  // Fetch user profile and their active plan details in one go
   const { data: user, error: userError } = await supabase
     .from('profiles')
-    .select('id, name')
+    .select('id, name, current_plan')
     .eq('id', session.user.id)
     .single();
 
@@ -42,6 +43,33 @@ export default async function AssignmentsPage() {
     return <div>Could not load user data.</div>;
   }
   
+  let plan: Plan | null = null;
+  if (user.current_plan) {
+    const { data: planData } = await supabase
+      .from('plans')
+      .select('*')
+      .eq('name', user.current_plan)
+      .single();
+    plan = planData;
+  }
+  
+  const dailyAssignmentLimit = plan?.daily_assignments || 0;
+  
+  // Get assignments submitted today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Start of today
+  const { count: assignmentsTodayCount, error: countError } = await supabase
+    .from('assignments')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', session.user.id)
+    .gte('created_at', today.toISOString());
+  
+  if (countError) {
+      console.error('Error counting assignments:', countError);
+  }
+
+  const remainingSubmissions = dailyAssignmentLimit - (assignmentsTodayCount || 0);
+
   const { data: assignments, error: assignmentsError } = await supabase
     .from('assignments')
     .select('*')
@@ -62,11 +90,21 @@ export default async function AssignmentsPage() {
             Submit Your Assignment
           </CardTitle>
           <CardDescription>
-            Provide the links to your completed tasks below. At least one URL is required.
+            You can submit up to {dailyAssignmentLimit} assignment(s) per day. You have {remainingSubmissions > 0 ? remainingSubmissions : 0} submission(s) left today.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AssignmentForm user={user} />
+          {dailyAssignmentLimit > 0 ? (
+            <AssignmentForm user={user} dailyLimit={dailyAssignmentLimit} remainingSubmissions={remainingSubmissions} />
+          ) : (
+             <Alert>
+                <Info className="h-4 w-4" />
+                <AlertTitle>No Active Plan</AlertTitle>
+                <AlertDescription>
+                  You do not have an active plan. Please purchase a plan to start submitting assignments.
+                </AlertDescription>
+              </Alert>
+          )}
         </CardContent>
       </Card>
       

@@ -291,3 +291,50 @@ export async function deleteTopUser(formData: FormData) {
     revalidatePath('/top-users');
     return { error: null };
 }
+
+
+const reviewSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(1, 'Reviewer name is required'),
+    content: z.string().min(1, 'Review content is required'),
+});
+
+export async function saveReview(formData: z.infer<typeof reviewSchema>) {
+    const supabase = await verifyAdmin();
+    const validatedData = reviewSchema.parse(formData);
+    const { id, ...reviewData } = validatedData;
+
+    try {
+        if (id) {
+            await supabase.from('reviews').update(reviewData).eq('id', id);
+        } else {
+            await supabase.from('reviews').insert(reviewData);
+        }
+    } catch (error: any) {
+        console.error('Save Review Error:', error);
+        return { error: `Failed to save review. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=reviews', 'page');
+    revalidatePath('/reviews');
+    return { error: null };
+}
+
+export async function deleteReview(formData: FormData) {
+    const supabase = await verifyAdmin();
+    const id = formData.get('id') as string;
+    if (!id) return { error: 'Review ID is missing' };
+
+    try {
+        await supabase.from('reviews').delete().eq('id', id);
+    } catch (error: any) {
+        console.error('Delete Review Error:', error);
+        return { error: `Failed to delete review. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=reviews', 'page');
+    revalidatePath('/reviews');
+    return { error: null };
+}

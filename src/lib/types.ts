@@ -69,3 +69,10 @@ export interface TopUser {
   image_url: string;
   created_at: string;
 }
+
+export interface Review {
+  id: string;
+  name: string;
+  content: string;
+  created_at: string;
+}

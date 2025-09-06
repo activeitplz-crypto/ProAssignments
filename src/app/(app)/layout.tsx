@@ -14,6 +14,7 @@ import {
   ImageIcon,
   Users,
   Award,
+  MessageSquare,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -104,6 +105,7 @@ export default function AppLayout({
 
   const actionItems = [
     { href: '/top-users', label: 'Top Users', icon: Award },
+    { href: '/reviews', label: 'Reviews', icon: MessageSquare },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
   ];
 
@@ -112,7 +114,7 @@ export default function AppLayout({
       <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-60 md:flex-col md:border-r">
         <div className="flex h-16 items-center gap-2 border-b px-6">
           <ProAssignmentIcon className="h-8 w-8" />
-          <span className="text-xl font-bold">ProAssignment</span>
+          <span className="text-sm font-bold">ProAssignment</span>
         </div>
         <div className="flex flex-1 flex-col justify-between overflow-auto py-4">
           <div className="flex flex-col gap-2 px-4">

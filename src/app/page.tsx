@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, TrendingUp } from 'lucide-react';
+import { ArrowRight, TrendingUp, ListChecks } from 'lucide-react';
 import { Logo } from '@/components/logo';
 
 export default function LandingPage() {
@@ -22,10 +22,10 @@ export default function LandingPage() {
       <main className="flex-1">
         <section className="container mx-auto flex flex-col items-center justify-center space-y-8 px-4 py-12 text-center md:py-24 lg:py-32">
           <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-5xl md:text-5xl lg:text-6xl">
-            Intelligent Investment, Simplified
+            Turn Your Tasks into Earnings
           </h1>
           <p className="max-w-[700px] text-lg text-muted-foreground md:text-xl">
-            Welcome to ProAssignment. We provide a clear path to grow your earnings through structured investment plans and a powerful referral system.
+            Welcome to ProAssignment. We provide a clear path to grow your earnings through structured investment plans and completing daily assignments.
           </p>
           <Button size="lg" asChild>
             <Link href="/signup">
@@ -37,30 +37,30 @@ export default function LandingPage() {
         <section className="bg-white/50 py-12 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="font-headline mb-12 text-center text-3xl font-bold md:text-4xl">
-              Why Choose ProAssignment?
+              How It Works
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
               <Card>
                 <CardHeader>
-                  <CardTitle>Structured Plans</CardTitle>
+                  <CardTitle>Choose Your Plan</CardTitle>
                   <CardDescription>
-                    Choose from a variety of investment plans tailored to your financial goals. Clear terms, daily earnings, and predictable returns.
+                    Select an investment plan that fits your goals. Each plan unlocks a specific number of daily tasks and earnings potential.
                   </CardDescription>
                 </CardHeader>
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Daily Earnings</CardTitle>
+                  <CardTitle>Complete Daily Tasks</CardTitle>
                   <CardDescription>
-                    Watch your investment grow every single day. Track your today's and total earnings transparently from your personal dashboard.
+                    Log in each day to view and complete your assigned tasks. The more tasks your plan includes, the more you can earn.
                   </CardDescription>
                 </CardHeader>
               </Card>
-              <Card>
+               <Card>
                 <CardHeader>
-                  <CardTitle>Powerful Referrals</CardTitle>
+                  <CardTitle>Earn & Withdraw</CardTitle>
                   <CardDescription>
-                    Maximize your income by inviting others. Our referral system rewards you for every new member who joins and invests through your link.
+                    Your earnings are updated daily. Track your balance on your dashboard and withdraw your earnings directly.
                   </CardDescription>
                 </CardHeader>
               </Card>

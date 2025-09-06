@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useTransition } from 'react';
+import { useTransition } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -33,16 +33,16 @@ const planSchema = z.object({
   investment: z.coerce.number().positive('Investment must be a positive number'),
   daily_earning: z.coerce.number().positive('Daily earning must be a positive number'),
   period_days: z.coerce.number().int().positive('Period must be a positive integer'),
-  total_return: z.coerce.number().positive('Total return must be a positive number'),
-  referral_bonus: z.coerce.number().positive('Referral bonus must be a positive number'),
+  daily_assignments: z.coerce.number().int().positive('Daily assignments must be a positive integer'),
 });
+
 
 const formSchema = z.object({
   plans: z.array(planSchema),
 });
 
 interface ManagePlansFormProps {
-  plans: Plan[];
+  plans: Omit<Plan, 'total_return' | 'referral_bonus'>[];
 }
 
 export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
@@ -60,27 +60,17 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
     control: form.control,
     name: 'plans',
   });
-  
-  const watchedFields = form.watch('plans');
-
-  useEffect(() => {
-    watchedFields.forEach((field, index) => {
-      const dailyEarning = field.daily_earning || 0;
-      const periodDays = field.period_days || 0;
-      const totalReturn = dailyEarning * periodDays;
-      const currentTotalReturn = form.getValues(`plans.${index}.total_return`);
-      
-      if (totalReturn !== currentTotalReturn) {
-          form.setValue(`plans.${index}.total_return`, totalReturn, { shouldValidate: true });
-      }
-    });
-  }, [watchedFields, form]);
-
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
       for (const plan of values.plans) {
-        const result = await savePlan(plan);
+        // Add default values for fields not in the form anymore
+        const fullPlan = {
+            ...plan,
+            total_return: (plan.daily_earning || 0) * (plan.period_days || 0),
+            referral_bonus: 0 // No longer used, set to 0
+        };
+        const result = await savePlan(fullPlan as any);
         if (result?.error) {
           toast({
             variant: 'destructive',
@@ -102,7 +92,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
       <CardHeader>
         <CardTitle>Manage Investment Plans</CardTitle>
         <CardDescription>
-          Add, edit, and save investment plans. Total Return is calculated automatically.
+          Add, edit, and save investment plans.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -148,7 +138,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                       <FormItem>
                         <FormLabel>Daily Earning (PKR)</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="200" {...field} />
+                          <Input type="number" placeholder="1500" {...field} />
                         </FormControl>
                          <FormMessage />
                       </FormItem>
@@ -169,25 +159,12 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                   />
                   <FormField
                     control={form.control}
-                    name={`plans.${index}.referral_bonus`}
+                    name={`plans.${index}.daily_assignments`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Referral Bonus (PKR)</FormLabel>
+                        <FormLabel>Daily Assignments</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="200" {...field} />
-                        </FormControl>
-                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                   <FormField
-                    control={form.control}
-                    name={`plans.${index}.total_return`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Total Return (Calculated)</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} readOnly className="bg-muted"/>
+                          <Input type="number" placeholder="1" {...field} />
                         </FormControl>
                          <FormMessage />
                       </FormItem>
@@ -209,7 +186,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                 <Button
                 type="button"
                 variant="outline"
-                onClick={() => append({ name: '', investment: 0, daily_earning: 0, period_days: 0, total_return: 0, referral_bonus: 0 })}
+                onClick={() => append({ name: '', investment: 0, daily_earning: 0, period_days: 0, daily_assignments: 0 })}
                 >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add New Plan

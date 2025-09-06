@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Zap } from 'lucide-react';
+import { CheckCircle, Zap, ClipboardList } from 'lucide-react';
 import type { Plan } from '@/lib/types';
 import {
   Dialog,
@@ -63,7 +63,7 @@ export default async function PlansPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {plans.map((plan) => (
+        {(plans as Plan[]).map((plan) => (
           <Card key={plan.id} className="flex flex-col">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
@@ -81,13 +81,9 @@ export default async function PlansPage() {
                 <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
                 <span>Period: {plan.period_days} Days</span>
               </div>
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                <span>Total Return: PKR {plan.total_return.toFixed(2)}</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                <span>Referral Bonus: PKR {plan.referral_bonus.toFixed(2)}</span>
+               <div className="flex items-center">
+                <ClipboardList className="mr-2 h-4 w-4 text-primary" />
+                <span>Daily Assignments: {plan.daily_assignments}</span>
               </div>
             </CardContent>
             <CardFooter>

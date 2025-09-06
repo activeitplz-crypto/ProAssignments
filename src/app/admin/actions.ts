@@ -140,8 +140,7 @@ const planSchema = z.object({
     investment: z.coerce.number().positive('Investment must be a positive number'),
     daily_earning: z.coerce.number().positive('Daily earning must be a positive number'),
     period_days: z.coerce.number().int().positive('Period must be a positive integer'),
-    total_return: z.coerce.number().positive('Total return must be a positive number'),
-    referral_bonus: z.coerce.number().positive('Referral bonus must be a positive number'),
+    daily_assignments: z.coerce.number().int().positive('Daily assignments must be a positive integer'),
 });
 
 export async function savePlan(formData: z.infer<typeof planSchema>) {

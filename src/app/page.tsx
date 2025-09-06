@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, TrendingUp, ListChecks } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import Image from 'next/image';
 
 export default function LandingPage() {
   return (
@@ -21,9 +22,17 @@ export default function LandingPage() {
       </header>
       <main className="flex-1">
         <section className="container mx-auto flex flex-col items-center justify-center space-y-8 px-4 py-12 text-center md:py-24 lg:py-32">
-          <h1 className="font-display text-5xl font-bold tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl">
-            <span className="text-foreground">Assignment</span> <span className="text-primary">Work</span>
-          </h1>
+          <div className="relative w-full max-w-2xl">
+            <Image 
+              src="https://i.postimg.cc/mD3t3rWq/Assignment-Work-Headline.png"
+              alt="Assignment Work"
+              width={1000}
+              height={250}
+              priority
+              data-ai-hint="logo text"
+              className="object-contain"
+            />
+          </div>
           <p className="max-w-[700px] text-lg text-muted-foreground md:text-xl">
             Welcome to ProAssignment. We provide a clear path to grow your earnings through structured investment plans and completing daily assignments.
           </p>

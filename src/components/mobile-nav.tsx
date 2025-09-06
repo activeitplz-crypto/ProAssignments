@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, MoreVertical } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
 import { JanzyIcon } from '@/components/janzy-icon';
@@ -30,7 +30,7 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
-          <MoreVertical className="h-5 w-5" />
+          <Menu className="h-5 w-5" />
           <span className="sr-only">Open navigation menu</span>
         </Button>
       </SheetTrigger>

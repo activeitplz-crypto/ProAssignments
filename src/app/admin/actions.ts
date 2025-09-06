@@ -214,3 +214,39 @@ export async function deleteTask(formData: FormData) {
     revalidatePath('/tasks');
     return { error: null };
 }
+
+export async function approveAssignment(formData: FormData) {
+  const supabase = await verifyAdmin();
+  const assignmentId = formData.get('assignmentId') as string;
+
+  const { error } = await supabase
+    .from('assignments')
+    .update({ status: 'approved' })
+    .eq('id', assignmentId);
+
+  if (error) {
+    console.error('Approve Assignment Error:', error);
+    return { error: 'Failed to approve assignment.' };
+  }
+
+  revalidatePath('/admin');
+  revalidatePath('/assignments');
+}
+
+export async function rejectAssignment(formData: FormData) {
+  const supabase = await verifyAdmin();
+  const assignmentId = formData.get('assignmentId') as string;
+
+  const { error } = await supabase
+    .from('assignments')
+    .update({ status: 'rejected' })
+    .eq('id', assignmentId);
+
+  if (error) {
+    console.error('Reject Assignment Error:', error);
+    return { error: 'Failed to reject assignment.' };
+  }
+
+  revalidatePath('/admin');
+  revalidatePath('/assignments');
+}

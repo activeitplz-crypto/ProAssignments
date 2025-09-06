@@ -10,7 +10,7 @@ import {
   LogOut,
   User as UserIcon,
   Loader2,
-  ListTodo,
+  FileCheck2,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -21,6 +21,7 @@ import { UserNav } from '@/components/user-nav';
 import { useRouter } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import type { Session } from '@supabase/supabase-js';
+import { Button } from '@/components/ui/button';
 
 export default function AppLayout({
   children,
@@ -93,9 +94,9 @@ export default function AppLayout({
   
   const navItems = [
     { href: '/dashboard', label: 'Home', icon: Home },
-    { href: '/tasks', label: 'Tasks', icon: ListTodo },
+    { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
-    { href: '/plans', label: 'Plans', icon: ClipboardList },
+    { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
   ];
 
   const actionItems = [{ href: '/profile', label: 'Edit Profile', icon: UserIcon }];
@@ -152,6 +153,9 @@ export default function AppLayout({
         </div>
 
         <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" asChild>
+                <Link href="/plans">Plans</Link>
+            </Button>
             <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} expiresAt={session.expires_at} />
             <MobileNav navItems={navItems} actionItems={actionItems} />
         </div>

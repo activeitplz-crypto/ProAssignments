@@ -12,13 +12,14 @@ import { WithdrawalsTable } from './withdrawals-table';
 import { UsersTable } from './users-table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ManageTasksForm } from './manage-tasks-form';
+import { AssignmentsTable } from './assignments-table';
 
 export default async function AdminPage({
   searchParams,
 }: {
   searchParams: { tab: string | undefined };
 }) {
-  const defaultTab = searchParams.tab || 'payments';
+  const defaultTab = searchParams.tab || 'assignments';
   const supabase = createClient();
   
   const { data: plansData } = await supabase.from('plans').select('*').order('investment');
@@ -30,13 +31,18 @@ export default async function AdminPage({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-5">
+      <TabsList className="grid w-full grid-cols-6">
+        <TabsTrigger value="assignments">Assignments</TabsTrigger>
         <TabsTrigger value="payments">Plan Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
         <TabsTrigger value="users">All Users</TabsTrigger>
         <TabsTrigger value="plans">Manage Plans</TabsTrigger>
         <TabsTrigger value="tasks">Manage Tasks</TabsTrigger>
       </TabsList>
+
+      <TabsContent value="assignments">
+        <AssignmentsTable />
+      </TabsContent>
 
       <TabsContent value="payments">
         <PaymentsTable />

@@ -55,3 +55,12 @@ export interface Task {
     url: string;
     created_at: string;
 }
+
+export interface Assignment {
+  id: string;
+  user_id: string;
+  title: string;
+  urls: string[];
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+}

@@ -8,7 +8,7 @@ export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2">
       <ProAssignmentIcon className="h-8 w-8" />
-      <span className="font-headline text-xl font-bold">ProAssignment</span>
+      <span className="font-headline text-lg font-bold">ProAssignment</span>
     </Link>
   );
 }

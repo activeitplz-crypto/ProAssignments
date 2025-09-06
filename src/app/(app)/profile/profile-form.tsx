@@ -15,15 +15,17 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { useRef, useTransition, useState } from 'react';
-import { Loader2, Upload } from 'lucide-react';
-import { updateProfile, uploadAvatar } from './actions';
+import { useTransition } from 'react';
+import { Loader2 } from 'lucide-react';
+import { updateProfile } from './actions';
 import { useRouter } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  avatar_url: z.string().url({ message: 'Please enter a valid URL.' }).nullable().or(z.literal('')),
 });
 
 interface ProfileFormProps {
@@ -34,9 +36,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(user.avatar_url || null);
-  const [avatarUrlToSave, setAvatarUrlToSave] = useState<string | null>(user.avatar_url || null);
   
   const initials = user.name?.split(' ').map((n) => n[0]).join('') || '';
 
@@ -44,33 +43,15 @@ export function ProfileForm({ user }: ProfileFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: user.name || '',
+      avatar_url: user.avatar_url || '',
     },
   });
-
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file)); // Show preview immediately
-      
-      startTransition(async () => {
-        const { publicUrl, error } = await uploadAvatar(file);
-        if (error) {
-          toast({ variant: 'destructive', title: 'Upload Failed', description: error });
-          setPreview(user.avatar_url); // Revert preview on failure
-        } else {
-          setAvatarUrlToSave(publicUrl);
-          toast({ title: 'Success', description: 'Avatar uploaded. Save changes to apply.' });
-        }
-      });
-    }
-  };
+  
+  const avatarUrlPreview = form.watch('avatar_url');
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
-      const result = await updateProfile({
-        ...values,
-        avatar_url: avatarUrlToSave
-      });
+      const result = await updateProfile(values);
       if (result?.error) {
         toast({
           variant: 'destructive',
@@ -108,20 +89,27 @@ export function ProfileForm({ user }: ProfileFormProps) {
             <FormLabel>Profile Picture</FormLabel>
             <div className="flex items-center gap-4">
                 <Avatar className="h-20 w-20">
-                    <AvatarImage src={preview || ''} alt="User avatar" data-ai-hint="user avatar" />
+                    <AvatarImage src={avatarUrlPreview || ''} alt="User avatar" data-ai-hint="user avatar" />
                     <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
-                 <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
-                   <Upload className="mr-2 h-4 w-4" />
-                   Upload Image
-                </Button>
-                <Input 
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept="image/png, image/jpeg, image/gif"
-                  onChange={handleFileChange}
-                />
+                <div className='flex-1 space-y-2'>
+                    <FormField
+                        control={form.control}
+                        name="avatar_url"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>Image URL</FormLabel>
+                            <FormControl>
+                                <Input placeholder="https://..." {...field} value={field.value || ''} />
+                            </FormControl>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                    <Button type="button" variant="outline" size="sm" asChild>
+                       <Link href="https://postimages.org/" target="_blank">Get Image URL from Postimages</Link>
+                    </Button>
+                </div>
             </div>
         </div>
 

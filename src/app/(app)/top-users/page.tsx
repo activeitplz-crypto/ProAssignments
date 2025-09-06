@@ -40,13 +40,13 @@ export default async function TopUsersPage() {
           {topUsers && topUsers.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
               {(topUsers as TopUser[]).map((user) => (
-                <div key={user.id} className="group relative overflow-hidden rounded-lg border shadow-md transition-transform hover:scale-105">
+                <div key={user.id} className="group relative overflow-hidden rounded-lg border bg-muted p-2 shadow-md transition-transform hover:scale-105">
                   <Image
                     src={user.image_url}
                     alt="Top user account screenshot"
                     width={300}
                     height={500}
-                    className="h-auto w-full object-contain"
+                    className="h-full w-full object-contain"
                     data-ai-hint="user screenshot"
                   />
                 </div>

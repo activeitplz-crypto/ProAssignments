@@ -100,10 +100,10 @@ export default function AppLayout({
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
     { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
-    { href: '/top-users', label: 'Top Users', icon: Award },
   ];
 
   const actionItems = [
+    { href: '/top-users', label: 'Top Users', icon: Award },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
   ];
 

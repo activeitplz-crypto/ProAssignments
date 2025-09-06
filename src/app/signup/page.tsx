@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import {
   Card,
@@ -7,17 +8,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SignupForm } from "@/components/auth/signup-form";
-import { Logo } from "@/components/logo";
 
 export default function SignupPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="absolute top-8 left-8">
-        <Logo />
-      </div>
       <Card className="w-full max-w-md shadow-2xl">
-        <CardHeader className="text-center">
-          <CardTitle className="font-headline text-2xl">Create an account</CardTitle>
+        <CardHeader className="text-center space-y-4">
+           <h1 className="font-display text-5xl font-bold tracking-wider text-foreground flex flex-col items-center">
+            <span>Assignment</span>
+            <span className="text-primary">Work</span>
+          </h1>
           <CardDescription>
             Enter your details below to create your account
           </CardDescription>

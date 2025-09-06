@@ -38,14 +38,14 @@ export default async function TopUsersPage() {
         </CardHeader>
         <CardContent>
           {topUsers && topUsers.length > 0 ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {(topUsers as TopUser[]).map((user) => (
-                <div key={user.id} className="overflow-hidden rounded-lg border shadow-lg transition-transform hover:scale-105">
+                <div key={user.id} className="group relative overflow-hidden rounded-xl border shadow-lg transition-transform hover:scale-105">
                   <Image
                     src={user.image_url}
                     alt="Top user account screenshot"
-                    width={400}
-                    height={600}
+                    width={300}
+                    height={500}
                     className="h-full w-full object-cover"
                     data-ai-hint="user screenshot"
                   />

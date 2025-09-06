@@ -15,6 +15,7 @@ import {
   Users,
   Award,
   MessageSquare,
+  HelpCircle,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -104,6 +105,7 @@ export default function AppLayout({
   ];
 
   const actionItems = [
+    { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: '/top-users', label: 'Top Users', icon: Award },
     { href: '/reviews', label: 'Reviews', icon: MessageSquare },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },

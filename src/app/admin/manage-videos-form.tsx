@@ -103,9 +103,9 @@ export function ManageVideosForm({ videos: initialVideos }: ManageVideosFormProp
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Manage Videos</CardTitle>
+        <CardTitle>Manage Guideline Videos</CardTitle>
         <CardDescription>
-          Add, edit, or delete videos that appear on the "Watch Videos" page.
+          Add, edit, or delete videos that appear on the "Guidelines" page.
         </CardDescription>
       </CardHeader>
       <CardContent>

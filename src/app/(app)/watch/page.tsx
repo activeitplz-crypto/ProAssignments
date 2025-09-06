@@ -47,7 +47,7 @@ export default async function WatchVideosPage() {
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2 text-3xl">
             <Video className="h-8 w-8 text-primary" />
-            Watch Videos
+            Guidelines
           </CardTitle>
           <CardDescription>
             Watch helpful videos and tutorials about using the platform.

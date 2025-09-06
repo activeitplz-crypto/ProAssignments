@@ -53,7 +53,7 @@ export default async function AdminPage({
         <TabsTrigger value="tasks">Manage Tasks</TabsTrigger>
         <TabsTrigger value="top-users">Top Users</TabsTrigger>
         <TabsTrigger value="reviews">Reviews</TabsTrigger>
-        <TabsTrigger value="videos">Videos</TabsTrigger>
+        <TabsTrigger value="videos">Guidelines</TabsTrigger>
       </TabsList>
 
       <TabsContent value="assignments">

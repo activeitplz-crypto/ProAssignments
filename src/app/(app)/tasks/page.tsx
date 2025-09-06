@@ -47,7 +47,7 @@ export default async function TasksPage() {
                 key={task.id}
                 className="flex items-center justify-between rounded-lg border bg-card p-4"
               >
-                <p className="font-semibold">{task.title}</p>
+                <p className="font-semibold">({task.title})</p>
                 <Button asChild>
                   <Link href={task.url} target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="mr-2 h-4 w-4" />

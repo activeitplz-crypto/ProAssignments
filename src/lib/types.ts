@@ -76,3 +76,10 @@ export interface Review {
   content: string;
   created_at: string;
 }
+
+export interface Video {
+  id: string;
+  title: string;
+  url: string;
+  created_at: string;
+}

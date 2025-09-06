@@ -338,3 +338,50 @@ export async function deleteReview(formData: FormData) {
     revalidatePath('/reviews');
     return { error: null };
 }
+
+
+const videoSchema = z.object({
+    id: z.string().optional(),
+    title: z.string().min(1, 'Video title is required'),
+    url: z.string().url('Must be a valid URL'),
+});
+
+export async function saveVideo(formData: z.infer<typeof videoSchema>) {
+    const supabase = await verifyAdmin();
+    const validatedData = videoSchema.parse(formData);
+    const { id, ...videoData } = validatedData;
+
+    try {
+        if (id) {
+            await supabase.from('videos').update(videoData).eq('id', id);
+        } else {
+            await supabase.from('videos').insert(videoData);
+        }
+    } catch (error: any) {
+        console.error('Save Video Error:', error);
+        return { error: `Failed to save video. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=videos', 'page');
+    revalidatePath('/watch');
+    return { error: null };
+}
+
+export async function deleteVideo(formData: FormData) {
+    const supabase = await verifyAdmin();
+    const id = formData.get('id') as string;
+    if (!id) return { error: 'Video ID is missing' };
+
+    try {
+        await supabase.from('videos').delete().eq('id', id);
+    } catch (error: any) {
+        console.error('Delete Video Error:', error);
+        return { error: `Failed to delete video. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=videos', 'page');
+    revalidatePath('/watch');
+    return { error: null };
+}

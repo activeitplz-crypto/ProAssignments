@@ -16,6 +16,7 @@ import {
   Award,
   MessageSquare,
   HelpCircle,
+  Video,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -102,6 +103,7 @@ export default function AppLayout({
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
     { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
+    { href: '/watch', label: 'Watch Videos', icon: Video },
   ];
 
   const actionItems = [

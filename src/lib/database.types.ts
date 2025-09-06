@@ -204,6 +204,27 @@ export type Database = {
         }
         Relationships: []
       }
+      videos: {
+        Row: {
+          id: string
+          title: string
+          url: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          url: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          url?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       withdrawals: {
         Row: {
           account_info: Json

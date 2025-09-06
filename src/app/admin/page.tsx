@@ -15,6 +15,9 @@ import { ManageTasksForm } from './manage-tasks-form';
 import { AssignmentsTable } from './assignments-table';
 import { ManageTopUsersForm } from './manage-top-users-form';
 import { ManageReviewsForm } from './manage-reviews-form';
+import { ManageVideosForm } from './manage-videos-form';
+import type { Plan, Task, TopUser, Review, Video } from '@/lib/types';
+
 
 export default async function AdminPage({
   searchParams,
@@ -25,21 +28,23 @@ export default async function AdminPage({
   const supabase = createClient();
   
   const { data: plansData } = await supabase.from('plans').select('*').order('investment');
-  const plans = plansData || [];
+  const plans: Plan[] = plansData || [];
 
   const { data: tasksData } = await supabase.from('tasks').select('*').order('created_at');
-  const tasks = tasksData || [];
+  const tasks: Task[] = tasksData || [];
 
   const { data: topUsersData } = await supabase.from('top_users').select('*').order('created_at', { ascending: false });
-  const topUsers = topUsersData || [];
+  const topUsers: TopUser[] = topUsersData || [];
 
   const { data: reviewsData } = await supabase.from('reviews').select('*').order('created_at', { ascending: false });
-  const reviews = reviewsData || [];
+  const reviews: Review[] = reviewsData || [];
 
+  const { data: videosData } = await supabase.from('videos').select('*').order('created_at', { ascending: false });
+  const videos: Video[] = videosData || [];
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-8">
+      <TabsList className="grid w-full grid-cols-9">
         <TabsTrigger value="assignments">Assignments</TabsTrigger>
         <TabsTrigger value="payments">Plan Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
@@ -48,6 +53,7 @@ export default async function AdminPage({
         <TabsTrigger value="tasks">Manage Tasks</TabsTrigger>
         <TabsTrigger value="top-users">Top Users</TabsTrigger>
         <TabsTrigger value="reviews">Reviews</TabsTrigger>
+        <TabsTrigger value="videos">Videos</TabsTrigger>
       </TabsList>
 
       <TabsContent value="assignments">
@@ -88,6 +94,10 @@ export default async function AdminPage({
       
       <TabsContent value="reviews">
         <ManageReviewsForm reviews={reviews} />
+      </TabsContent>
+      
+      <TabsContent value="videos">
+        <ManageVideosForm videos={videos} />
       </TabsContent>
     </Tabs>
   );

@@ -177,7 +177,7 @@ export default function AppLayout({
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
         <div className="flex h-16 items-center justify-around">
-          {navItems.map((item) => (
+          {navItems.filter(item => item.href !== '/watch').map((item) => (
             <Link
               key={item.href}
               href={item.href}

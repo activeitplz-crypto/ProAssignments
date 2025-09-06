@@ -6,11 +6,11 @@ import Link from 'next/link';
 import {
   Home,
   Wallet,
-  Users,
   ClipboardList,
   LogOut,
   User as UserIcon,
   Loader2,
+  ListTodo,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -93,8 +93,8 @@ export default function AppLayout({
   
   const navItems = [
     { href: '/dashboard', label: 'Home', icon: Home },
+    { href: '/tasks', label: 'Tasks', icon: ListTodo },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
-    { href: '/referrals', label: 'Referral', icon: Users },
     { href: '/plans', label: 'Plans', icon: ClipboardList },
   ];
 

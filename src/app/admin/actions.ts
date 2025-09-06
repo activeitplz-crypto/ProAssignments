@@ -167,3 +167,50 @@ export async function savePlan(formData: z.infer<typeof planSchema>) {
     revalidatePath('/plans');
     return { error: null };
 }
+
+
+const taskSchema = z.object({
+    id: z.string().optional(),
+    title: z.string().min(1, 'Task title is required'),
+    url: z.string().url('Must be a valid URL'),
+});
+
+export async function saveTask(formData: z.infer<typeof taskSchema>) {
+    const supabase = await verifyAdmin();
+    const validatedData = taskSchema.parse(formData);
+    const { id, ...taskData } = validatedData;
+
+    try {
+        if (id) {
+            await supabase.from('tasks').update(taskData).eq('id', id);
+        } else {
+            await supabase.from('tasks').insert(taskData);
+        }
+    } catch (error: any) {
+        console.error('Save Task Error:', error);
+        return { error: `Failed to save task. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=tasks', 'page');
+    revalidatePath('/tasks');
+    return { error: null };
+}
+
+export async function deleteTask(formData: FormData) {
+    const supabase = await verifyAdmin();
+    const id = formData.get('id') as string;
+    if (!id) return { error: 'Task ID is missing' };
+
+    try {
+        await supabase.from('tasks').delete().eq('id', id);
+    } catch (error: any) {
+        console.error('Delete Task Error:', error);
+        return { error: `Failed to delete task. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=tasks', 'page');
+    revalidatePath('/tasks');
+    return { error: null };
+}

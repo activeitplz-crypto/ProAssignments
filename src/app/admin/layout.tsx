@@ -12,6 +12,7 @@ import {
   PanelLeft,
   Home,
   ClipboardList,
+  ListTodo,
 } from 'lucide-react';
 import {
   Sheet,
@@ -38,6 +39,7 @@ export default async function AdminLayout({
     { href: '/admin?tab=withdrawals', label: 'Withdrawals', icon: Send },
     { href: '/admin?tab=users', label: 'Users', icon: Users },
     { href: '/admin?tab=plans', label: 'Plans', icon: ClipboardList },
+    { href: '/admin?tab=tasks', label: 'Tasks', icon: ListTodo },
   ];
   
   return (

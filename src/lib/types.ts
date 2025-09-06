@@ -48,3 +48,10 @@ export interface Withdrawal {
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
 }
+
+export interface Task {
+    id: string;
+    title: string;
+    url: string;
+    created_at: string;
+}

@@ -18,7 +18,7 @@ export async function middleware(request: NextRequest) {
   const isAuthRoute = authRoutes.includes(pathname);
 
   // User-specific routes
-  const protectedRoutes = ['/dashboard', '/plans', '/withdraw', '/referrals', '/profile'];
+  const protectedRoutes = ['/dashboard', '/plans', '/withdraw', '/tasks', '/profile'];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
 
   // Admin route

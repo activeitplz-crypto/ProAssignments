@@ -99,7 +99,6 @@ export default function AppLayout({
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
     { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
-    { href: '/referrals', label: 'Referrals', icon: Users },
   ];
 
   const actionItems = [
@@ -163,7 +162,6 @@ export default function AppLayout({
             <Button variant="outline" size="sm" asChild>
                 <Link href="/plans">Plans</Link>
             </Button>
-            <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} expiresAt={session.expires_at} />
             <MobileNav navItems={navItems} actionItems={actionItems} />
         </div>
       </header>

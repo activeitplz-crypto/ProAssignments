@@ -11,8 +11,9 @@ import {
   User as UserIcon,
   Loader2,
   FileCheck2,
-  Image as ImageIcon,
+  ImageIcon,
   Users,
+  Award,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -99,6 +100,7 @@ export default function AppLayout({
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
     { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
+    { href: '/top-users', label: 'Top Users', icon: Award },
   ];
 
   const actionItems = [

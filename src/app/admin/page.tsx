@@ -13,6 +13,7 @@ import { UsersTable } from './users-table';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ManageTasksForm } from './manage-tasks-form';
 import { AssignmentsTable } from './assignments-table';
+import { ManageTopUsersForm } from './manage-top-users-form';
 
 export default async function AdminPage({
   searchParams,
@@ -28,16 +29,20 @@ export default async function AdminPage({
   const { data: tasksData } = await supabase.from('tasks').select('*').order('created_at');
   const tasks = tasksData || [];
 
+  const { data: topUsersData } = await supabase.from('top_users').select('*').order('created_at', { ascending: false });
+  const topUsers = topUsersData || [];
+
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-6">
+      <TabsList className="grid w-full grid-cols-7">
         <TabsTrigger value="assignments">Assignments</TabsTrigger>
         <TabsTrigger value="payments">Plan Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
         <TabsTrigger value="users">All Users</TabsTrigger>
         <TabsTrigger value="plans">Manage Plans</TabsTrigger>
         <TabsTrigger value="tasks">Manage Tasks</TabsTrigger>
+        <TabsTrigger value="top-users">Top Users</TabsTrigger>
       </TabsList>
 
       <TabsContent value="assignments">
@@ -70,6 +75,10 @@ export default async function AdminPage({
 
       <TabsContent value="tasks">
         <ManageTasksForm tasks={tasks} />
+      </TabsContent>
+      
+      <TabsContent value="top-users">
+        <ManageTopUsersForm topUsers={topUsers} />
       </TabsContent>
     </Tabs>
   );

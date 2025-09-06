@@ -13,6 +13,7 @@ import {
   Home,
   ClipboardList,
   ListTodo,
+  Award,
 } from 'lucide-react';
 import {
   Sheet,
@@ -40,6 +41,7 @@ export default async function AdminLayout({
     { href: '/admin?tab=users', label: 'Users', icon: Users },
     { href: '/admin?tab=plans', label: 'Plans', icon: ClipboardList },
     { href: '/admin?tab=tasks', label: 'Tasks', icon: ListTodo },
+    { href: '/admin?tab=top-users', label: 'Top Users', icon: Award },
   ];
   
   return (

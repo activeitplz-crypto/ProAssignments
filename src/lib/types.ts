@@ -63,3 +63,9 @@ export interface Assignment {
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
 }
+
+export interface TopUser {
+  id: string;
+  image_url: string;
+  created_at: string;
+}

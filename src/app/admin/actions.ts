@@ -246,3 +246,48 @@ export async function rejectAssignment(formData: FormData) {
   revalidatePath('/admin');
   revalidatePath('/assignments');
 }
+
+const topUserSchema = z.object({
+    id: z.string().optional(),
+    image_url: z.string().url('Must be a valid URL'),
+});
+
+export async function saveTopUser(formData: z.infer<typeof topUserSchema>) {
+    const supabase = await verifyAdmin();
+    const validatedData = topUserSchema.parse(formData);
+    const { id, ...topUserData } = validatedData;
+
+    try {
+        if (id) {
+            await supabase.from('top_users').update(topUserData).eq('id', id);
+        } else {
+            await supabase.from('top_users').insert(topUserData);
+        }
+    } catch (error: any) {
+        console.error('Save Top User Error:', error);
+        return { error: `Failed to save top user screenshot. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=top-users', 'page');
+    revalidatePath('/top-users');
+    return { error: null };
+}
+
+export async function deleteTopUser(formData: FormData) {
+    const supabase = await verifyAdmin();
+    const id = formData.get('id') as string;
+    if (!id) return { error: 'Top User ID is missing' };
+
+    try {
+        await supabase.from('top_users').delete().eq('id', id);
+    } catch (error: any) {
+        console.error('Delete Top User Error:', error);
+        return { error: `Failed to delete screenshot. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=top-users', 'page');
+    revalidatePath('/top-users');
+    return { error: null };
+}

@@ -12,6 +12,7 @@ import {
   Loader2,
   FileCheck2,
   Image as ImageIcon,
+  Users,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -98,10 +99,10 @@ export default function AppLayout({
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
     { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
+    { href: '/referrals', label: 'Referrals', icon: Users },
   ];
 
   const actionItems = [
-    { href: '/profile', label: 'Edit Profile', icon: UserIcon },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
   ];
 

@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Menu } from 'lucide-react';
+import { LogOut, Menu, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
 import { ProAssignmentIcon } from '@/components/pro-assignment-icon';
@@ -61,7 +61,18 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
             </nav>
         </div>
         <SheetFooter className="flex-col-reverse items-start gap-2 p-4 sm:flex-col-reverse sm:items-start sm:gap-2">
-             {actionItems.map((item) => (
+             <Link
+                href="/profile"
+                onClick={() => setOpen(false)}
+                className={cn(
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                    pathname === '/profile' && 'bg-muted text-primary'
+                )}
+                >
+                <User className="h-5 w-5" />
+                <span>Edit Profile</span>
+            </Link>
+            {actionItems.map((item) => (
                 <Link
                 key={item.href}
                 href={item.href}
@@ -69,8 +80,7 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
                 rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
                 onClick={() => setOpen(false)}
                 className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                    pathname === item.href && 'bg-muted text-primary'
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary'
                 )}
                 >
                 <item.icon className="h-5 w-5" />

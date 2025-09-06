@@ -10,6 +10,7 @@ import {
 import { UserProfileCard } from '@/components/user-profile-card';
 import { ProfileForm } from './profile-form';
 import { redirect } from 'next/navigation';
+import { Label } from '@/components/ui/label';
 
 export default async function ProfilePage() {
   const supabase = createClient();
@@ -39,6 +40,35 @@ export default async function ProfilePage() {
         username={user.email?.split('@')[0] || 'anonymous'}
         avatarUrl={user.avatar_url}
       />
+
+       <Card>
+        <CardHeader>
+          <CardTitle>Your Information</CardTitle>
+          <CardDescription>
+            These are your account details and cannot be changed.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Full Name</Label>
+            <p className="rounded-md border bg-muted px-3 py-2 text-sm text-foreground">
+              {user.name || 'N/A'}
+            </p>
+          </div>
+           <div className="space-y-2">
+            <Label>Email Address</Label>
+             <p className="rounded-md border bg-muted px-3 py-2 text-sm text-foreground">
+              {user.email || 'N/A'}
+            </p>
+          </div>
+           <div className="space-y-2">
+            <Label>User ID</Label>
+            <p className="break-all rounded-md border bg-muted px-3 py-2 text-sm text-foreground">
+              {user.id}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
       
       <Card>
         <CardHeader>

@@ -78,10 +78,6 @@ export default async function PlansPage() {
                 <span>Daily Earning: PKR {plan.daily_earning.toFixed(2)}</span>
               </div>
               <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                <span>Period: {plan.period_days} Days</span>
-              </div>
-               <div className="flex items-center">
                 <ClipboardList className="mr-2 h-4 w-4 text-primary" />
                 <span>Daily Assignments: {plan.daily_assignments}</span>
               </div>

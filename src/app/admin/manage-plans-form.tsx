@@ -32,7 +32,6 @@ const planSchema = z.object({
   name: z.string().min(1, 'Plan name is required'),
   investment: z.coerce.number().positive('Investment must be a positive number'),
   daily_earning: z.coerce.number().positive('Daily earning must be a positive number'),
-  period_days: z.coerce.number().int().positive('Period must be a positive integer'),
   daily_assignments: z.coerce.number().int().positive('Daily assignments must be a positive integer'),
 });
 
@@ -42,7 +41,7 @@ const formSchema = z.object({
 });
 
 interface ManagePlansFormProps {
-  plans: Omit<Plan, 'total_return' | 'referral_bonus'>[];
+  plans: Omit<Plan, 'period_days' | 'created_at'>[];
 }
 
 export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
@@ -64,13 +63,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
       for (const plan of values.plans) {
-        // Add default values for fields not in the form anymore
-        const fullPlan = {
-            ...plan,
-            total_return: (plan.daily_earning || 0) * (plan.period_days || 0),
-            referral_bonus: 0 // No longer used, set to 0
-        };
-        const result = await savePlan(fullPlan as any);
+        const result = await savePlan(plan as any);
         if (result?.error) {
           toast({
             variant: 'destructive',
@@ -146,19 +139,6 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                   />
                   <FormField
                     control={form.control}
-                    name={`plans.${index}.period_days`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Period (Days)</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="90" {...field} />
-                        </FormControl>
-                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
                     name={`plans.${index}.daily_assignments`}
                     render={({ field }) => (
                       <FormItem>
@@ -186,7 +166,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                 <Button
                 type="button"
                 variant="outline"
-                onClick={() => append({ name: '', investment: 0, daily_earning: 0, period_days: 0, daily_assignments: 0 })}
+                onClick={() => append({ name: '', investment: 0, daily_earning: 0, daily_assignments: 0 })}
                 >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add New Plan

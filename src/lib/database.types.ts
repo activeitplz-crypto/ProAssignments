@@ -95,8 +95,7 @@ export type Database = {
           investment: number
           name: string
           period_days: number
-          referral_bonus: number
-          total_return: number
+          daily_assignments: number
         }
         Insert: {
           created_at?: string
@@ -105,8 +104,7 @@ export type Database = {
           investment: number
           name: string
           period_days: number
-          referral_bonus: number
-          total_return: number
+          daily_assignments: number
         }
         Update: {
           created_at?: string
@@ -115,8 +113,7 @@ export type Database = {
           investment?: number
           name?: string
           period_days?: number
-          referral_bonus?: number
-          total_return?: number
+          daily_assignments?: number
         }
         Relationships: []
       }

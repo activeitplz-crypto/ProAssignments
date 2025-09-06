@@ -48,7 +48,7 @@ export async function approvePayment(formData: FormData) {
     const plan = await handleSupabaseResponse(
       supabase
         .from('plans')
-        .select('name, period_days, referral_bonus')
+        .select('name')
         .eq('id', payment.plan_id)
         .single()
     );
@@ -66,8 +66,6 @@ export async function approvePayment(formData: FormData) {
         p_payment_id: paymentId,
         p_user_id: profile.id,
         p_plan_name: plan.name,
-        p_plan_period_days: plan.period_days,
-        p_referral_bonus: plan.referral_bonus,
         p_referred_by_id: profile.referred_by
     });
 
@@ -139,7 +137,6 @@ const planSchema = z.object({
     name: z.string().min(1, 'Plan name is required'),
     investment: z.coerce.number().positive('Investment must be a positive number'),
     daily_earning: z.coerce.number().positive('Daily earning must be a positive number'),
-    period_days: z.coerce.number().int().positive('Period must be a positive integer'),
     daily_assignments: z.coerce.number().int().positive('Daily assignments must be a positive integer'),
 });
 

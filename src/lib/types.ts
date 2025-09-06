@@ -5,9 +5,7 @@ export interface Plan {
   investment: number;
   daily_earning: number;
   period_days: number;
-  total_return: number;
-  referral_bonus: number;
-  daily_assignments: number; // New field
+  daily_assignments: number;
   created_at: string;
 }
 

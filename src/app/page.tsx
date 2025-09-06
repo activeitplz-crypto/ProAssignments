@@ -22,8 +22,9 @@ export default function LandingPage() {
       </header>
       <main className="flex-1">
         <section className="container mx-auto flex flex-col items-center justify-center space-y-8 px-4 py-12 text-center md:py-24 lg:py-32">
-           <h1 className="font-display text-6xl font-bold tracking-wider text-foreground md:text-8xl">
-            Assignment <span className="text-primary">Work</span>
+           <h1 className="font-display text-5xl font-bold tracking-wider text-foreground md:text-7xl flex flex-col items-center">
+            <span>Assignment</span>
+            <span className="text-primary">Work</span>
           </h1>
           <p className="max-w-[700px] text-lg text-muted-foreground md:text-xl">
             Welcome to ProAssignment. We provide a clear path to grow your earnings through structured investment plans and completing daily assignments.

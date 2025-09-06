@@ -25,7 +25,7 @@ export default function LandingPage() {
             Intelligent Investment, Simplified
           </h1>
           <p className="max-w-[700px] text-lg text-muted-foreground md:text-xl">
-            Welcome to Janzy. We provide a clear path to grow your earnings through structured investment plans and a powerful referral system.
+            Welcome to ProAssignment. We provide a clear path to grow your earnings through structured investment plans and a powerful referral system.
           </p>
           <Button size="lg" asChild>
             <Link href="/signup">
@@ -37,7 +37,7 @@ export default function LandingPage() {
         <section className="bg-white/50 py-12 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="font-headline mb-12 text-center text-3xl font-bold md:text-4xl">
-              Why Choose Janzy?
+              Why Choose ProAssignment?
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
               <Card>
@@ -69,7 +69,7 @@ export default function LandingPage() {
         </section>
       </main>
       <footer className="container mx-auto px-4 py-6 text-center text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} Janzy. All Rights Reserved.</p>
+        <p>&copy; {new Date().getFullYear()} ProAssignment. All Rights Reserved.</p>
       </footer>
     </div>
   );

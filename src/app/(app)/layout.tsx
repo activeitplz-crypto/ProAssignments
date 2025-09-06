@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { JanzyIcon } from '@/components/janzy-icon';
+import { ProAssignmentIcon } from '@/components/pro-assignment-icon';
 import { MobileNav } from '@/components/mobile-nav';
 import { logout } from '@/app/auth/actions';
 import { UserNav } from '@/components/user-nav';
@@ -105,8 +105,8 @@ export default function AppLayout({
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">
       <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-60 md:flex-col md:border-r">
         <div className="flex h-16 items-center gap-2 border-b px-6">
-          <JanzyIcon className="h-8 w-8" />
-          <span className="text-xl font-bold">Janzy</span>
+          <ProAssignmentIcon className="h-8 w-8" />
+          <span className="text-xl font-bold">ProAssignment</span>
         </div>
         <div className="flex flex-1 flex-col justify-between overflow-auto py-4">
           <div className="flex flex-col gap-2 px-4">
@@ -148,8 +148,8 @@ export default function AppLayout({
 
        <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/95 px-4 backdrop-blur-sm md:justify-end md:px-6">
         <div className="flex items-center gap-2 md:hidden">
-            <JanzyIcon className="h-7 w-7" />
-            <span className="font-bold">Janzy</span>
+            <ProAssignmentIcon className="h-7 w-7" />
+            <span className="font-bold">ProAssignment</span>
         </div>
 
         <div className="flex items-center gap-2">

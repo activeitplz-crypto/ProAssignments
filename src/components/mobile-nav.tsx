@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { LogOut, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
-import { JanzyIcon } from '@/components/janzy-icon';
+import { ProAssignmentIcon } from '@/components/pro-assignment-icon';
 import { cn } from '@/lib/utils';
 import { logout } from '@/app/auth/actions';
 
@@ -37,8 +37,8 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
       <SheetContent side="left" className="flex flex-col">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            <JanzyIcon className="h-8 w-8" />
-            <span className="text-xl font-bold">Janzy</span>
+            <ProAssignmentIcon className="h-8 w-8" />
+            <span className="text-xl font-bold">ProAssignment</span>
           </SheetTitle>
         </SheetHeader>
         <div className="flex-1">

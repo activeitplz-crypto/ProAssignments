@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -51,14 +50,12 @@ export function UserNav({ name, email, avatarUrl, expiresAt }: UserNavProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-           <DropdownMenuItem asChild>
-            <Link href="/profile" className="flex items-center w-full cursor-pointer">
-              <User className="mr-2 h-4 w-4" />
-              <span>Edit Profile</span>
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        <DropdownMenuItem asChild>
+          <Link href="/profile" className="flex items-center w-full cursor-pointer">
+            <User className="mr-2 h-4 w-4" />
+            <span>Edit Profile</span>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
          <div className="px-2 py-1.5 text-xs text-muted-foreground">
             Session expires: {expirationDate}

@@ -91,3 +91,11 @@ export interface FeedbackVideo {
   url: string;
   created_at: string;
 }
+
+export interface SocialLink {
+  id: string;
+  name: string;
+  icon_url: string;
+  social_link: string;
+  created_at: string;
+}

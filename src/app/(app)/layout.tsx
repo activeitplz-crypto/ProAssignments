@@ -17,6 +17,7 @@ import {
   MessageSquare,
   HelpCircle,
   Video,
+  Share2,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -111,6 +112,7 @@ export default function AppLayout({
     { href: '/top-users', label: 'Top Users', icon: Award },
     { href: '/reviews', label: 'Reviews', icon: MessageSquare },
     { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },
+    { href: '/social', label: 'Social', icon: Share2 },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
   ];
 

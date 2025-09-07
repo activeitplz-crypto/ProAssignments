@@ -270,6 +270,30 @@ export type Database = {
         }
         Relationships: []
       }
+      social_links: {
+        Row: {
+          id: string
+          name: string
+          icon_url: string
+          social_link: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          icon_url: string
+          social_link: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          icon_url?: string
+          social_link?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       withdrawals: {
         Row: {
           account_info: Json

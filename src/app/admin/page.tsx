@@ -17,7 +17,8 @@ import { ManageTopUsersForm } from './manage-top-users-form';
 import { ManageReviewsForm } from './manage-reviews-form';
 import { ManageVideosForm } from './manage-videos-form';
 import { ManageFeedbacksForm } from './manage-feedbacks-form';
-import type { Plan, Task, TopUser, Review, Video, FeedbackVideo } from '@/lib/types';
+import { ManageSocialsForm } from './manage-socials-form';
+import type { Plan, Task, TopUser, Review, Video, FeedbackVideo, SocialLink } from '@/lib/types';
 
 
 export default async function AdminPage({
@@ -46,9 +47,12 @@ export default async function AdminPage({
   const { data: feedbackVideosData } = await supabase.from('feedback_videos').select('*').order('created_at', { ascending: false });
   const feedbackVideos: FeedbackVideo[] = feedbackVideosData || [];
 
+  const { data: socialLinksData } = await supabase.from('social_links').select('*').order('created_at', { ascending: false });
+  const socialLinks: SocialLink[] = socialLinksData || [];
+
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-10">
+      <TabsList className="grid w-full grid-cols-11">
         <TabsTrigger value="assignments">Assignments</TabsTrigger>
         <TabsTrigger value="payments">Plan Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
@@ -59,6 +63,7 @@ export default async function AdminPage({
         <TabsTrigger value="reviews">Reviews</TabsTrigger>
         <TabsTrigger value="feedbacks">Feedbacks</TabsTrigger>
         <TabsTrigger value="videos">Guidelines</TabsTrigger>
+        <TabsTrigger value="socials">Socials</TabsTrigger>
       </TabsList>
 
       <TabsContent value="assignments">
@@ -107,6 +112,10 @@ export default async function AdminPage({
       
       <TabsContent value="videos">
         <ManageVideosForm videos={videos} />
+      </TabsContent>
+      
+      <TabsContent value="socials">
+        <ManageSocialsForm socials={socialLinks} />
       </TabsContent>
     </Tabs>
   );

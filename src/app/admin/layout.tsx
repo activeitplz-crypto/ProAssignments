@@ -16,6 +16,7 @@ import {
   Award,
   MessageSquare,
   Video,
+  Share2,
 } from 'lucide-react';
 import {
   Sheet,
@@ -47,6 +48,7 @@ export default async function AdminLayout({
     { href: '/admin?tab=reviews', label: 'Reviews', icon: MessageSquare },
     { href: '/admin?tab=feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/admin?tab=videos', label: 'Guidelines', icon: Video },
+    { href: '/admin?tab=socials', label: 'Socials', icon: Share2 },
   ];
   
   return (

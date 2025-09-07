@@ -433,3 +433,50 @@ export async function deleteFeedbackVideo(formData: FormData) {
     revalidatePath('/feedbacks');
     return { error: null };
 }
+
+const socialLinkSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(1, 'Name is required'),
+    icon_url: z.string().url('Must be a valid URL'),
+    social_link: z.string().url('Must be a valid URL'),
+});
+
+export async function saveSocialLink(formData: z.infer<typeof socialLinkSchema>) {
+    const supabase = await verifyAdmin();
+    const validatedData = socialLinkSchema.parse(formData);
+    const { id, ...socialLinkData } = validatedData;
+
+    try {
+        if (id) {
+            await supabase.from('social_links').update(socialLinkData).eq('id', id);
+        } else {
+            await supabase.from('social_links').insert(socialLinkData);
+        }
+    } catch (error: any) {
+        console.error('Save Social Link Error:', error);
+        return { error: `Failed to save social link. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=socials', 'page');
+    revalidatePath('/social');
+    return { error: null };
+}
+
+export async function deleteSocialLink(formData: FormData) {
+    const supabase = await verifyAdmin();
+    const id = formData.get('id') as string;
+    if (!id) return { error: 'Social Link ID is missing' };
+
+    try {
+        await supabase.from('social_links').delete().eq('id', id);
+    } catch (error: any) {
+        console.error('Delete Social Link Error:', error);
+        return { error: `Failed to delete social link. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=socials', 'page');
+    revalidatePath('/social');
+    return { error: null };
+}

@@ -32,6 +32,7 @@ const reviewSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, 'Reviewer name is required'),
   content: z.string().min(1, 'Review content is required'),
+  avatar_url: z.string().url({ message: 'Please enter a valid URL.' }).nullable().or(z.literal('')),
 });
 
 const formSchema = z.object({
@@ -49,11 +50,11 @@ export function ManageReviewsForm({ reviews: initialReviews }: ManageReviewsForm
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      reviews: initialReviews || [],
+      reviews: initialReviews.map(r => ({...r, avatar_url: r.avatar_url || ''})) || [],
     },
   });
 
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'reviews',
   });
@@ -116,6 +117,19 @@ export function ManageReviewsForm({ reviews: initialReviews }: ManageReviewsForm
                       type="hidden"
                       {...form.register(`reviews.${index}.id`)}
                     />
+                     <FormField
+                      control={form.control}
+                      name={`reviews.${index}.avatar_url`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Avatar URL (Optional)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="https://..." {...field} value={field.value || ''} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <FormField
                       control={form.control}
                       name={`reviews.${index}.name`}
@@ -164,7 +178,7 @@ export function ManageReviewsForm({ reviews: initialReviews }: ManageReviewsForm
                 type="button"
                 variant="outline"
                 onClick={() =>
-                  append({ name: '', content: '' }, { shouldFocus: true })
+                  append({ name: '', content: '', avatar_url: '' }, { shouldFocus: true })
                 }
                 disabled={isPending}
               >

@@ -2,9 +2,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageSquare, User } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import type { Review } from '@/lib/types';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default async function ReviewsPage() {
   const supabase = createClient();
@@ -49,6 +49,7 @@ export default async function ReviewsPage() {
                     </blockquote>
                     <div className="mt-4 flex items-center gap-3">
                         <Avatar className="h-10 w-10 border-2 border-primary/50">
+                            <AvatarImage src={review.avatar_url || ''} alt={review.name} data-ai-hint="user avatar" />
                             <AvatarFallback>
                                 {review.name.split(' ').map(n => n[0]).join('')}
                             </AvatarFallback>

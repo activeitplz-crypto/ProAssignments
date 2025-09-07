@@ -74,6 +74,7 @@ export interface Review {
   id: string;
   name: string;
   content: string;
+  avatar_url: string | null;
   created_at: string;
 }
 

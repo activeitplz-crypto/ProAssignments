@@ -297,6 +297,7 @@ const reviewSchema = z.object({
     id: z.string().optional(),
     name: z.string().min(1, 'Reviewer name is required'),
     content: z.string().min(1, 'Review content is required'),
+    avatar_url: z.string().url('Please enter a valid URL.').nullable().or(z.literal('')),
 });
 
 export async function saveReview(formData: z.infer<typeof reviewSchema>) {

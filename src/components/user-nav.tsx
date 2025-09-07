@@ -56,11 +56,6 @@ export function UserNav({ name, email, avatarUrl, expiresAt }: UserNavProps) {
             <span>Edit Profile</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-         <div className="px-2 py-1.5 text-xs text-muted-foreground">
-            Session expires: {expirationDate}
-          </div>
-        <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <form action={logout} className="w-full">
             <button type="submit" className="flex w-full cursor-pointer items-center">
@@ -69,6 +64,10 @@ export function UserNav({ name, email, avatarUrl, expiresAt }: UserNavProps) {
             </button>
           </form>
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+         <div className="px-2 py-1.5 text-xs text-muted-foreground">
+            Session expires: {expirationDate}
+          </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

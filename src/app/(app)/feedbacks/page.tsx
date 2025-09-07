@@ -8,14 +8,29 @@ import type { FeedbackVideo as FeedbackVideoType } from '@/lib/types';
 function getYouTubeEmbedUrl(url: string): string | null {
   try {
     const urlObj = new URL(url);
+    let videoId: string | null = null;
+
     if (urlObj.hostname.includes('youtube.com')) {
-      const videoId = urlObj.searchParams.get('v');
-      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+      if (urlObj.pathname.startsWith('/shorts/')) {
+        videoId = urlObj.pathname.substring('/shorts/'.length);
+      } else if (urlObj.pathname.startsWith('/live/')) {
+        videoId = urlObj.pathname.substring('/live/'.length);
+      } else {
+        videoId = urlObj.searchParams.get('v');
+      }
+    } else if (urlObj.hostname.includes('youtu.be')) {
+      videoId = urlObj.pathname.slice(1);
     }
-    if (urlObj.hostname.includes('youtu.be')) {
-      const videoId = urlObj.pathname.slice(1);
-      return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    
+    // Clean up potential query parameters from the videoId
+    if (videoId) {
+        const queryIndex = videoId.indexOf('?');
+        if (queryIndex !== -1) {
+            videoId = videoId.substring(0, queryIndex);
+        }
     }
+
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
   } catch (error) {
     console.error("Invalid URL for embedding:", url);
     return null;

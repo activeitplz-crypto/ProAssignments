@@ -2,8 +2,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Video } from 'lucide-react';
-import type { Video as VideoType } from '@/lib/types';
+import { MessageSquare, Video } from 'lucide-react';
+import type { FeedbackVideo as FeedbackVideoType } from '@/lib/types';
 
 function getYouTubeEmbedUrl(url: string): string | null {
   try {
@@ -38,7 +38,8 @@ function getYouTubeEmbedUrl(url: string): string | null {
   return null;
 }
 
-export default async function WatchVideosPage() {
+
+export default async function FeedbacksPage() {
   const supabase = createClient();
   const { data: { session }} = await supabase.auth.getSession();
 
@@ -47,13 +48,13 @@ export default async function WatchVideosPage() {
   }
 
   const { data: videos, error } = await supabase
-    .from('videos')
+    .from('feedback_videos')
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching videos:', error);
-    return <div>Could not load videos. Please try again later.</div>
+   if (error) {
+    console.error('Error fetching feedback videos:', error);
+    return <div>Could not load feedback videos. Please try again later.</div>
   }
 
   return (
@@ -61,17 +62,17 @@ export default async function WatchVideosPage() {
       <Card>
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2 text-3xl">
-            <Video className="h-8 w-8 text-primary" />
-            Guidelines
+            <MessageSquare className="h-8 w-8 text-primary" />
+            User Feedbacks
           </CardTitle>
           <CardDescription>
-            Watch helpful videos and tutorials about using the platform.
+            Watch video testimonials from our satisfied users.
           </CardDescription>
         </CardHeader>
         <CardContent>
           {videos && videos.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {(videos as VideoType[]).map((video) => {
+              {(videos as FeedbackVideoType[]).map((video) => {
                 const embedUrl = getYouTubeEmbedUrl(video.url);
                 return (
                   <Card key={video.id} className="overflow-hidden">
@@ -101,9 +102,9 @@ export default async function WatchVideosPage() {
           ) : (
             <div className="flex h-48 flex-col items-center justify-center rounded-lg border-2 border-dashed bg-muted">
                 <p className="text-center text-muted-foreground">
-                    No videos have been uploaded yet.
+                    No feedback videos have been added yet.
                     <br />
-                    Check back soon for tutorials and other content!
+                    Check back later to see what our users are saying!
                 </p>
             </div>
           )}

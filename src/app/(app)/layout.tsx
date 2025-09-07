@@ -110,6 +110,7 @@ export default function AppLayout({
     { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: '/top-users', label: 'Top Users', icon: Award },
     { href: '/reviews', label: 'Reviews', icon: MessageSquare },
+    { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
   ];
 

@@ -84,3 +84,10 @@ export interface Video {
   url: string;
   created_at: string;
 }
+
+export interface FeedbackVideo {
+  id: string;
+  title: string;
+  url: string;
+  created_at: string;
+}

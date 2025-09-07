@@ -16,7 +16,8 @@ import { AssignmentsTable } from './assignments-table';
 import { ManageTopUsersForm } from './manage-top-users-form';
 import { ManageReviewsForm } from './manage-reviews-form';
 import { ManageVideosForm } from './manage-videos-form';
-import type { Plan, Task, TopUser, Review, Video } from '@/lib/types';
+import { ManageFeedbacksForm } from './manage-feedbacks-form';
+import type { Plan, Task, TopUser, Review, Video, FeedbackVideo } from '@/lib/types';
 
 
 export default async function AdminPage({
@@ -42,9 +43,12 @@ export default async function AdminPage({
   const { data: videosData } = await supabase.from('videos').select('*').order('created_at', { ascending: false });
   const videos: Video[] = videosData || [];
 
+  const { data: feedbackVideosData } = await supabase.from('feedback_videos').select('*').order('created_at', { ascending: false });
+  const feedbackVideos: FeedbackVideo[] = feedbackVideosData || [];
+
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-9">
+      <TabsList className="grid w-full grid-cols-10">
         <TabsTrigger value="assignments">Assignments</TabsTrigger>
         <TabsTrigger value="payments">Plan Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
@@ -53,6 +57,7 @@ export default async function AdminPage({
         <TabsTrigger value="tasks">Manage Tasks</TabsTrigger>
         <TabsTrigger value="top-users">Top Users</TabsTrigger>
         <TabsTrigger value="reviews">Reviews</TabsTrigger>
+        <TabsTrigger value="feedbacks">Feedbacks</TabsTrigger>
         <TabsTrigger value="videos">Guidelines</TabsTrigger>
       </TabsList>
 
@@ -94,6 +99,10 @@ export default async function AdminPage({
       
       <TabsContent value="reviews">
         <ManageReviewsForm reviews={reviews} />
+      </TabsContent>
+       
+      <TabsContent value="feedbacks">
+        <ManageFeedbacksForm videos={feedbackVideos} />
       </TabsContent>
       
       <TabsContent value="videos">

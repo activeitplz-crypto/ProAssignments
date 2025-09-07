@@ -45,6 +45,7 @@ export default async function AdminLayout({
     { href: '/admin?tab=tasks', label: 'Tasks', icon: ListTodo },
     { href: '/admin?tab=top-users', label: 'Top Users', icon: Award },
     { href: '/admin?tab=reviews', label: 'Reviews', icon: MessageSquare },
+    { href: '/admin?tab=feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/admin?tab=videos', label: 'Guidelines', icon: Video },
   ];
   

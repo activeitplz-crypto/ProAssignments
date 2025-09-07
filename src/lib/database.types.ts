@@ -45,6 +45,27 @@ export type Database = {
           },
         ]
       }
+      feedback_videos: {
+        Row: {
+          id: string
+          title: string
+          url: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          url: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          url?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           created_at: string
@@ -201,6 +222,30 @@ export type Database = {
           title?: string
           url?: string
           created_at?: string
+        }
+        Relationships: []
+      }
+       reviews: {
+        Row: {
+          id: string;
+          name: string;
+          content: string;
+          avatar_url: string | null;
+          created_at: string;
+        }
+        Insert: {
+          id?: string;
+          name: string;
+          content: string;
+          avatar_url?: string | null;
+          created_at?: string;
+        }
+        Update: {
+          id?: string;
+          name?: string;
+          content?: string;
+          avatar_url?: string | null;
+          created_at?: string;
         }
         Relationships: []
       }

@@ -386,3 +386,50 @@ export async function deleteVideo(formData: FormData) {
     revalidatePath('/watch');
     return { error: null };
 }
+
+
+const feedbackVideoSchema = z.object({
+    id: z.string().optional(),
+    title: z.string().min(1, 'Video title is required'),
+    url: z.string().url('Must be a valid URL'),
+});
+
+export async function saveFeedbackVideo(formData: z.infer<typeof feedbackVideoSchema>) {
+    const supabase = await verifyAdmin();
+    const validatedData = feedbackVideoSchema.parse(formData);
+    const { id, ...videoData } = validatedData;
+
+    try {
+        if (id) {
+            await supabase.from('feedback_videos').update(videoData).eq('id', id);
+        } else {
+            await supabase.from('feedback_videos').insert(videoData);
+        }
+    } catch (error: any) {
+        console.error('Save Feedback Video Error:', error);
+        return { error: `Failed to save feedback video. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=feedbacks', 'page');
+    revalidatePath('/feedbacks');
+    return { error: null };
+}
+
+export async function deleteFeedbackVideo(formData: FormData) {
+    const supabase = await verifyAdmin();
+    const id = formData.get('id') as string;
+    if (!id) return { error: 'Video ID is missing' };
+
+    try {
+        await supabase.from('feedback_videos').delete().eq('id', id);
+    } catch (error: any) {
+        console.error('Delete Feedback Video Error:', error);
+        return { error: `Failed to delete feedback video. Database error: ${error.message}` };
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/admin?tab=feedbacks', 'page');
+    revalidatePath('/feedbacks');
+    return { error: null };
+}

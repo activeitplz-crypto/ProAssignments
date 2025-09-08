@@ -146,6 +146,7 @@ export type Database = {
           email: string | null
           id: string
           name: string | null
+          username: string | null
           plan_end: string | null
           plan_start: string | null
           referral_bonus: number
@@ -162,6 +163,7 @@ export type Database = {
           email?: string | null
           id: string
           name?: string | null
+          username?: string | null
           plan_end?: string | null
           plan_start?: string | null
           referral_bonus?: number
@@ -178,6 +180,7 @@ export type Database = {
           email?: string | null
           id?: string
           name?: string | null
+          username?: string | null
           plan_end?: string | null
           plan_start?: string | null
           referral_bonus?: number

@@ -25,6 +25,7 @@ import Link from 'next/link';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  username: z.string().min(3, { message: 'Username must be at least 3 characters.' }).regex(/^[a-z0-9_]+$/, { message: 'Username can only contain lowercase letters, numbers, and underscores.' }),
   avatar_url: z.string().url({ message: 'Please enter a valid URL.' }).nullable().or(z.literal('')),
 });
 
@@ -43,6 +44,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: user.name || '',
+      username: user.username || '',
       avatar_url: user.avatar_url || '',
     },
   });
@@ -79,6 +81,20 @@ export function ProfileForm({ user }: ProfileFormProps) {
               <FormLabel>Full Name</FormLabel>
               <FormControl>
                 <Input placeholder="Your full name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="your_username" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>

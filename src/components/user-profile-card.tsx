@@ -19,7 +19,7 @@ export function UserProfileCard({ name, username, avatarUrl }: UserProfileCardPr
     <div className="flex items-center justify-between rounded-lg bg-card p-4">
       <div className="flex items-center gap-4">
         <Avatar className="h-14 w-14 border-2 border-primary">
-          <AvatarImage src={avatarUrl || ''} alt={`@${name}`} data-ai-hint="profile picture" />
+          <AvatarImage src={avatarUrl || ''} alt={`@${username}`} data-ai-hint="profile picture" />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div>

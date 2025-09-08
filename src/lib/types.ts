@@ -12,6 +12,7 @@ export interface Plan {
 export interface Profile {
   id: string;
   name: string | null;
+  username: string | null;
   email: string | null;
   avatar_url: string | null;
   current_plan: string | null;

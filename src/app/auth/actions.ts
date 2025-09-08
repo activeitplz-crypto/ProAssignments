@@ -32,12 +32,25 @@ export async function login(formData: z.infer<typeof loginSchema>) {
 
 const signupSchema = z.object({
   name: z.string().min(2),
+  username: z.string().min(3).regex(/^[a-z0-9_]+$/, { message: 'Username can only contain lowercase letters, numbers, and underscores.'}),
   email: z.string().email(),
   password: z.string().min(6),
 });
 
 export async function signup(formData: z.infer<typeof signupSchema>) {
   const supabase = createClient();
+
+  // Check if username is already taken
+  const { data: existingUser } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('username', formData.username)
+    .single();
+
+  if (existingUser) {
+    return { error: 'Username is already taken.', success: false };
+  }
+
   const referral_code = `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`;
 
   const { error } = await supabase.auth.signUp({
@@ -47,12 +60,16 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
       data: {
         name: formData.name,
+        username: formData.username,
         referral_code: referral_code,
       },
     },
   });
 
   if (error) {
+    if (error.message.includes('unique constraint')) {
+       return { error: 'User with this email already exists.', success: false };
+    }
     console.error('Signup Error:', error.message);
     return { error: 'Could not create user. Please try again.', success: false };
   }

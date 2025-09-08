@@ -31,7 +31,7 @@ export default async function DashboardPage() {
   
   const userData = {
     name: user.name || 'Anonymous',
-    username: user.email?.split('@')[0] || 'anonymous',
+    username: user.username || 'anonymous',
     avatarUrl: user.avatar_url,
     total_earning: user.total_earning,
     today_earning: user.today_earning,

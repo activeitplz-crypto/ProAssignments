@@ -37,7 +37,7 @@ export default async function ProfilePage() {
     <div className="space-y-6">
       <UserProfileCard 
         name={user.name || 'Anonymous'}
-        username={user.email?.split('@')[0] || 'anonymous'}
+        username={user.username || 'anonymous'}
         avatarUrl={user.avatar_url}
       />
 
@@ -45,7 +45,7 @@ export default async function ProfilePage() {
         <CardHeader>
           <CardTitle>Your Information</CardTitle>
           <CardDescription>
-            These are your account details and cannot be changed.
+            These are your account details. Some fields can be edited below.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -53,6 +53,12 @@ export default async function ProfilePage() {
             <Label>Full Name</Label>
             <p className="rounded-md border bg-muted px-3 py-2 text-sm text-foreground">
               {user.name || 'N/A'}
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label>Username</Label>
+            <p className="rounded-md border bg-muted px-3 py-2 text-sm text-foreground">
+              {user.username || 'N/A'}
             </p>
           </div>
            <div className="space-y-2">
@@ -73,7 +79,7 @@ export default async function ProfilePage() {
       <Card>
         <CardHeader>
           <CardTitle>Edit Profile</CardTitle>
-          <CardDescription>Update your name and profile picture here.</CardDescription>
+          <CardDescription>Update your name, username, and profile picture here.</CardDescription>
         </CardHeader>
         <CardContent>
           <ProfileForm user={user} />

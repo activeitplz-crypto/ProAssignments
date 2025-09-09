@@ -12,7 +12,7 @@ import { MailCheck } from 'lucide-react';
 
 export default function AuthConfirmPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-muted p-4">
       <Card className="w-full max-w-md text-center shadow-2xl">
         <CardHeader>
           <MailCheck className="mx-auto h-12 w-12 text-green-500" />

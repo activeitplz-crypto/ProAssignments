@@ -53,11 +53,11 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
 
   const referral_code = `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`;
 
+  // The redirect URL is now configured in Supabase settings, not here.
   const { error } = await supabase.auth.signUp({
     email: formData.email,
     password: formData.password,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
       data: {
         name: formData.name,
         username: formData.username,

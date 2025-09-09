@@ -19,6 +19,7 @@ import { useTransition } from 'react';
 import { Loader2 } from 'lucide-react';
 import { submitAssignment } from './actions';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters long.' }),
@@ -87,7 +88,7 @@ export function AssignmentForm() {
             name="url1"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Task Proof URL 1 (Required)</FormLabel>
+                <FormLabel className="font-semibold text-primary">Task Proof URL 1 (Required)</FormLabel>
                 <FormControl>
                     <Input placeholder="Paste proof URL here..." {...field} />
                 </FormControl>
@@ -100,7 +101,7 @@ export function AssignmentForm() {
             name="url2"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Task Proof URL 2</FormLabel>
+                <FormLabel className="font-semibold text-primary">Task Proof URL 2</FormLabel>
                 <FormControl>
                     <Input placeholder="Paste proof URL here..." {...field} />
                 </FormControl>

@@ -66,7 +66,7 @@ export async function approvePayment(formData: FormData) {
         p_payment_id: paymentId,
         p_user_id: profile.id,
         p_plan_name: plan.name,
-        p_referred_by_id: profile.referred_by
+        p_referred_by_id: profile.referred_by || null // Pass null if no referrer
     });
 
     if (transactionError) {
@@ -105,7 +105,8 @@ export async function approveWithdrawal(formData: FormData) {
   const withdrawalId = formData.get('withdrawalId') as string;
   
   try {
-     await supabase.rpc('approve_withdrawal', { p_withdrawal_id: withdrawalId });
+     const { error } = await supabase.rpc('approve_withdrawal', { p_withdrawal_id: withdrawalId });
+     if (error) throw error;
   } catch (error: any) {
      console.error('Approve Withdrawal Error:', error);
      return { error: error.message };

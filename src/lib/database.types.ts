@@ -18,7 +18,6 @@ export type Database = {
           title: string
           urls: string[]
           user_id: string
-          task_id: string | null
         }
         Insert: {
           created_at?: string
@@ -27,7 +26,6 @@ export type Database = {
           title: string
           urls: string[]
           user_id: string
-          task_id?: string | null
         }
         Update: {
           created_at?: string
@@ -36,7 +34,6 @@ export type Database = {
           title?: string
           urls?: string[]
           user_id?: string
-          task_id?: string | null
         }
         Relationships: [
           {
@@ -44,13 +41,6 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assignments_task_id_fkey"
-            columns: ["task_id"]
-            isOneToOne: false
-            referencedRelation: "tasks"
             referencedColumns: ["id"]
           }
         ]

@@ -10,7 +10,6 @@ import {
 import { ListTodo, Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { redirect } from 'next/navigation';
-import type { Task } from '@/lib/types';
 import { TaskItem } from './task-item';
 
 export default async function TasksPage() {
@@ -46,28 +45,13 @@ export default async function TasksPage() {
   if (error) {
     console.error('Error fetching tasks:', error);
   }
-  
-  // Get assignments submitted today
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Start of today
-  const { data: submittedTasks, error: submittedTasksError } = await supabase
-    .from('assignments')
-    .select('task_id')
-    .eq('user_id', session.user.id)
-    .gte('created_at', today.toISOString());
-
-   if (submittedTasksError) {
-       console.error('Error fetching submitted tasks:', submittedTasksError);
-   }
-
-  const submittedTaskIds = new Set(submittedTasks?.map(t => t.task_id) || []);
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-headline text-3xl font-bold">Daily Tasks</h1>
+        <h1 className="font-headline text-3xl font-bold">View Daily Tasks</h1>
         <p className="text-muted-foreground">
-          Complete and submit the tasks below based on your active plan. You have {dailyTaskLimit} task(s) available today.
+          View the tasks below, then go to the "Submit Tasks" page to upload your proof. You have {dailyTaskLimit} task(s) available today.
         </p>
       </div>
 
@@ -75,9 +59,9 @@ export default async function TasksPage() {
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2">
             <ListTodo className="h-6 w-6 text-primary" />
-            Available Tasks for Submission
+            Available Tasks
           </CardTitle>
-          <CardDescription>View each task, then paste the completion URL to submit your proof.</CardDescription>
+          <CardDescription>Click "View Task" to see the task details in a new tab.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {tasks && tasks.length > 0 ? (
@@ -86,7 +70,6 @@ export default async function TasksPage() {
                 key={task.id} 
                 task={task} 
                 taskNumber={index + 1}
-                isSubmitted={submittedTaskIds.has(task.id)}
               />
             ))
           ) : (

@@ -101,7 +101,8 @@ export default function AppLayout({
   
   const navItems = [
     { href: '/dashboard', label: 'Home', icon: Home },
-    { href: '/tasks', label: 'Submit Tasks', icon: FileCheck2 },
+    { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
+    { href: '/assignments', label: 'Submit Tasks', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
     { href: '/watch', label: 'Guidelines', icon: Video },
   ];
@@ -122,7 +123,7 @@ export default function AppLayout({
           <ProAssignmentIcon className="h-8 w-8" />
           <span className="text-sm font-bold">ProAssignment</span>
         </div>
-        <div className="flex flex-1 flex-col justify-between overflow-auto py-4">
+        <div className="flex flex-1 flex-col justify-between overflow-y-auto py-4">
           <div className="flex flex-col gap-2 px-4">
             {navItems.map((item) => (
               <Link
@@ -178,7 +179,7 @@ export default function AppLayout({
       <main className="flex-1 p-4 lg:p-6">{children}</main>
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
-        <div className="grid h-16 grid-cols-4 items-center justify-around">
+        <div className="grid h-16 grid-cols-5 items-center justify-around">
           {navItems.map((item) => (
             <Link
               key={item.href}

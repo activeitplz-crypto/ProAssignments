@@ -59,6 +59,7 @@ export interface Task {
 export interface Assignment {
   id: string;
   user_id: string;
+  task_id: string | null;
   title: string;
   urls: string[];
   status: 'pending' | 'approved' | 'rejected';

@@ -24,6 +24,7 @@ import Link from 'next/link';
 
 type EnrichedAssignment = Assignment & {
   profiles: { name: string | null; email: string | null } | null;
+  tasks: { title: string | null } | null;
 };
 
 export function AssignmentsTable() {
@@ -35,7 +36,7 @@ export function AssignmentsTable() {
     setLoading(true);
     const { data, error } = await supabase
       .from('assignments')
-      .select('*, profiles(name, email)')
+      .select('*, profiles(name, email), tasks(title)')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -76,7 +77,7 @@ export function AssignmentsTable() {
                 <TableHeader>
                     <TableRow>
                     <TableHead>User</TableHead>
-                    <TableHead>Title</TableHead>
+                    <TableHead>Task Title</TableHead>
                     <TableHead>Links</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Status</TableHead>
@@ -112,7 +113,7 @@ export function AssignmentsTable() {
             <TableHeader>
             <TableRow>
                 <TableHead>User</TableHead>
-                <TableHead>Title</TableHead>
+                <TableHead>Task Title</TableHead>
                 <TableHead>Links</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Status</TableHead>
@@ -162,7 +163,7 @@ function AssignmentRow({ assignment }: { assignment: EnrichedAssignment }) {
                 <div>{assignment.profiles?.name || 'N/A'}</div>
                 <div className="text-xs text-muted-foreground">{assignment.profiles?.email}</div>
             </TableCell>
-            <TableCell>{assignment.title}</TableCell>
+            <TableCell>{assignment.tasks?.title || assignment.title}</TableCell>
             <TableCell>
                 <div className='flex flex-col gap-1'>
                     {assignment.urls.map((url, index) => (

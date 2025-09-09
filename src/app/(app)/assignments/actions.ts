@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 
 const assignmentSchema = z.object({
+  taskId: z.string().uuid('Invalid Task ID.'),
   title: z.string().min(1, 'Title is required.'),
   url1: z.string().url({ message: 'URL 1 must be a valid URL.' }),
   url2: z.string().url().optional().or(z.literal('')),
@@ -21,6 +22,7 @@ export async function submitAssignment(formData: z.infer<typeof assignmentSchema
     return { error: 'You must be logged in to submit an assignment.' };
   }
   
+  // 1. Verify user has an active plan
   const { data: profile } = await supabase
     .from('profiles')
     .select('current_plan')
@@ -31,39 +33,33 @@ export async function submitAssignment(formData: z.infer<typeof assignmentSchema
     return { error: 'You must have an active plan to submit assignments.' };
   }
   
-  const { data: plan } = await supabase
-    .from('plans')
-    .select('daily_assignments')
-    .eq('name', profile.current_plan)
-    .single();
-
-  if (!plan) {
-    return { error: 'Could not find your plan details.' };
-  }
-  
+  // 2. Check if the user has already submitted this specific task today
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Start of today
-  const { count, error: countError } = await supabase
+  const { count: existingSubmissionCount, error: countError } = await supabase
     .from('assignments')
     .select('*', { count: 'exact', head: true })
     .eq('user_id', user.id)
+    .eq('task_id', formData.taskId)
     .gte('created_at', today.toISOString());
 
   if (countError) {
     console.error('Server-side count error:', countError);
-    return { error: 'Could not verify your submission limit.' };
+    return { error: 'Could not verify your submission status.' };
   }
   
-  if (count !== null && count >= plan.daily_assignments) {
-    return { error: 'You have reached your daily submission limit for this plan.' };
+  if (existingSubmissionCount !== null && existingSubmissionCount > 0) {
+    return { error: 'You have already submitted proof for this task today.' };
   }
 
+  // 3. Insert the new assignment
   const urls = [formData.url1, formData.url2, formData.url3, formData.url4].filter(url => url);
 
   const { error } = await supabase
     .from('assignments')
     .insert({
       user_id: user.id,
+      task_id: formData.taskId,
       title: formData.title,
       urls: urls,
       status: 'pending',

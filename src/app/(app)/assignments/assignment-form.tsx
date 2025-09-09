@@ -19,9 +19,10 @@ import { useTransition } from 'react';
 import { Loader2 } from 'lucide-react';
 import { submitAssignment } from './actions';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
+import type { Task } from '@/lib/types';
 
 const formSchema = z.object({
+  taskId: z.string(),
   title: z.string().min(3, { message: 'Title must be at least 3 characters long.' }),
   url1: z.string().url({ message: 'A valid URL is required.' }),
   url2: z.string().url().optional().or(z.literal('')),
@@ -29,7 +30,11 @@ const formSchema = z.object({
   url4: z.string().url().optional().or(z.literal('')),
 });
 
-export function AssignmentForm() {
+interface AssignmentFormProps {
+    task: Task;
+}
+
+export function AssignmentForm({ task }: AssignmentFormProps) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -37,7 +42,8 @@ export function AssignmentForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
+      taskId: task.id,
+      title: task.title || '',
       url1: '',
       url2: '',
       url3: '',
@@ -57,10 +63,10 @@ export function AssignmentForm() {
       } else {
         toast({
           title: 'Success!',
-          description: 'Your assignment has been submitted for review.',
+          description: `Your submission for "${task.title}" has been received.`,
         });
         form.reset();
-        router.refresh(); // Refresh the page to show updated submission count
+        router.refresh(); 
       }
     });
   }
@@ -68,6 +74,7 @@ export function AssignmentForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <input type="hidden" {...form.register('taskId')} />
         <FormField
           control={form.control}
           name="title"
@@ -101,7 +108,7 @@ export function AssignmentForm() {
             name="url2"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel className="font-semibold text-primary">Task Proof URL 2</FormLabel>
+                <FormLabel>Task Proof URL 2</FormLabel>
                 <FormControl>
                     <Input placeholder="Paste proof URL here..." {...field} />
                 </FormControl>
@@ -139,7 +146,7 @@ export function AssignmentForm() {
 
         <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Submit Assignment
+          Submit Task
         </Button>
       </form>
     </Form>

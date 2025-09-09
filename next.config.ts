@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
    env: {
     NEXT_PUBLIC_ADMIN_EMAIL: 'itxprince440@gmail.com',
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002',
   },
 };
 

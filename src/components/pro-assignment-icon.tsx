@@ -3,9 +3,7 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 export function ProAssignmentIcon({ className }: { className?: string }) {
-  // A valid default icon is used here to prevent crashes.
-  // To use your own icon, upload it to a service like Postimages.org,
-  // get the "Direct Link", and paste it here.
+  // This is the icon URL for the web application.
   const iconUrl = "https://i.postimg.cc/VNmhm0H5/IMG-20250819-WA0033.jpg";
 
   return (

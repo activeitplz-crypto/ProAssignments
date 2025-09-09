@@ -72,14 +72,15 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: 'You must be logged in to submit an assignment.' };
   }
   
-  // 1. Check for existing submission for this task today
+  // 1. Check for existing APPROVED submission for this task today
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Start of today
   const { data: existingSubmission, error: existingError } = await supabase
     .from('assignments')
-    .select('id, status')
+    .select('id')
     .eq('user_id', user.id)
     .eq('task_id', formData.taskId)
+    .eq('status', 'approved') // We only care about blocking re-submission for already approved tasks
     .gte('created_at', today.toISOString())
     .maybeSingle();
 
@@ -89,7 +90,7 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
   }
   
   // Block resubmission only if it's already approved
-  if (existingSubmission && existingSubmission.status === 'approved') {
+  if (existingSubmission) {
     return { error: 'You have already submitted and been approved for this task today.' };
   }
 
@@ -101,44 +102,37 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
 
   const aiResult = await verifyAssignment(aiInput);
 
-  // 3. Insert or Update the assignment based on AI result
-  const assignmentData = {
+  // 3. If AI verification is NOT approved, just return feedback without saving anything.
+  if (!aiResult.isApproved) {
+    return { 
+        error: null, 
+        aiFeedback: aiResult.reason, 
+        isApproved: false 
+    };
+  }
+
+  // 4. If AI verification IS approved, insert the assignment.
+  // We use INSERT instead of UPSERT because we only save 'approved' status.
+  // Any previous rejections were not saved, so there's nothing to update.
+  const { error: insertError } = await supabase
+    .from('assignments')
+    .insert({
       user_id: user.id,
       task_id: formData.taskId,
       title: formData.title,
       urls: [], // URLs are no longer used, but schema might require it
-      status: aiResult.isApproved ? 'approved' : 'rejected',
-      feedback: aiResult.reason, // Save AI feedback
-      created_at: new Date().toISOString(), // ensure timestamp is updated on resubmission
-  };
+      status: 'approved',
+      feedback: aiResult.reason,
+      created_at: new Date().toISOString(),
+    });
 
-  // If there was a submission today (which would have to be 'rejected' based on the check above), update it
-  if (existingSubmission) {
-      const { error: updateError } = await supabase
-        .from('assignments')
-        .update(assignmentData)
-        .eq('id', existingSubmission.id);
-      
-      if (updateError) {
-        console.error('Assignment Update Error:', updateError);
-        return { error: 'Failed to update your assignment submission.', aiFeedback: aiResult.reason };
-      }
-  } else {
-      // Otherwise, insert a new one
-      const { error: insertError } = await supabase
-        .from('assignments')
-        .insert(assignmentData);
-
-      if (insertError) {
-        console.error('Assignment Insert Error:', insertError);
-        return { error: 'Failed to submit your assignment.', aiFeedback: aiResult.reason };
-      }
+  if (insertError) {
+    console.error('Assignment Insert Error:', insertError);
+    return { error: 'Failed to save your approved assignment.', aiFeedback: aiResult.reason };
   }
   
-  // 4. If approved, check if all daily tasks are done and update earnings
-  if (aiResult.isApproved) {
-      await updateUserEarnings(supabase, user.id);
-  }
+  // 5. Since it's approved, check if all daily tasks are done and update earnings
+  await updateUserEarnings(supabase, user.id);
   
   revalidatePath('/assignments');
   revalidatePath('/dashboard');

@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import {
@@ -7,33 +8,26 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { FileCheck2, Info, CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react';
+import { FileCheck2, Info, CheckCircle, Clock } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AssignmentForm } from './assignment-form';
 import type { Task, Assignment } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 
-function getStatusBadge(status: string | null, feedback?: string | null) {
-    switch (status) {
-        case 'approved':
-            return (
-                <Badge variant="default" className="bg-green-500 hover:bg-green-600">
-                    <CheckCircle className="mr-2 h-4 w-4" /> AI Approved
-                </Badge>
-            );
-        case 'rejected':
-             return (
-                <Badge variant="destructive">
-                    <XCircle className="mr-2 h-4 w-4" /> AI Rejected: {feedback || "No reason given."}
-                </Badge>
-            );
-        default:
-            return (
-                <Badge variant="secondary">
-                    <Clock className="mr-2 h-4 w-4" /> Pending Submission
-                </Badge>
-            );
+// This component now only shows "Approved" or "Pending"
+function getStatusBadge(isApproved: boolean) {
+    if (isApproved) {
+        return (
+            <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+                <CheckCircle className="mr-2 h-4 w-4" /> AI Approved
+            </Badge>
+        );
     }
+    return (
+        <Badge variant="secondary">
+            <Clock className="mr-2 h-4 w-4" /> Pending Submission
+        </Badge>
+    );
 }
 
 
@@ -83,13 +77,14 @@ export default async function AssignmentsPage() {
     return <div>Could not load tasks. Please try again.</div>;
   }
 
-  // Fetch today's submissions to check status
+  // Fetch today's APPROVED submissions to check status
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const { data: submitted_assignments, error: submissionsError } = await supabase
+  const { data: approved_assignments, error: submissionsError } = await supabase
     .from('assignments')
-    .select('task_id, status, feedback')
+    .select('task_id') // We only need the task_id
     .eq('user_id', session.user.id)
+    .eq('status', 'approved')
     .gte('created_at', today.toISOString());
 
   if (submissionsError) {
@@ -97,10 +92,10 @@ export default async function AssignmentsPage() {
       return <div>Could not load submission status.</div>
   }
 
-  const submissionStatusMap = new Map<string, {status: string; feedback: string | null;}>();
-    (submitted_assignments as Assignment[]).forEach(a => {
+  const approvedTaskIds = new Set<string>();
+    (approved_assignments as Pick<Assignment, 'task_id'>[]).forEach(a => {
         if(a.task_id) {
-            submissionStatusMap.set(a.task_id, { status: a.status, feedback: a.feedback });
+            approvedTaskIds.add(a.task_id);
         }
     });
 
@@ -117,15 +112,12 @@ export default async function AssignmentsPage() {
       {tasks && tasks.length > 0 ? (
         <div className="space-y-8">
           {(tasks as Task[]).map((task, index) => {
-            const submission = submissionStatusMap.get(task.id);
-            const isApproved = submission?.status === 'approved';
-
-            let description = "Upload your handwritten assignment image(s). Ensure the title matches exactly.";
-            if (submission?.status === 'approved') {
-                description = "You have already been approved for this task today.";
-            } else if (submission?.status === 'rejected') {
-                description = `Your last submission was rejected. Reason: ${submission.feedback}. You can try again.`;
-            }
+            const isApproved = approvedTaskIds.has(task.id);
+            
+            // Description changes based on approval status. Rejection is now handled client-side in the form.
+            const description = isApproved
+                ? "You have already been approved for this task today."
+                : "Upload your handwritten assignment image(s). Ensure the title matches exactly.";
 
             return (
               <Card key={task.id}>
@@ -135,7 +127,7 @@ export default async function AssignmentsPage() {
                         <FileCheck2 className="h-6 w-6 text-primary" />
                         Task {index + 1}: {task.title}
                     </CardTitle>
-                    {getStatusBadge(submission?.status || null, submission?.feedback)}
+                    {getStatusBadge(isApproved)}
                   </div>
                   <CardDescription>
                    {description}

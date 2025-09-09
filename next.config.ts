@@ -1,5 +1,6 @@
 
 import type {NextConfig} from 'next';
+import 'dotenv/config';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -31,6 +32,7 @@ const nextConfig: NextConfig = {
   },
    env: {
     NEXT_PUBLIC_ADMIN_EMAIL: 'itxprince440@gmail.com',
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY,
   },
 };
 

@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export function ProAssignmentIcon({ className }: { className?: string }) {
   // This is the icon URL for the web application.
-  const iconUrl = "https://i.postimg.cc/VNmhm0H5/IMG-20250819-WA0033.jpg";
+  const iconUrl = "https://i.postimg.cc/4NycZngc/In-Shot-20250828-122821151.png";
 
   return (
     <div className={cn("relative overflow-hidden rounded-full", className)}>

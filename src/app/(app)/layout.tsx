@@ -132,7 +132,7 @@ export default function AppLayout({
                 href={item.href}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                  pathname === item.href && 'bg-primary text-primary-foreground hover:text-primary/90'
+                  pathname === item.href && 'bg-primary text-primary-foreground hover:text-primary-foreground/90'
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -179,7 +179,7 @@ export default function AppLayout({
             <MobileNav navItems={navItems} actionItems={actionItems} />
         </div>
       </header>
-      <main className="flex-1 p-4 lg:p-6">{children}</main>
+      <main className="flex-1 p-4 pb-20 md:pb-4 lg:p-6">{children}</main>
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
         <div className="grid h-16 grid-cols-4 items-center justify-around">

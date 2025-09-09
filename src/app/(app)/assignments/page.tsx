@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { FileCheck2, Info, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { FileCheck2, Info, CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AssignmentForm } from './assignment-form';
 import type { Task, Assignment } from '@/lib/types';
@@ -118,7 +118,14 @@ export default async function AssignmentsPage() {
         <div className="space-y-8">
           {(tasks as Task[]).map((task, index) => {
             const submission = submissionStatusMap.get(task.id);
-            const isSubmittedAndNotRejected = submission && submission.status !== 'rejected';
+            const isApproved = submission?.status === 'approved';
+
+            let description = "Upload your handwritten assignment image(s). Ensure the title matches exactly.";
+            if (submission?.status === 'approved') {
+                description = "You have already been approved for this task today.";
+            } else if (submission?.status === 'rejected') {
+                description = `Your last submission was rejected. Reason: ${submission.feedback}. You can try again.`;
+            }
 
             return (
               <Card key={task.id}>
@@ -131,19 +138,16 @@ export default async function AssignmentsPage() {
                     {getStatusBadge(submission?.status || null, submission?.feedback)}
                   </div>
                   <CardDescription>
-                    {isSubmittedAndNotRejected 
-                        ? "You have already submitted this task for today." 
-                        : "Upload your handwritten assignment image(s). Ensure the title matches exactly."
-                    }
+                   {description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {isSubmittedAndNotRejected ? (
+                    {isApproved ? (
                          <Alert variant="default" className="border-green-500 bg-green-50">
                             <Info className="h-4 w-4 text-green-600" />
-                            <AlertTitle className="text-green-700">Submission Received</AlertTitle>
+                            <AlertTitle className="text-green-700">Submission Approved</AlertTitle>
                             <AlertDescription className="text-green-600">
-                                This task has been submitted for today.
+                                This task has been successfully verified for today.
                             </AlertDescription>
                         </Alert>
                     ) : (

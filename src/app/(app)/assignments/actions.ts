@@ -4,7 +4,6 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { verifyAssignment, type VerifyAssignmentInput } from '@/ai/flows/verify-assignment-flow';
-import type { Plan } from '@/lib/types';
 
 const assignmentSchema = z.object({
   taskId: z.string().uuid('Invalid Task ID.'),
@@ -89,8 +88,9 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: 'Could not verify your submission status.' };
   }
   
-  if (existingSubmission && existingSubmission.status !== 'rejected') {
-    return { error: 'You have already submitted this task today.' };
+  // Block resubmission only if it's already approved
+  if (existingSubmission && existingSubmission.status === 'approved') {
+    return { error: 'You have already submitted and been approved for this task today.' };
   }
 
   // 2. Prepare data and call AI verification flow
@@ -106,13 +106,14 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
       user_id: user.id,
       task_id: formData.taskId,
       title: formData.title,
-      urls: [], // URLs are no longer used
+      urls: [], // URLs are no longer used, but schema might require it
       status: aiResult.isApproved ? 'approved' : 'rejected',
       feedback: aiResult.reason, // Save AI feedback
+      created_at: new Date().toISOString(), // ensure timestamp is updated on resubmission
   };
 
+  // If there was a submission today (which would have to be 'rejected' based on the check above), update it
   if (existingSubmission) {
-      // If there was a rejected submission today, update it
       const { error: updateError } = await supabase
         .from('assignments')
         .update(assignmentData)

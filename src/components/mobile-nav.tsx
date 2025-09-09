@@ -64,7 +64,7 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
                 onClick={() => setOpen(false)}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                  pathname === item.href && 'bg-muted text-primary'
+                  pathname === item.href && 'bg-primary text-primary-foreground hover:text-primary/90'
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -76,7 +76,7 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
                 onClick={() => setOpen(false)}
                 className={cn(
                     'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                    pathname === '/profile' && 'bg-muted text-primary'
+                    pathname === '/profile' && 'bg-primary text-primary-foreground hover:text-primary/90'
                 )}
                 >
                 <User className="h-5 w-5" />

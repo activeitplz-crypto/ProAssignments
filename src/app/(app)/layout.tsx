@@ -25,7 +25,7 @@ import { ProAssignmentIcon } from '@/components/pro-assignment-icon';
 import { MobileNav } from '@/components/mobile-nav';
 import { logout } from '@/app/auth/actions';
 import { UserNav } from '@/components/user-nav';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import type { Session } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,7 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = createClient();
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<Profile | null>(null);
@@ -130,7 +131,8 @@ export default function AppLayout({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                  pathname === item.href && 'bg-primary text-primary-foreground hover:text-primary/90'
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -146,7 +148,8 @@ export default function AppLayout({
                 target={item.target}
                 rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary'
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                  pathname === item.href && 'bg-muted text-primary'
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -185,10 +188,11 @@ export default function AppLayout({
               key={item.href}
               href={item.href}
               className={cn(
-                'flex flex-col items-center gap-1 p-2 text-muted-foreground'
+                'flex flex-col items-center gap-1 p-2 text-muted-foreground',
+                pathname === item.href && 'text-primary'
               )}
             >
-              <item.icon className="h-6 w-6" />
+              <item.icon className={cn('h-6 w-6', pathname === item.href && 'rounded-full bg-primary/10 p-1')} />
               <span className="text-xs">{item.label}</span>
             </Link>
           ))}

@@ -101,9 +101,8 @@ export default function AppLayout({
   
   const navItems = [
     { href: '/dashboard', label: 'Home', icon: Home },
-    { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
+    { href: '/tasks', label: 'Submit Tasks', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
-    { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
     { href: '/watch', label: 'Guidelines', icon: Video },
   ];
 
@@ -179,8 +178,8 @@ export default function AppLayout({
       <main className="flex-1 p-4 lg:p-6">{children}</main>
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
-        <div className="flex h-16 items-center justify-around">
-          {navItems.filter(item => item.href !== '/watch').map((item) => (
+        <div className="grid h-16 grid-cols-4 items-center justify-around">
+          {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}

@@ -5,11 +5,13 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 
-const assignmentSchema = z.object({
-  title: z.string().min(3, 'Title must be at least 3 characters long.'),
-}).catchall(z.string().url().or(z.literal(''))); // Allows url1, url2, etc.
+const singleTaskSchema = z.object({
+  proof_url: z.string().url({ message: 'The proof must be a valid URL.' }),
+  task_id: z.string(),
+  task_title: z.string(),
+});
 
-export async function submitAssignment(formData: Record<string, any>) {
+export async function submitSingleTask(formData: z.infer<typeof singleTaskSchema>) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -39,7 +41,7 @@ export async function submitAssignment(formData: Record<string, any>) {
   }
   
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Start of today in local time
+  today.setHours(0, 0, 0, 0); // Start of today
   const { count, error: countError } = await supabase
     .from('assignments')
     .select('*', { count: 'exact', head: true })
@@ -54,22 +56,31 @@ export async function submitAssignment(formData: Record<string, any>) {
   if (count !== null && count >= plan.daily_assignments) {
     return { error: 'You have reached your daily submission limit for this plan.' };
   }
+  
+  // Check if this specific task has already been submitted today
+  const { data: existingSubmission, error: existingError } = await supabase
+    .from('assignments')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('task_id', formData.task_id)
+    .gte('created_at', today.toISOString())
+    .single();
 
-  // Process URLs
-  const urls = Object.keys(formData)
-    .filter(key => key.startsWith('url') && formData[key])
-    .map(key => formData[key]);
-
-  if (urls.length === 0) {
-      return { error: 'You must provide at least one task URL.' };
+  if (existingError && existingError.code !== 'PGRST116') { // Ignore 'no rows found'
+      console.error('Error checking for existing submission:', existingError);
+      return { error: 'Server error. Please try again.' };
+  }
+  if (existingSubmission) {
+      return { error: 'You have already submitted this task today.' };
   }
 
   const { error } = await supabase
     .from('assignments')
     .insert({
       user_id: user.id,
-      title: formData.title,
-      urls: urls,
+      task_id: formData.task_id,
+      title: formData.task_title, // Keep title for admin UI
+      urls: [formData.proof_url], // Store single URL in array for consistency
       status: 'pending',
     });
 
@@ -78,7 +89,7 @@ export async function submitAssignment(formData: Record<string, any>) {
     return { error: 'Failed to submit your assignment. Please try again.' };
   }
   
-  revalidatePath('/assignments');
+  revalidatePath('/tasks');
   revalidatePath('/admin');
   return { error: null };
 }

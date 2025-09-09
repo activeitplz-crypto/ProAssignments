@@ -101,14 +101,15 @@ export default function AppLayout({
   
   const navItems = [
     { href: '/dashboard', label: 'Home', icon: Home },
-    { href: '/tasks', label: 'View Tasks', icon: ClipboardList },
-    { href: '/assignments', label: 'Submit Tasks', icon: FileCheck2 },
+    { href: '/tasks', label: 'Tasks', icon: ClipboardList },
+    { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
-    { href: '/watch', label: 'Guidelines', icon: Video },
+    { href: '/referrals', label: 'Referrals', icon: Users },
   ];
 
   const actionItems = [
     { href: '/guide', label: 'Guide', icon: HelpCircle },
+    { href: '/watch', label: 'Guidelines', icon: Video },
     { href: '/top-users', label: 'Top Users', icon: Award },
     { href: '/reviews', label: 'Reviews', icon: MessageSquare },
     { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },

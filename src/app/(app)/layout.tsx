@@ -104,7 +104,6 @@ export default function AppLayout({
     { href: '/tasks', label: 'Tasks', icon: ClipboardList },
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
-    { href: '/referrals', label: 'Referrals', icon: Users },
   ];
 
   const actionItems = [
@@ -180,7 +179,7 @@ export default function AppLayout({
       <main className="flex-1 p-4 lg:p-6">{children}</main>
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
-        <div className="grid h-16 grid-cols-5 items-center justify-around">
+        <div className="grid h-16 grid-cols-4 items-center justify-around">
           {navItems.map((item) => (
             <Link
               key={item.href}

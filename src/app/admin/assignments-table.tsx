@@ -78,7 +78,7 @@ export function AssignmentsTable() {
                     <TableRow>
                     <TableHead>User</TableHead>
                     <TableHead>Task Title</TableHead>
-                    <TableHead>Links</TableHead>
+                    <TableHead>AI Feedback</TableHead>
                     <TableHead>Date</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Actions</TableHead>
@@ -89,7 +89,7 @@ export function AssignmentsTable() {
                     <TableRow key={i}>
                         <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
                         <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
-                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
                         <TableCell><Skeleton className="h-4 w-[90px]" /></TableCell>
                         <TableCell><Skeleton className="h-6 w-[80px] rounded-full" /></TableCell>
                         <TableCell className="space-x-2"><Skeleton className="h-8 w-[80px]" /><Skeleton className="h-8 w-[80px]" /></TableCell>
@@ -106,7 +106,7 @@ export function AssignmentsTable() {
     <Card>
       <CardHeader>
         <CardTitle>Assignment Submissions</CardTitle>
-        <CardDescription>Review and approve user task submissions. Pending requests require action.</CardDescription>
+        <CardDescription>Review and manually override AI-verified task submissions if necessary.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -114,7 +114,7 @@ export function AssignmentsTable() {
             <TableRow>
                 <TableHead>User</TableHead>
                 <TableHead>Task Title</TableHead>
-                <TableHead>Links</TableHead>
+                <TableHead>AI Feedback</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
@@ -128,7 +128,7 @@ export function AssignmentsTable() {
             ) : (
                 <TableRow>
                 <TableCell colSpan={6} className="h-24 text-center">
-                    No pending assignment submissions found.
+                    No assignment submissions found.
                 </TableCell>
                 </TableRow>
             )}
@@ -164,18 +164,7 @@ function AssignmentRow({ assignment }: { assignment: EnrichedAssignment }) {
                 <div className="text-xs text-muted-foreground">{assignment.profiles?.email}</div>
             </TableCell>
             <TableCell>{assignment.tasks?.title || assignment.title}</TableCell>
-            <TableCell>
-                <div className='flex flex-col gap-1'>
-                    {assignment.urls.map((url, index) => (
-                        <Button key={index} variant="outline" size="sm" asChild>
-                            <Link href={url} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="mr-2 h-3 w-3" />
-                                Link {index + 1}
-                            </Link>
-                        </Button>
-                    ))}
-                </div>
-            </TableCell>
+            <TableCell>{assignment.feedback || "N/A"}</TableCell>
             <TableCell>{format(new Date(assignment.created_at), 'PPP')}</TableCell>
             <TableCell>
                  <Badge variant={assignment.status === 'pending' ? 'secondary' : assignment.status === 'approved' ? 'default' : 'destructive'}>
@@ -183,15 +172,15 @@ function AssignmentRow({ assignment }: { assignment: EnrichedAssignment }) {
                 </Badge>
             </TableCell>
             <TableCell className="space-x-2">
-                {assignment.status === 'pending' && (
-                    <>
-                        <Button size="sm" onClick={() => handleAction(approveAssignment)} disabled={isPending}>
-                            {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Check className="mr-2 h-4 w-4" />} Approve
-                        </Button>
-                        <Button size="sm" variant="destructive" onClick={() => handleAction(rejectAssignment)} disabled={isPending}>
-                           {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <X className="mr-2 h-4 w-4" />} Reject
-                        </Button>
-                    </>
+                {assignment.status !== 'approved' && (
+                    <Button size="sm" onClick={() => handleAction(approveAssignment)} disabled={isPending}>
+                        {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Check className="mr-2 h-4 w-4" />} Approve
+                    </Button>
+                )}
+                 {assignment.status !== 'rejected' && (
+                    <Button size="sm" variant="destructive" onClick={() => handleAction(rejectAssignment)} disabled={isPending}>
+                       {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <X className="mr-2 h-4 w-4" />} Reject
+                    </Button>
                 )}
             </TableCell>
         </TableRow>

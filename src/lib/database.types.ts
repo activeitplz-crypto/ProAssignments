@@ -19,6 +19,7 @@ export type Database = {
           urls: string[]
           user_id: string
           task_id: string | null
+          feedback: string | null
         }
         Insert: {
           created_at?: string
@@ -28,6 +29,7 @@ export type Database = {
           urls: string[]
           user_id: string
           task_id?: string | null
+          feedback?: string | null
         }
         Update: {
           created_at?: string
@@ -37,6 +39,7 @@ export type Database = {
           urls?: string[]
           user_id?: string
           task_id?: string | null
+          feedback?: string | null
         }
         Relationships: [
           {

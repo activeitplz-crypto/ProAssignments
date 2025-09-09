@@ -1,4 +1,3 @@
-
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import {
@@ -8,10 +7,35 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { FileCheck2, Info } from 'lucide-react';
+import { FileCheck2, Info, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AssignmentForm } from './assignment-form';
-import type { Task } from '@/lib/types';
+import type { Task, Assignment } from '@/lib/types';
+import { Badge } from '@/components/ui/badge';
+
+function getStatusBadge(status: string | null, feedback?: string | null) {
+    switch (status) {
+        case 'approved':
+            return (
+                <Badge variant="default" className="bg-green-500 hover:bg-green-600">
+                    <CheckCircle className="mr-2 h-4 w-4" /> AI Approved
+                </Badge>
+            );
+        case 'rejected':
+             return (
+                <Badge variant="destructive">
+                    <XCircle className="mr-2 h-4 w-4" /> AI Rejected: {feedback || "No reason given."}
+                </Badge>
+            );
+        default:
+            return (
+                <Badge variant="secondary">
+                    <Clock className="mr-2 h-4 w-4" /> Pending Submission
+                </Badge>
+            );
+    }
+}
+
 
 export default async function AssignmentsPage() {
   const supabase = createClient();
@@ -59,12 +83,12 @@ export default async function AssignmentsPage() {
     return <div>Could not load tasks. Please try again.</div>;
   }
 
-  // Fetch today's submissions to check which tasks are already submitted
+  // Fetch today's submissions to check status
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const { data: submitted_assignments, error: submissionsError } = await supabase
     .from('assignments')
-    .select('task_id')
+    .select('task_id, status, feedback')
     .eq('user_id', session.user.id)
     .gte('created_at', today.toISOString());
 
@@ -73,42 +97,53 @@ export default async function AssignmentsPage() {
       return <div>Could not load submission status.</div>
   }
 
-  const submittedTaskIds = new Set(submitted_assignments.map(a => a.task_id));
+  const submissionStatusMap = new Map<string, {status: string; feedback: string | null;}>();
+    (submitted_assignments as Assignment[]).forEach(a => {
+        if(a.task_id) {
+            submissionStatusMap.set(a.task_id, { status: a.status, feedback: a.feedback });
+        }
+    });
+
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-headline text-3xl font-bold">Submit Your Tasks</h1>
+        <h1 className="font-headline text-3xl font-bold">Submit Your Assignments</h1>
         <p className="text-muted-foreground">
-          Submit proof for each task you have completed today.
+          Upload images of your handwritten assignments for AI verification.
         </p>
       </div>
 
       {tasks && tasks.length > 0 ? (
         <div className="space-y-8">
           {(tasks as Task[]).map((task, index) => {
-            const isSubmitted = submittedTaskIds.has(task.id);
+            const submission = submissionStatusMap.get(task.id);
+            const isSubmittedAndNotRejected = submission && submission.status !== 'rejected';
+
             return (
               <Card key={task.id}>
                 <CardHeader>
-                  <CardTitle className="font-headline flex items-center gap-2">
-                    <FileCheck2 className="h-6 w-6 text-primary" />
-                    Task {index + 1}: {task.title}
-                  </CardTitle>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                    <CardTitle className="font-headline flex items-center gap-2">
+                        <FileCheck2 className="h-6 w-6 text-primary" />
+                        Task {index + 1}: {task.title}
+                    </CardTitle>
+                    {getStatusBadge(submission?.status || null, submission?.feedback)}
+                  </div>
                   <CardDescription>
-                    {isSubmitted 
+                    {isSubmittedAndNotRejected 
                         ? "You have already submitted this task for today." 
-                        : "Paste the proof URLs from the task you've completed."
+                        : "Upload your handwritten assignment image(s). Ensure the title matches exactly."
                     }
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {isSubmitted ? (
+                    {isSubmittedAndNotRejected ? (
                          <Alert variant="default" className="border-green-500 bg-green-50">
                             <Info className="h-4 w-4 text-green-600" />
                             <AlertTitle className="text-green-700">Submission Received</AlertTitle>
                             <AlertDescription className="text-green-600">
-                                We are reviewing your submission for this task.
+                                This task has been submitted for today.
                             </AlertDescription>
                         </Alert>
                     ) : (

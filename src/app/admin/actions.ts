@@ -215,6 +215,17 @@ export async function approveAssignment(formData: FormData) {
   const supabase = await verifyAdmin();
   const assignmentId = formData.get('assignmentId') as string;
 
+  if (!assignmentId) return { error: 'Assignment ID missing.' };
+
+  const { data: assignment, error: fetchError } = await supabase
+    .from('assignments')
+    .select('id, user_id, status')
+    .eq('id', assignmentId)
+    .single();
+
+  if (fetchError || !assignment) return { error: 'Assignment not found.' };
+  if (assignment.status === 'approved') return { error: 'Assignment already approved.' };
+
   const { error } = await supabase
     .from('assignments')
     .update({ status: 'approved' })
@@ -224,10 +235,46 @@ export async function approveAssignment(formData: FormData) {
     console.error('Approve Assignment Error:', error);
     return { error: 'Failed to approve assignment.' };
   }
+  
+  // Trigger earnings update check
+  await checkAndApplyDailyEarnings(supabase, assignment.user_id);
 
   revalidatePath('/admin');
   revalidatePath('/assignments');
+  return { error: null };
 }
+
+async function checkAndApplyDailyEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
+    const { data: profile, error: profileError } = await supabase
+        .from('profiles').select('current_plan').eq('id', userId).single();
+    
+    if (profileError || !profile || !profile.current_plan) return;
+
+    const { data: plan, error: planError } = await supabase
+        .from('plans').select('daily_earning, daily_assignments').eq('name', profile.current_plan).single();
+    
+    if (planError || !plan) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const { count, error: countError } = await supabase
+        .from('assignments').select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('status', 'approved')
+        .gte('created_at', today.toISOString());
+
+    if (countError) return;
+
+    if (count !== null && count >= plan.daily_assignments) {
+        const { error: rpcError } = await supabase.rpc('add_daily_earnings', {
+           p_user_id: userId,
+           p_earnings_to_add: plan.daily_earning,
+       });
+       if (rpcError) console.error("RPC 'add_daily_earnings' Error:", rpcError);
+    }
+}
+
 
 export async function rejectAssignment(formData: FormData) {
   const supabase = await verifyAdmin();

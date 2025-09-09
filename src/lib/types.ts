@@ -64,6 +64,7 @@ export interface Assignment {
   urls: string[];
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
+  feedback: string | null;
 }
 
 export interface TopUser {

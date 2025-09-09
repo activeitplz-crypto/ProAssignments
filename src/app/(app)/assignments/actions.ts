@@ -1,20 +1,71 @@
-
 'use server';
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
+import { verifyAssignment, type VerifyAssignmentInput } from '@/ai/flows/verify-assignment-flow';
+import type { Plan } from '@/lib/types';
 
 const assignmentSchema = z.object({
   taskId: z.string().uuid('Invalid Task ID.'),
   title: z.string().min(1, 'Title is required.'),
-  url1: z.string().url({ message: 'URL 1 must be a valid URL.' }),
-  url2: z.string().url().optional().or(z.literal('')),
-  url3: z.string().url().optional().or(z.literal('')),
-  url4: z.string().url().optional().or(z.literal('')),
+  images: z.array(z.string()).min(1, 'At least one image is required.'),
 });
 
-export async function submitAssignment(formData: z.infer<typeof assignmentSchema>) {
+async function updateUserEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
+    // 1. Get user's current plan
+    const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('current_plan')
+        .eq('id', userId)
+        .single();
+    
+    if (profileError || !profile || !profile.current_plan) {
+        console.error("Could not fetch user plan for earnings update", profileError);
+        return; // Exit if no plan found
+    }
+
+    // 2. Get plan details (daily earning amount and task limit)
+    const { data: plan, error: planError } = await supabase
+        .from('plans')
+        .select('daily_earning, daily_assignments')
+        .eq('name', profile.current_plan)
+        .single();
+
+    if (planError || !plan) {
+        console.error("Could not fetch plan details for earnings update", planError);
+        return; // Exit if no plan details found
+    }
+    
+    // 3. Count today's approved assignments for the user
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of today
+    const { count: approvedCount, error: countError } = await supabase
+        .from('assignments')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('status', 'approved')
+        .gte('created_at', today.toISOString());
+    
+    if (countError) {
+        console.error("Could not count approved assignments", countError);
+        return;
+    }
+
+    // 4. If approved count matches daily assignment limit, update earnings
+    if (approvedCount !== null && approvedCount >= plan.daily_assignments) {
+       const { error: rpcError } = await supabase.rpc('add_daily_earnings', {
+           p_user_id: userId,
+           p_earnings_to_add: plan.daily_earning,
+       });
+       if(rpcError) {
+           console.error("Failed to add daily earnings via RPC:", rpcError);
+       }
+    }
+}
+
+
+export async function submitAssignmentWithImages(formData: z.infer<typeof assignmentSchema>) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -22,55 +73,74 @@ export async function submitAssignment(formData: z.infer<typeof assignmentSchema
     return { error: 'You must be logged in to submit an assignment.' };
   }
   
-  // 1. Verify user has an active plan
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('current_plan')
-    .eq('id', user.id)
-    .single();
-  
-  if (!profile || !profile.current_plan) {
-    return { error: 'You must have an active plan to submit assignments.' };
-  }
-  
-  // 2. Check if the user has already submitted this specific task today
+  // 1. Check for existing submission for this task today
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Start of today
-  const { count: existingSubmissionCount, error: countError } = await supabase
+  const { data: existingSubmission, error: existingError } = await supabase
     .from('assignments')
-    .select('*', { count: 'exact', head: true })
+    .select('id, status')
     .eq('user_id', user.id)
     .eq('task_id', formData.taskId)
-    .gte('created_at', today.toISOString());
+    .gte('created_at', today.toISOString())
+    .maybeSingle();
 
-  if (countError) {
-    console.error('Server-side count error:', countError);
+  if (existingError) {
+    console.error('Server-side check error:', existingError);
     return { error: 'Could not verify your submission status.' };
   }
   
-  if (existingSubmissionCount !== null && existingSubmissionCount > 0) {
-    return { error: 'You have already submitted proof for this task today.' };
+  if (existingSubmission && existingSubmission.status !== 'rejected') {
+    return { error: 'You have already submitted this task today.' };
   }
 
-  // 3. Insert the new assignment
-  const urls = [formData.url1, formData.url2, formData.url3, formData.url4].filter(url => url);
+  // 2. Prepare data and call AI verification flow
+  const aiInput: VerifyAssignmentInput = {
+    taskTitle: formData.title,
+    images: formData.images,
+  };
 
-  const { error } = await supabase
-    .from('assignments')
-    .insert({
+  const aiResult = await verifyAssignment(aiInput);
+
+  // 3. Insert or Update the assignment based on AI result
+  const assignmentData = {
       user_id: user.id,
       task_id: formData.taskId,
       title: formData.title,
-      urls: urls,
-      status: 'pending',
-    });
+      urls: [], // URLs are no longer used
+      status: aiResult.isApproved ? 'approved' : 'rejected',
+      feedback: aiResult.reason, // Save AI feedback
+  };
 
-  if (error) {
-    console.error('Assignment Submission Error:', error);
-    return { error: 'Failed to submit your assignment. Please try again.' };
+  if (existingSubmission) {
+      // If there was a rejected submission today, update it
+      const { error: updateError } = await supabase
+        .from('assignments')
+        .update(assignmentData)
+        .eq('id', existingSubmission.id);
+      
+      if (updateError) {
+        console.error('Assignment Update Error:', updateError);
+        return { error: 'Failed to update your assignment submission.', aiFeedback: aiResult.reason };
+      }
+  } else {
+      // Otherwise, insert a new one
+      const { error: insertError } = await supabase
+        .from('assignments')
+        .insert(assignmentData);
+
+      if (insertError) {
+        console.error('Assignment Insert Error:', insertError);
+        return { error: 'Failed to submit your assignment.', aiFeedback: aiResult.reason };
+      }
+  }
+  
+  // 4. If approved, check if all daily tasks are done and update earnings
+  if (aiResult.isApproved) {
+      await updateUserEarnings(supabase, user.id);
   }
   
   revalidatePath('/assignments');
-  revalidatePath('/admin');
-  return { error: null };
+  revalidatePath('/dashboard');
+  
+  return { error: null, aiFeedback: aiResult.reason, isApproved: aiResult.isApproved };
 }

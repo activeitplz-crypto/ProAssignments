@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
     GEMINI_API_KEY: process.env.GEMINI_API_KEY,
     // When you deploy your app, set NEXT_PUBLIC_BASE_URL in your hosting environment
     // to your app's public URL.
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:9002',
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || 'https://pro-assignments.vercel.app',
   },
 };
 

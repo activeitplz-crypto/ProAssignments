@@ -102,3 +102,9 @@ export interface SocialLink {
   social_link: string;
   created_at: string;
 }
+
+export interface Referral {
+    name: string | null;
+    created_at: string;
+    current_plan: string | null;
+}

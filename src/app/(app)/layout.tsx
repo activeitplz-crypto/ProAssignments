@@ -108,6 +108,7 @@ export default function AppLayout({
   ];
 
   const actionItems = [
+    { href: '/referrals', label: 'Referrals', icon: Users },
     { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: '/watch', label: 'Guidelines', icon: Video },
     { href: '/top-users', label: 'Top Users', icon: Award },

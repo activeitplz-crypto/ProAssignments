@@ -35,6 +35,7 @@ const signupSchema = z.object({
   username: z.string().min(3).regex(/^[a-z0-9_]+$/, { message: 'Username can only contain lowercase letters, numbers, and underscores.'}),
   email: z.string().email(),
   password: z.string().min(6),
+  referral_code: z.string().optional(),
 });
 
 export async function signup(formData: z.infer<typeof signupSchema>) {
@@ -51,6 +52,19 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
     return { error: 'Username is already taken.', success: false };
   }
 
+  let referrerId: string | null = null;
+  if (formData.referral_code) {
+      const { data: referrer, error: referrerError } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('referral_code', formData.referral_code)
+          .single();
+      
+      if (referrer) {
+          referrerId = referrer.id;
+      }
+  }
+  
   const referral_code = `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`;
 
   const origin = process.env.NEXT_PUBLIC_BASE_URL;
@@ -65,6 +79,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
         name: formData.name,
         username: formData.username,
         referral_code: referral_code,
+        referred_by: referrerId,
       },
     },
   });

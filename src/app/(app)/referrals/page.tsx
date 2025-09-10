@@ -17,10 +17,29 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Users, CheckCircle, Gift, UserPlus } from 'lucide-react';
-import type { Referral } from '@/lib/types';
+import { Users, CheckCircle, Gift, UserPlus, ArrowUpCircle } from 'lucide-react';
+import type { Referral, Upline } from '@/lib/types';
 import { format } from 'date-fns';
 import { CopyButton } from './copy-button';
+
+async function getUplineInfo(supabase: ReturnType<typeof createClient>, referrerId: string): Promise<Upline | null> {
+    const { data: uplineProfile, error } = await supabase
+        .from('profiles')
+        .select('name, referral_code')
+        .eq('id', referrerId)
+        .single();
+    
+    if(error || !uplineProfile) {
+        console.error('Error fetching upline info:', error);
+        return null;
+    }
+
+    return {
+        name: uplineProfile.name,
+        referral_code: uplineProfile.referral_code,
+    }
+}
+
 
 export default async function ReferralsPage() {
   const supabase = createClient();
@@ -41,6 +60,11 @@ export default async function ReferralsPage() {
   if (userError || !user) {
     return <div>Could not load your referral data.</div>;
   }
+  
+  let uplineInfo: Upline | null = null;
+  if (user.referred_by) {
+    uplineInfo = await getUplineInfo(supabase, user.referred_by);
+  }
 
   const { data: referrals, error: referralsError } = await supabase
     .from('profiles')
@@ -57,6 +81,28 @@ export default async function ReferralsPage() {
 
   return (
     <div className="space-y-6">
+      {uplineInfo && (
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-2 text-2xl">
+                    <ArrowUpCircle className="h-7 w-7 text-primary" />
+                    My Upline
+                </CardTitle>
+                <CardDescription>This is the person who referred you to the platform.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+                <div>
+                    <p className="text-sm font-medium text-muted-foreground">Upline Name</p>
+                    <p className="font-semibold">{uplineInfo.name || 'Anonymous'}</p>
+                </div>
+                 <div>
+                    <p className="text-sm font-medium text-muted-foreground">Upline Referral Code</p>
+                    <p className="font-semibold">{uplineInfo.referral_code}</p>
+                </div>
+            </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2 text-3xl">

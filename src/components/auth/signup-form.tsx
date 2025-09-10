@@ -25,9 +25,14 @@ const formSchema = z.object({
   username: z.string().min(3, { message: "Username must be at least 3 characters." }).regex(/^[a-z0-9_]+$/, { message: 'Username can only use lowercase letters, numbers, and underscores.'}),
   email: z.string().email({ message: "Invalid email address." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  referral_code: z.string().optional(),
 });
 
-export function SignupForm() {
+interface SignupFormProps {
+  referralCode?: string;
+}
+
+export function SignupForm({ referralCode }: SignupFormProps) {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
   const [isSuccess, setIsSuccess] = useState(false);
@@ -39,6 +44,7 @@ export function SignupForm() {
       username: "",
       email: "",
       password: "",
+      referral_code: referralCode || "",
     },
   });
 
@@ -124,6 +130,19 @@ export function SignupForm() {
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input type="password" placeholder="••••••••" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="referral_code"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Referral Code (Optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., FRIEND-REF-1234" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

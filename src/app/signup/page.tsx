@@ -9,7 +9,14 @@ import {
 } from "@/components/ui/card";
 import { SignupForm } from "@/components/auth/signup-form";
 
-export default function SignupPage() {
+export default function SignupPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const referralCode =
+    typeof searchParams.ref === "string" ? searchParams.ref : undefined;
+    
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-2xl">
@@ -23,7 +30,7 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SignupForm />
+          <SignupForm referralCode={referralCode} />
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
             <Link href="/login" className="underline text-primary font-medium hover:text-primary/80">

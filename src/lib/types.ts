@@ -108,3 +108,8 @@ export interface Referral {
     created_at: string;
     current_plan: string | null;
 }
+
+export interface Upline {
+  name: string | null;
+  referral_code: string;
+}

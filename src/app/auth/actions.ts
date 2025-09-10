@@ -63,17 +63,15 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
       if (referrer) {
           referrerId = referrer.id;
       } else {
-        // If the code is provided but not found, we can optionally return an error
         return { error: 'Invalid referral code provided.', success: false };
       }
   }
   
-  const referral_code = `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`;
-
+  const ownReferralCode = `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`;
   const origin = process.env.NEXT_PUBLIC_BASE_URL;
 
-  // Explicitly set the redirect URL for the confirmation email.
-  const { error } = await supabase.auth.signUp({
+  // Step 1: Sign up the new user
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email: formData.email,
     password: formData.password,
     options: {
@@ -81,19 +79,32 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
       data: {
         name: formData.name,
         username: formData.username,
-        referral_code: referral_code,
-        // This is the corrected part: we now pass the referrer's UUID
-        referred_by: referrerId,
+        referral_code: ownReferralCode,
+        // We will set referred_by in a separate update call after the user profile is created.
       },
     },
   });
 
-  if (error) {
-    if (error.message.includes('unique constraint')) {
+  if (signUpError) {
+    if (signUpError.message.includes('unique constraint')) {
        return { error: 'User with this email already exists.', success: false };
     }
-    console.error('Signup Error:', error.message);
+    console.error('Signup Error:', signUpError.message);
     return { error: 'Could not create user. Please try again.', success: false };
+  }
+
+  // Step 2: If signup was successful and there's a referrer, update the new user's profile
+  if (signUpData.user && referrerId) {
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ referred_by: referrerId })
+        .eq('id', signUpData.user.id);
+        
+      if (updateError) {
+          console.error('Failed to link referrer:', updateError);
+          // This is not a critical failure for the user, so we don't return an error.
+          // The user is created, just not linked. We log it for debugging.
+      }
   }
 
   return { error: null, success: true };

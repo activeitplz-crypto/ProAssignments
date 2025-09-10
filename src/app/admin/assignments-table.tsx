@@ -167,7 +167,18 @@ function AssignmentRow({ assignment }: { assignment: EnrichedAssignment }) {
             <TableCell>{assignment.feedback || "N/A"}</TableCell>
             <TableCell>{format(new Date(assignment.created_at), 'PPP')}</TableCell>
             <TableCell>
-                 <Badge variant={assignment.status === 'pending' ? 'secondary' : assignment.status === 'approved' ? 'default' : 'destructive'}>
+                 <Badge
+                    variant={
+                        assignment.status === 'approved'
+                        ? 'default'
+                        : assignment.status === 'rejected'
+                        ? 'destructive'
+                        : 'secondary'
+                    }
+                    className={
+                        assignment.status === 'approved' ? 'bg-green-500 hover:bg-green-600' : ''
+                    }
+                    >
                     {assignment.status}
                 </Badge>
             </TableCell>

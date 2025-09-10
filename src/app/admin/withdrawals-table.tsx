@@ -138,7 +138,22 @@ export function WithdrawalsTable() {
                   <TableCell>{w.account_info.holder_name}</TableCell>
                   <TableCell>{w.account_info.account_number}</TableCell>
                   <TableCell>{format(new Date(w.created_at), 'PPP')}</TableCell>
-                  <TableCell><Badge variant={w.status === 'pending' ? 'secondary' : w.status === 'approved' ? 'default' : 'destructive'}>{w.status}</Badge></TableCell>
+                  <TableCell>
+                     <Badge
+                      variant={
+                        w.status === 'approved'
+                          ? 'default'
+                          : w.status === 'rejected'
+                          ? 'destructive'
+                          : 'secondary'
+                      }
+                      className={
+                        w.status === 'approved' ? 'bg-green-500 hover:bg-green-600' : ''
+                      }
+                    >
+                      {w.status}
+                    </Badge>
+                  </TableCell>
                   <TableCell className="space-x-2">
                     {w.status === 'pending' && <AdminActionForms withdrawalId={w.id} />}
                   </TableCell>

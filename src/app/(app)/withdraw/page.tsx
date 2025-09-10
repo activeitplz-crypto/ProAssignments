@@ -105,7 +105,18 @@ function WithdrawalHistory({ withdrawals }: { withdrawals: Withdrawal[] }) {
                   <TableCell>{w.account_info.bank_name} ({w.account_info.account_number})</TableCell>
                   <TableCell>{format(new Date(w.created_at), 'PPP')}</TableCell>
                   <TableCell>
-                    <Badge variant={w.status === 'pending' ? 'secondary' : w.status === 'approved' ? 'default' : 'destructive'}>
+                     <Badge
+                      variant={
+                        w.status === 'approved'
+                          ? 'default'
+                          : w.status === 'rejected'
+                          ? 'destructive'
+                          : 'secondary'
+                      }
+                      className={
+                        w.status === 'approved' ? 'bg-green-500 hover:bg-green-600' : ''
+                      }
+                    >
                       {w.status}
                     </Badge>
                   </TableCell>

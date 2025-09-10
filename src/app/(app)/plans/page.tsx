@@ -104,7 +104,7 @@ export default async function PlansPage() {
               </CardContent>
               <CardFooter>
                  {isActive ? (
-                    <Button className="w-full" disabled>
+                    <Button className="w-full bg-green-500 hover:bg-green-600" disabled>
                       <CheckCircle className="mr-2 h-4 w-4" />
                       Active Plan
                     </Button>
@@ -189,7 +189,18 @@ function PurchaseHistory({ payments }: { payments: any[] }) {
                   <TableCell>{p.payment_uid}</TableCell>
                   <TableCell>{format(new Date(p.created_at), 'PPP')}</TableCell>
                   <TableCell>
-                    <Badge variant={p.status === 'pending' ? 'secondary' : p.status === 'approved' ? 'default' : 'destructive'}>
+                     <Badge
+                      variant={
+                        p.status === 'approved'
+                          ? 'default'
+                          : p.status === 'rejected'
+                          ? 'destructive'
+                          : 'secondary'
+                      }
+                      className={
+                        p.status === 'approved' ? 'bg-green-500 hover:bg-green-600' : ''
+                      }
+                    >
                       {p.status}
                     </Badge>
                   </TableCell>

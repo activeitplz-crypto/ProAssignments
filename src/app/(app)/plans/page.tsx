@@ -10,8 +10,8 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Zap, ClipboardList } from 'lucide-react';
-import type { Plan } from '@/lib/types';
+import { CheckCircle, Zap, ClipboardList, Clock } from 'lucide-react';
+import type { Plan, Payment } from '@/lib/types';
 import {
   Dialog,
   DialogContent,
@@ -37,6 +37,12 @@ export default async function PlansPage() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('current_plan')
+    .eq('id', user?.id || '')
+    .single();
+
   const { data: plans, error: plansError } = await supabase.from('plans').select('*').order('investment');
   const { data: payments, error: paymentsError } = await supabase
     .from('payments')
@@ -53,6 +59,16 @@ export default async function PlansPage() {
     // Non-critical, so we can still render the rest of the page
   }
 
+  // Create a map of pending payments for quick lookup
+  const pendingPayments = new Map<string, boolean>();
+  (payments as Payment[] || []).forEach(p => {
+    if (p.status === 'pending' && p.plan_id) {
+      pendingPayments.set(p.plan_id, true);
+    }
+  });
+  
+  const activePlanName = profile?.current_plan;
+
   return (
     <div className="space-y-6">
       <div>
@@ -63,30 +79,47 @@ export default async function PlansPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {(plans as Plan[]).map((plan) => (
-          <Card key={plan.id} className="flex flex-col">
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
-              <CardDescription className="flex flex-col">
-                <span className="text-xs text-muted-foreground">Investment</span>
-                <span className="text-3xl font-bold text-primary">PKR {plan.investment}</span>
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1 space-y-4">
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                <span>Daily Earning: PKR {plan.daily_earning.toFixed(2)}</span>
-              </div>
-              <div className="flex items-center">
-                <ClipboardList className="mr-2 h-4 w-4 text-primary" />
-                <span>Daily Assignments: {plan.daily_assignments}</span>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <PurchasePlanDialog plan={plan} />
-            </CardFooter>
-          </Card>
-        ))}
+        {(plans as Plan[]).map((plan) => {
+          const isPending = pendingPayments.has(plan.id);
+          const isActive = activePlanName === plan.name;
+
+          return (
+            <Card key={plan.id} className="flex flex-col">
+              <CardHeader>
+                <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
+                <CardDescription className="flex flex-col">
+                  <span className="text-xs text-muted-foreground">Investment</span>
+                  <span className="text-3xl font-bold text-primary">PKR {plan.investment}</span>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1 space-y-4">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                  <span>Daily Earning: PKR {plan.daily_earning.toFixed(2)}</span>
+                </div>
+                <div className="flex items-center">
+                  <ClipboardList className="mr-2 h-4 w-4 text-primary" />
+                  <span>Daily Assignments: {plan.daily_assignments}</span>
+                </div>
+              </CardContent>
+              <CardFooter>
+                 {isActive ? (
+                    <Button className="w-full" disabled>
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      Active Plan
+                    </Button>
+                  ) : isPending ? (
+                    <Button className="w-full" disabled variant="secondary">
+                      <Clock className="mr-2 h-4 w-4" />
+                      Pending Approval
+                    </Button>
+                  ) : (
+                    <PurchasePlanDialog plan={plan} />
+                  )}
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
 
       <PurchaseHistory payments={payments as any[] || []} />

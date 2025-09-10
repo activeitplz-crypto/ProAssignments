@@ -17,9 +17,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Users, Copy, CheckCircle, Gift, UserPlus } from 'lucide-react';
-import type { Profile, Referral } from '@/lib/types';
+import { Users, CheckCircle, Gift, UserPlus } from 'lucide-react';
+import type { Referral } from '@/lib/types';
 import { format } from 'date-fns';
 import { CopyButton } from './copy-button';
 
@@ -51,6 +50,7 @@ export default async function ReferralsPage() {
 
   if (referralsError) {
     console.error('Error fetching referrals:', referralsError);
+    // Don't return, just show an empty table.
   }
 
   const referralLink = `${process.env.NEXT_PUBLIC_BASE_URL}/signup?ref=${user.referral_code}`;
@@ -64,27 +64,47 @@ export default async function ReferralsPage() {
             Invite Friends, Earn Rewards
           </CardTitle>
           <CardDescription>
-            Share your unique referral link with friends. When they sign up and
+            Share your unique referral link or code with friends. When they sign up and
             purchase a plan, you'll earn a bonus!
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2 rounded-lg border bg-muted p-4">
-            <label
-              htmlFor="referral-link"
-              className="text-sm font-medium text-muted-foreground"
-            >
-              Your Unique Referral Link
-            </label>
-            <div className="flex gap-2">
-              <input
-                id="referral-link"
-                type="text"
-                readOnly
-                value={referralLink}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              />
-              <CopyButton textToCopy={referralLink} />
+          <div className="space-y-4 rounded-lg border bg-muted p-4">
+            <div className="space-y-2">
+              <label
+                htmlFor="referral-link"
+                className="text-sm font-medium text-muted-foreground"
+              >
+                Your Unique Referral Link
+              </label>
+              <div className="flex gap-2">
+                <input
+                  id="referral-link"
+                  type="text"
+                  readOnly
+                  value={referralLink}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                />
+                <CopyButton textToCopy={referralLink} />
+              </div>
+            </div>
+             <div className="space-y-2">
+              <label
+                htmlFor="referral-code"
+                className="text-sm font-medium text-muted-foreground"
+              >
+                Your Unique Referral Code
+              </label>
+              <div className="flex gap-2">
+                <input
+                  id="referral-code"
+                  type="text"
+                  readOnly
+                  value={user.referral_code}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-semibold"
+                />
+                <CopyButton textToCopy={user.referral_code} />
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -144,7 +164,7 @@ export default async function ReferralsPage() {
               {referrals && referrals.length > 0 ? (
                 (referrals as Referral[]).map((ref, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">{ref.name}</TableCell>
+                    <TableCell className="font-medium">{ref.name || 'Anonymous User'}</TableCell>
                     <TableCell>
                       {format(new Date(ref.created_at), 'PPP')}
                     </TableCell>

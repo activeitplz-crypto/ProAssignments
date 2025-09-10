@@ -53,15 +53,18 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
   }
 
   let referrerId: string | null = null;
-  if (formData.referral_code) {
+  if (formData.referral_code && formData.referral_code.trim() !== '') {
       const { data: referrer, error: referrerError } = await supabase
           .from('profiles')
           .select('id')
-          .eq('referral_code', formData.referral_code)
+          .eq('referral_code', formData.referral_code.trim())
           .single();
       
       if (referrer) {
           referrerId = referrer.id;
+      } else {
+        // If the code is provided but not found, we can optionally return an error
+        return { error: 'Invalid referral code provided.', success: false };
       }
   }
   
@@ -79,6 +82,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
         name: formData.name,
         username: formData.username,
         referral_code: referral_code,
+        // This is the corrected part: we now pass the referrer's UUID
         referred_by: referrerId,
       },
     },

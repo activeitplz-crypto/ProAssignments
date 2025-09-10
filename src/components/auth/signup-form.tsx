@@ -142,7 +142,7 @@ export function SignupForm({ referralCode }: SignupFormProps) {
             <FormItem>
               <FormLabel>Referral Code (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., FRIEND-REF-1234" {...field} />
+                <Input placeholder="e.g., FRIEND-REF-1234" {...field} value={field.value ?? ''} />
               </FormControl>
               <FormMessage />
             </FormItem>

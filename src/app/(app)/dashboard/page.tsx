@@ -60,6 +60,19 @@ export default async function DashboardPage() {
         <Card className="bg-card/80">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-normal text-muted-foreground">
+              Current Balance
+            </CardTitle>
+            <Wallet className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">
+             PKR {userData.current_balance.toFixed(2)}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="bg-card/80">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-normal text-muted-foreground">
               Today's Earnings
             </CardTitle>
              <Zap className="h-4 w-4 text-muted-foreground" />
@@ -80,19 +93,6 @@ export default async function DashboardPage() {
           <CardContent>
             <p className="text-2xl font-bold">
               {userData.active_plan}
-            </p>
-          </CardContent>
-        </Card>
-         <Card className="bg-card/80">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-normal text-muted-foreground">
-              Current Balance
-            </CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-             PKR {userData.current_balance.toFixed(2)}
             </p>
           </CardContent>
         </Card>

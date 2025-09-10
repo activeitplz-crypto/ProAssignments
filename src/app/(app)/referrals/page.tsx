@@ -30,12 +30,13 @@ async function getUplineInfo(supabase: ReturnType<typeof createClient>, referrer
         .single();
     
     if(error || !uplineProfile) {
-        console.error('Error fetching upline info:', error);
+        // This is not a critical error if the upline is not found, so just log it.
+        console.error('Could not fetch upline info:', error);
         return null;
     }
 
     return {
-        name: uplineProfile.name,
+        name: uplineProfile.name || 'Anonymous',
         referral_code: uplineProfile.referral_code,
     }
 }
@@ -58,7 +59,7 @@ export default async function ReferralsPage() {
     .single();
 
   if (userError || !user) {
-    return <div>Could not load your referral data.</div>;
+    return <div>Could not load your referral data. Please try again.</div>;
   }
   
   let uplineInfo: Upline | null = null;
@@ -93,7 +94,7 @@ export default async function ReferralsPage() {
             <CardContent className="space-y-2">
                 <div>
                     <p className="text-sm font-medium text-muted-foreground">Upline Name</p>
-                    <p className="font-semibold">{uplineInfo.name || 'Anonymous'}</p>
+                    <p className="font-semibold">{uplineInfo.name}</p>
                 </div>
                  <div>
                     <p className="text-sm font-medium text-muted-foreground">Upline Referral Code</p>

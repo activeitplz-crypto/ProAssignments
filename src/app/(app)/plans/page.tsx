@@ -32,6 +32,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 export default async function PlansPage() {
   const supabase = createClient();
@@ -197,9 +198,9 @@ function PurchaseHistory({ payments }: { payments: any[] }) {
                           ? 'destructive'
                           : 'secondary'
                       }
-                      className={
-                        p.status === 'approved' ? 'bg-green-500 hover:bg-green-600' : ''
-                      }
+                      className={cn(
+                        p.status === 'approved' && 'bg-green-500 hover:bg-green-600'
+                      )}
                     >
                       {p.status}
                     </Badge>

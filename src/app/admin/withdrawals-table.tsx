@@ -147,9 +147,9 @@ export function WithdrawalsTable() {
                           ? 'destructive'
                           : 'secondary'
                       }
-                      className={
-                        w.status === 'approved' ? 'bg-green-500 hover:bg-green-600' : ''
-                      }
+                      className={cn(
+                        w.status === 'approved' && 'bg-green-500 hover:bg-green-600'
+                      )}
                     >
                       {w.status}
                     </Badge>

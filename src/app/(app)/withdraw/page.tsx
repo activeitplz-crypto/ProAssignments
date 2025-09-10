@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import type { Withdrawal } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default async function WithdrawPage() {
   const supabase = createClient();
@@ -113,9 +114,9 @@ function WithdrawalHistory({ withdrawals }: { withdrawals: Withdrawal[] }) {
                           ? 'destructive'
                           : 'secondary'
                       }
-                      className={
-                        w.status === 'approved' ? 'bg-green-500 hover:bg-green-600' : ''
-                      }
+                      className={cn(
+                        w.status === 'approved' && 'bg-green-500 hover:bg-green-600'
+                      )}
                     >
                       {w.status}
                     </Badge>

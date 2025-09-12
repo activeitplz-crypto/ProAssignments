@@ -105,18 +105,21 @@ export default function AppLayout({
     { href: '/tasks', label: 'Tasks', icon: ClipboardList },
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
+    { href: '/top-users', label: 'Top Users', icon: Award },
+    { href: '/reviews', label: 'Reviews', icon: MessageSquare },
+    { href: '/guide', label: 'Guide', icon: HelpCircle },
   ];
 
   const actionItems = [
     { href: '/referrals', label: 'Referrals', icon: Users },
-    { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: '/watch', label: 'Guidelines', icon: Video },
-    { href: '/top-users', label: 'Top Users', icon: Award },
-    { href: '/reviews', label: 'Reviews', icon: MessageSquare },
     { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/social', label: 'Social', icon: Share2 },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
   ];
+
+  const allNavItems = [...navItems, ...actionItems];
+
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">
@@ -184,7 +187,7 @@ export default function AppLayout({
 
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
         <div className="grid h-16 grid-cols-4 items-center justify-around">
-          {navItems.map((item) => (
+          {navItems.slice(0, 4).map((item) => (
             <Link
               key={item.href}
               href={item.href}

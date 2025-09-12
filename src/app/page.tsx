@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, TrendingUp, ListChecks } from 'lucide-react';
+import { ArrowRight, TrendingUp, ListChecks, Award, MessageSquare, HelpCircle } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
 
@@ -36,7 +36,60 @@ export default function LandingPage() {
             </Link>
           </Button>
         </section>
-        <section className="bg-white/50 py-12 md:py-24">
+
+        <section className="bg-muted py-12 md:py-24">
+          <div className="container mx-auto px-4 md:px-6">
+            <h2 className="font-headline mb-12 text-center text-3xl font-bold md:text-4xl">
+              Explore Our Platform
+            </h2>
+            <div className="grid gap-8 md:grid-cols-3">
+              <Card className="flex flex-col text-center items-center">
+                <CardHeader>
+                  <Award className="h-10 w-10 text-primary mx-auto mb-4" />
+                  <CardTitle>Top Users</CardTitle>
+                  <CardDescription>
+                    See screenshots from our top earners and get motivated by their success.
+                  </CardDescription>
+                </CardHeader>
+                 <CardContent>
+                  <Button variant="outline" asChild>
+                    <Link href="/top-users">View Top Users</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card className="flex flex-col text-center items-center">
+                <CardHeader>
+                  <MessageSquare className="h-10 w-10 text-primary mx-auto mb-4" />
+                  <CardTitle>User Reviews</CardTitle>
+                  <CardDescription>
+                    Read testimonials from our community to see what they're saying about us.
+                  </CardDescription>
+                </CardHeader>
+                 <CardContent>
+                  <Button variant="outline" asChild>
+                    <Link href="/reviews">Read Reviews</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+               <Card className="flex flex-col text-center items-center">
+                <CardHeader>
+                    <HelpCircle className="h-10 w-10 text-primary mx-auto mb-4" />
+                  <CardTitle>Full Guide</CardTitle>
+                  <CardDescription>
+                    Learn everything you need to know about how to use the platform effectively.
+                  </CardDescription>
+                </CardHeader>
+                 <CardContent>
+                  <Button variant="outline" asChild>
+                    <Link href="/guide">Read the Guide</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-background py-12 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="font-headline mb-12 text-center text-3xl font-bold md:text-4xl">
               How It Works
@@ -69,6 +122,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
       </main>
       <footer className="container mx-auto px-4 py-6 text-center text-muted-foreground">
         <p>&copy; {new Date().getFullYear()} ProAssignment. All Rights Reserved.</p>

@@ -13,19 +13,18 @@ const assignmentSchema = z.object({
 });
 
 async function updateUserEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
-    // This function now calls an RPC to add a fixed amount.
-    // The RPC function 'add_fixed_earnings' should handle adding 2000 to
-    // current_balance, today_earning, and total_earning.
-    const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
-        p_user_id: userId,
-        p_amount_to_add: 2000,
-    });
+  // This RPC call will add exactly 2000 to the user's balances.
+  const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
+    p_user_id: userId,
+    p_amount_to_add: 2000,
+  });
 
-    if (rpcError) {
-        console.error("Failed to add fixed earnings via RPC:", rpcError);
-    }
+  if (rpcError) {
+    console.error('Failed to add fixed earnings via RPC:', rpcError);
+    // Even if it fails, we don't block the UI. The assignment is still approved.
+    // Logging is important here.
+  }
 }
-
 
 export async function submitAssignmentWithImages(formData: z.infer<typeof assignmentSchema>) {
   const supabase = createClient();
@@ -34,7 +33,7 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
   if (!user) {
     return { error: 'You must be logged in to submit an assignment.' };
   }
-  
+
   // 1. Check for existing APPROVED submission for this task today
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Start of today
@@ -43,7 +42,7 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     .select('id')
     .eq('user_id', user.id)
     .eq('task_id', formData.taskId)
-    .eq('status', 'approved') // We only care about blocking re-submission for already approved tasks
+    .eq('status', 'approved')
     .gte('created_at', today.toISOString())
     .maybeSingle();
 
@@ -51,8 +50,7 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     console.error('Server-side check error:', existingError);
     return { error: 'Could not verify your submission status.' };
   }
-  
-  // Block resubmission only if it's already approved
+
   if (existingSubmission) {
     return { error: 'You have already submitted and been approved for this task today.' };
   }
@@ -75,15 +73,13 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
   }
 
   // 4. If AI verification IS approved, insert the assignment.
-  // We use INSERT instead of UPSERT because we only save 'approved' status.
-  // Any previous rejections were not saved, so there's nothing to update.
   const { error: insertError } = await supabase
     .from('assignments')
     .insert({
       user_id: user.id,
       task_id: formData.taskId,
       title: formData.title,
-      urls: [], // URLs are no longer used, but schema might require it
+      urls: [], 
       status: 'approved',
       feedback: aiResult.reason,
       created_at: new Date().toISOString(),

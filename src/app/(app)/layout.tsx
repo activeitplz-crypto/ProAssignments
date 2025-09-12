@@ -105,9 +105,6 @@ export default function AppLayout({
     { href: '/tasks', label: 'Tasks', icon: ClipboardList },
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
-    { href: '/top-users', label: 'Top Users', icon: Award },
-    { href: '/reviews', label: 'Reviews', icon: MessageSquare },
-    { href: '/guide', label: 'Guide', icon: HelpCircle },
   ];
 
   const actionItems = [

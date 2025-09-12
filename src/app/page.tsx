@@ -2,9 +2,8 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, TrendingUp, ListChecks, Award, MessageSquare, HelpCircle } from 'lucide-react';
+import { ArrowRight, TrendingUp, Award, MessageSquare, HelpCircle } from 'lucide-react';
 import { Logo } from '@/components/logo';
-import Image from 'next/image';
 
 export default function LandingPage() {
   return (

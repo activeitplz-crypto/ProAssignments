@@ -17,9 +17,18 @@ export async function middleware(request: NextRequest) {
   const authRoutes = ['/login', '/signup'];
   const isAuthRoute = authRoutes.includes(pathname);
 
-  // User-specific routes
-  const protectedRoutes = ['/dashboard', '/plans', '/withdraw', '/tasks', '/profile'];
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  // User-specific routes (inside the /app directory group)
+  const isAppRoute = pathname.startsWith('/dashboard') || 
+                   pathname.startsWith('/plans') ||
+                   pathname.startsWith('/withdraw') ||
+                   pathname.startsWith('/tasks') ||
+                   pathname.startsWith('/assignments') ||
+                   pathname.startsWith('/referrals') ||
+                   pathname.startsWith('/profile') ||
+                   pathname.startsWith('/watch') ||
+                   pathname.startsWith('/feedbacks') ||
+                   pathname.startsWith('/social');
+
 
   // Admin route
   const isAdminRoute = pathname.startsWith('/admin');
@@ -31,7 +40,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // If a logged-out user tries to access protected content, redirect to login
-  if (!session && (isProtectedRoute || isAdminRoute)) {
+  if (!session && (isAppRoute || isAdminRoute)) {
      return NextResponse.redirect(new URL('/login', request.url));
   }
 
@@ -41,7 +50,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // If the admin tries to access a regular user page, redirect them to the admin panel
-  if (session && isProtectedRoute && isAdmin) {
+  if (session && isAppRoute && isAdmin) {
     return NextResponse.redirect(new URL('/admin', request.url));
   }
 

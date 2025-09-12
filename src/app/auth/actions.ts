@@ -32,7 +32,6 @@ export async function login(formData: z.infer<typeof loginSchema>) {
 
 const signupSchema = z.object({
   name: z.string().min(2),
-  username: z.string().min(3).regex(/^[a-z0-9_]+$/, { message: 'Username can only contain lowercase letters, numbers, and underscores.'}),
   email: z.string().email(),
   password: z.string().min(6),
   referral_code: z.string().optional(),
@@ -41,15 +40,21 @@ const signupSchema = z.object({
 export async function signup(formData: z.infer<typeof signupSchema>) {
   const supabase = createClient();
 
+  // Auto-generate username from name
+  const baseUsername = formData.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+  const uniqueUsername = `${baseUsername}_${Date.now().toString().slice(-4)}`;
+
+
   // Check if username is already taken
   const { data: existingUser } = await supabase
     .from('profiles')
     .select('id')
-    .eq('username', formData.username)
+    .eq('username', uniqueUsername)
     .single();
 
   if (existingUser) {
-    return { error: 'Username is already taken.', success: false };
+    // This is highly unlikely due to the timestamp, but it's good practice
+    return { error: 'A user with this generated username already exists. Please try again.', success: false };
   }
 
   let referrerId: string | null = null;
@@ -78,7 +83,7 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
       emailRedirectTo: `${origin}/auth/callback`,
       data: {
         name: formData.name,
-        username: formData.username,
+        username: uniqueUsername,
         referral_code: ownReferralCode,
         // We will set referred_by in a separate update call after the user profile is created.
       },

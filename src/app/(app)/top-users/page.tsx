@@ -4,10 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Award } from 'lucide-react';
 import Image from 'next/image';
 import type { TopUser } from '@/lib/types';
+import { redirect } from 'next/navigation';
 
 export default async function TopUsersPage() {
   const supabase = createClient();
-  
+  const { data: { session }} = await supabase.auth.getSession();
+
+  if (!session) {
+    redirect('/login');
+  }
+
   const { data: topUsers, error } = await supabase
     .from('top_users')
     .select('*')

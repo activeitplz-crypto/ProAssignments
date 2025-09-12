@@ -8,8 +8,17 @@ import {
 } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { HelpCircle } from 'lucide-react';
+import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 
-export default function GuidePage() {
+export default async function GuidePage() {
+    const supabase = createClient();
+    const { data: { session }} = await supabase.auth.getSession();
+
+    if (!session) {
+        redirect('/login');
+    }
+
   return (
     <div className="space-y-6">
       <Card>

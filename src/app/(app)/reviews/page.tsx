@@ -4,9 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { MessageSquare } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { Review } from '@/lib/types';
+import { redirect } from 'next/navigation';
 
 export default async function ReviewsPage() {
   const supabase = createClient();
+  const { data: { session }} = await supabase.auth.getSession();
+
+  if (!session) {
+    redirect('/login');
+  }
+  
   const { data: reviews, error } = await supabase
     .from('reviews')
     .select('*')

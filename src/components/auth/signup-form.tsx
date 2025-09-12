@@ -16,25 +16,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signup } from "@/app/auth/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useTransition } from "react";
-import { Loader2, MailCheck } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useTransition } from "react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Invalid email address." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
-  referral_code: z.string().optional(),
 });
 
-interface SignupFormProps {
-  referralCode?: string;
-}
-
-export function SignupForm({ referralCode }: SignupFormProps) {
+export function SignupForm() {
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
-  const [isSuccess, setIsSuccess] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,7 +38,6 @@ export function SignupForm({ referralCode }: SignupFormProps) {
       name: "",
       email: "",
       password: "",
-      referral_code: referralCode || "",
     },
   });
 
@@ -57,26 +52,14 @@ export function SignupForm({ referralCode }: SignupFormProps) {
         });
       }
       if (result?.success) {
-        setIsSuccess(true);
+        toast({
+            title: "Account Created!",
+            description: "You can now log in with your new account.",
+        });
+        router.push('/login');
       }
     });
   }
-
-  if (isSuccess) {
-    return (
-      <Alert variant="default" className="text-center">
-        <MailCheck className="mx-auto h-8 w-8 text-green-500" />
-        <AlertTitle className="mt-4 font-headline text-xl">
-          Check your email
-        </AlertTitle>
-        <AlertDescription className="mt-2">
-          We've sent a verification link to your email address. Please click the
-          link to complete your registration.
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
 
   return (
     <Form {...form}>
@@ -115,19 +98,6 @@ export function SignupForm({ referralCode }: SignupFormProps) {
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input type="password" placeholder="••••••••" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="referral_code"
-          render={({ field }) => (
-            <FormItem className="hidden">
-              <FormLabel>Referral Code (Optional)</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., FRIEND-REF-1234" {...field} value={field.value ?? ''} />
               </FormControl>
               <FormMessage />
             </FormItem>

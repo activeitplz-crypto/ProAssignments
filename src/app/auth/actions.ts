@@ -34,7 +34,6 @@ const signupSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(6),
-  referral_code: z.string().optional(),
 });
 
 export async function signup(formData: z.infer<typeof signupSchema>) {
@@ -56,36 +55,18 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
     // This is highly unlikely due to the timestamp, but it's good practice
     return { error: 'A user with this generated username already exists. Please try again.', success: false };
   }
-
-  let referrerId: string | null = null;
-  if (formData.referral_code && formData.referral_code.trim() !== '') {
-      const { data: referrer, error: referrerError } = await supabase
-          .from('profiles')
-          .select('id')
-          .eq('referral_code', formData.referral_code.trim())
-          .single();
-      
-      if (referrer) {
-          referrerId = referrer.id;
-      } else {
-        return { error: 'Invalid referral code provided.', success: false };
-      }
-  }
   
   const ownReferralCode = `${formData.name.toUpperCase().slice(0,4)}-REF-${Date.now().toString().slice(-4)}`;
-  const origin = process.env.NEXT_PUBLIC_BASE_URL;
 
   // Step 1: Sign up the new user
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email: formData.email,
     password: formData.password,
     options: {
-      emailRedirectTo: `${origin}/auth/callback`,
       data: {
         name: formData.name,
         username: uniqueUsername,
         referral_code: ownReferralCode,
-        // We will set referred_by in a separate update call after the user profile is created.
       },
     },
   });
@@ -97,20 +78,9 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
     console.error('Signup Error:', signUpError.message);
     return { error: 'Could not create user. Please try again.', success: false };
   }
-
-  // Step 2: If signup was successful and there's a referrer, update the new user's profile
-  if (signUpData.user && referrerId) {
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ referred_by: referrerId })
-        .eq('id', signUpData.user.id);
-        
-      if (updateError) {
-          console.error('Failed to link referrer:', updateError);
-          // This is not a critical failure for the user, so we don't return an error.
-          // The user is created, just not linked. We log it for debugging.
-      }
-  }
+  
+  // Since email confirmation is off, the user is created and their profile is available.
+  // No need to link referrer in a separate step as it's handled by the `handle_new_user` trigger.
 
   return { error: null, success: true };
 }

@@ -11,9 +11,6 @@ export default function LandingPage() {
       <header className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Logo />
         <nav className="flex items-center gap-4">
-          <Button variant="outline" asChild>
-            <Link href="/comments">Comments</Link>
-          </Button>
           <Button variant="ghost" asChild>
             <Link href="/login">Login</Link>
           </Button>
@@ -31,12 +28,20 @@ export default function LandingPage() {
           <p className="max-w-[700px] text-lg text-muted-foreground md:text-xl">
             Welcome to ProAssignment. We provide a clear path to grow your earnings through structured investment plans and completing daily assignments.
           </p>
-          <Button size="lg" asChild>
-            <Link href="/signup">
-              Start Earning Today
-              <TrendingUp className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button size="lg" asChild>
+              <Link href="/signup">
+                Start Earning Today
+                <TrendingUp className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/comments">
+                View Comments
+                <MessageSquare className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
         </section>
 
         <section className="bg-muted py-12 md:py-24">

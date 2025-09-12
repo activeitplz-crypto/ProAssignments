@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -93,16 +94,18 @@ export function AssignmentForm({ task }: AssignmentFormProps) {
       } else {
         toast({
           variant: result.isApproved ? 'default' : 'destructive',
-          title: `AI Verification: ${result.isApproved ? 'Approved' : 'Rejected'}`,
+          title: `AI Verification: ${result.isApproved ? 'Approved & Earnings Added' : 'Rejected'}`,
           description: result.aiFeedback,
         });
-        form.reset({
-            taskId: task.id,
-            title: task.title,
-            images: [],
-        });
-        setImagePreviews([]);
-        router.refresh();
+        if(result.isApproved) {
+            form.reset({
+                taskId: task.id,
+                title: task.title,
+                images: [],
+            });
+            setImagePreviews([]);
+            router.refresh();
+        }
       }
     });
   }

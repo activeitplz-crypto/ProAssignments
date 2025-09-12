@@ -228,30 +228,18 @@ export async function approveAssignment(formData: FormData) {
   // If already approved, do nothing to prevent double payment.
   if (assignment.status === 'approved') return { error: 'Assignment has already been approved.' };
 
-  // Use a transaction to update status and distribute earnings
-  const { error } = await supabase.tx(async (tx) => {
-    const { error: updateError } = await tx
-      .from('assignments')
-      .update({ status: 'approved' })
-      .eq('id', assignmentId);
-
-    if (updateError) throw updateError;
-
-    const { error: rpcError } = await tx.rpc('add_fixed_earnings', {
-      p_user_id: assignment.user_id,
-      p_amount_to_add: 2000,
-    });
-
-    if (rpcError) throw rpcError;
-  });
+  // Only change the status. Do not distribute earnings here.
+  const { error } = await supabase
+    .from('assignments')
+    .update({ status: 'approved' })
+    .eq('id', assignmentId);
   
   if (error) {
-    console.error('Approve Assignment Transaction Error:', error);
-    return { error: 'Transaction failed: Could not approve assignment and distribute earnings.' };
+    console.error('Approve Assignment Error:', error);
+    return { error: 'Could not approve assignment.' };
   }
 
   revalidatePath('/admin');
-  revalidatePath('/dashboard');
   revalidatePath('/assignments');
   return { error: null };
 }

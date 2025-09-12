@@ -97,11 +97,11 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     console.error('Assignment Insert Error:', insertError);
     // Although earnings were distributed, we should let the user know saving failed.
     // This is a state that may require manual correction, so logging is vital.
-    return { error: 'Failed to save your approved assignment, but your earnings have been processed.', aiFeedback: aiResult.reason };
+    return { error: 'Failed to save your approved assignment, but your earnings have been processed.', aiFeedback: aiResult.reason, isApproved: true };
   }
   
   revalidatePath('/assignments');
   revalidatePath('/dashboard');
   
-  return { error: null, aiFeedback: aiResult.reason, isApproved: aiResult.isApproved };
+  return { error: null, aiFeedback: aiResult.reason, isApproved: true };
 }

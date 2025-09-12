@@ -1,3 +1,4 @@
+
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -52,7 +53,7 @@ async function updateUserEarnings(supabase: ReturnType<typeof createClient>, use
     }
 
     // 4. If approved count matches daily assignment limit, update earnings
-    if (approvedCount !== null && approvedCount >= plan.daily_assignments) {
+    if (approvedCount !== null && approvedCount == plan.daily_assignments) {
        const { error: rpcError } = await supabase.rpc('add_daily_earnings', {
            p_user_id: userId,
            p_earnings_to_add: plan.daily_earning,

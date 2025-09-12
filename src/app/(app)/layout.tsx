@@ -112,9 +112,9 @@ export default function AppLayout({
     { href: '/watch', label: 'Guidelines', icon: Video },
     { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/social', label: 'Social', icon: Share2 },
-    { href: '/top-users', label: 'Top Users', icon: Award, target: '_blank' },
-    { href: '/reviews', label: 'Reviews', icon: MessageSquare, target: '_blank' },
-    { href: '/guide', label: 'Guide', icon: HelpCircle, target: '_blank' },
+    { href: '/top-users', label: 'Top Users', icon: Award },
+    { href: '/reviews', label: 'Reviews', icon: MessageSquare },
+    { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
   ];
 

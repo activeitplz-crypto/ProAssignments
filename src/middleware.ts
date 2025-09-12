@@ -17,18 +17,23 @@ export async function middleware(request: NextRequest) {
   const authRoutes = ['/login', '/signup'];
   const isAuthRoute = authRoutes.includes(pathname);
 
-  // User-specific routes (inside the /app directory group)
-  const isAppRoute = pathname.startsWith('/dashboard') || 
-                   pathname.startsWith('/plans') ||
-                   pathname.startsWith('/withdraw') ||
-                   pathname.startsWith('/tasks') ||
-                   pathname.startsWith('/assignments') ||
-                   pathname.startsWith('/referrals') ||
-                   pathname.startsWith('/profile') ||
-                   pathname.startsWith('/watch') ||
-                   pathname.startsWith('/feedbacks') ||
-                   pathname.startsWith('/social');
-
+  // Protected user-specific routes
+  const appRoutes = [
+    '/dashboard', 
+    '/plans', 
+    '/withdraw', 
+    '/tasks', 
+    '/assignments', 
+    '/referrals', 
+    '/profile', 
+    '/watch', 
+    '/feedbacks', 
+    '/social',
+    '/top-users',
+    '/reviews',
+    '/guide'
+  ];
+  const isAppRoute = appRoutes.some(route => pathname.startsWith(route));
 
   // Admin route
   const isAdminRoute = pathname.startsWith('/admin');

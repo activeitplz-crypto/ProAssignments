@@ -11,6 +11,9 @@ export default function LandingPage() {
       <header className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Logo />
         <nav className="flex items-center gap-4">
+          <Button variant="outline" asChild>
+            <Link href="/comments">Comments</Link>
+          </Button>
           <Button variant="ghost" asChild>
             <Link href="/login">Login</Link>
           </Button>

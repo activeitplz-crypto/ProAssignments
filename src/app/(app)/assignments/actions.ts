@@ -21,8 +21,8 @@ async function distributeEarnings(supabase: ReturnType<typeof createClient>, use
 
   if (rpcError) {
     console.error('Failed to distribute earnings via RPC:', rpcError);
-    // Even if it fails, we don't block the UI. The assignment is still approved.
-    // Logging is important here for manual correction if needed.
+    // This is a critical failure. We should throw an error to be caught by the caller.
+    throw new Error('Failed to distribute earnings. Please contact support.');
   }
 }
 
@@ -72,7 +72,15 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     };
   }
 
-  // 4. If AI verification IS approved, insert the assignment.
+  // 4. If AI-approved, distribute earnings FIRST. This is the most critical step.
+  try {
+    await distributeEarnings(supabase, user.id);
+  } catch (distributionError: any) {
+    // If earnings fail, we stop and return an error. Don't save the assignment.
+    return { error: distributionError.message, aiFeedback: aiResult.reason, isApproved: false };
+  }
+
+  // 5. Now, insert the approved assignment record.
   const { error: insertError } = await supabase
     .from('assignments')
     .insert({
@@ -87,11 +95,10 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
 
   if (insertError) {
     console.error('Assignment Insert Error:', insertError);
-    return { error: 'Failed to save your approved assignment.', aiFeedback: aiResult.reason };
+    // Although earnings were distributed, we should let the user know saving failed.
+    // This is a state that may require manual correction, so logging is vital.
+    return { error: 'Failed to save your approved assignment, but your earnings have been processed.', aiFeedback: aiResult.reason };
   }
-  
-  // 5. Since it's approved, directly distribute the fixed earnings.
-  await distributeEarnings(supabase, user.id);
   
   revalidatePath('/assignments');
   revalidatePath('/dashboard');

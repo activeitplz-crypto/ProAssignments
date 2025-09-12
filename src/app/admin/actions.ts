@@ -212,69 +212,50 @@ export async function deleteTask(formData: FormData) {
     return { error: null };
 }
 
-async function distributeEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
-  // This RPC call will add exactly 2000 to the user's balances.
-  const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
-    p_user_id: userId,
-    p_amount_to_add: 2000,
-  });
-
-  if (rpcError) {
-    console.error('Failed to distribute earnings via RPC from admin:', rpcError);
-    // Throw an error to be caught by the calling function
-    throw new Error('Failed to distribute earnings.');
-  }
-}
-
 export async function approveAssignment(formData: FormData) {
   const supabase = await verifyAdmin();
   const assignmentId = formData.get('assignmentId') as string;
-
-  if (!assignmentId) return { error: 'Assignment ID missing.' };
+  if (!assignmentId) return { error: 'Assignment ID is missing.' };
 
   const { data: assignment, error: fetchError } = await supabase
     .from('assignments')
-    .select('id, user_id, status')
+    .select('user_id, status')
     .eq('id', assignmentId)
     .single();
-
+  
   if (fetchError || !assignment) return { error: 'Assignment not found.' };
-  if (assignment.status === 'approved') {
-    // If it's already approved, do nothing to prevent double payment.
-    return { error: 'Assignment already approved.' };
-  }
 
-  // Use a transaction to ensure atomicity
-  const { error: transactionError } = await supabase.tx(async (tx) => {
-    // 1. Update assignment status
+  // If already approved, do nothing to prevent double payment.
+  if (assignment.status === 'approved') return { error: 'Assignment has already been approved.' };
+
+  // Use a transaction to update status and distribute earnings
+  const { error } = await supabase.tx(async (tx) => {
     const { error: updateError } = await tx
       .from('assignments')
       .update({ status: 'approved' })
       .eq('id', assignmentId);
-    
-    if (updateError) return { error: updateError };
 
-    // 2. Distribute earnings by calling the RPC
+    if (updateError) throw updateError;
+
     const { error: rpcError } = await tx.rpc('add_fixed_earnings', {
       p_user_id: assignment.user_id,
       p_amount_to_add: 2000,
     });
-    
-    if (rpcError) return { error: rpcError };
 
-    return { error: null };
+    if (rpcError) throw rpcError;
   });
-
-  if (transactionError) {
-    console.error('Approve Assignment Transaction Error:', transactionError);
-    return { error: 'Failed to approve assignment and distribute earnings.' };
-  }
   
+  if (error) {
+    console.error('Approve Assignment Transaction Error:', error);
+    return { error: 'Transaction failed: Could not approve assignment and distribute earnings.' };
+  }
+
   revalidatePath('/admin');
-  revalidatePath('/assignments');
   revalidatePath('/dashboard');
+  revalidatePath('/assignments');
   return { error: null };
 }
+
 
 export async function rejectAssignment(formData: FormData) {
   const supabase = await verifyAdmin();

@@ -13,54 +13,16 @@ const assignmentSchema = z.object({
 });
 
 async function updateUserEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
-    // 1. Get user's current plan
-    const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('current_plan')
-        .eq('id', userId)
-        .single();
-    
-    if (profileError || !profile || !profile.current_plan) {
-        console.error("Could not fetch user plan for earnings update", profileError);
-        return; // Exit if no plan found
-    }
+    // This function now calls an RPC to add a fixed amount.
+    // The RPC function 'add_fixed_earnings' should handle adding 2000 to
+    // current_balance, today_earning, and total_earning.
+    const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
+        p_user_id: userId,
+        p_amount_to_add: 2000,
+    });
 
-    // 2. Get plan details (daily earning amount and task limit)
-    const { data: plan, error: planError } = await supabase
-        .from('plans')
-        .select('daily_earning, daily_assignments')
-        .eq('name', profile.current_plan)
-        .single();
-
-    if (planError || !plan) {
-        console.error("Could not fetch plan details for earnings update", planError);
-        return; // Exit if no plan details found
-    }
-    
-    // 3. Count today's approved assignments for the user
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Start of today
-    const { count: approvedCount, error: countError } = await supabase
-        .from('assignments')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', userId)
-        .eq('status', 'approved')
-        .gte('created_at', today.toISOString());
-    
-    if (countError) {
-        console.error("Could not count approved assignments", countError);
-        return;
-    }
-
-    // 4. If approved count matches daily assignment limit, update earnings
-    if (approvedCount !== null && approvedCount == plan.daily_assignments) {
-       const { error: rpcError } = await supabase.rpc('add_daily_earnings', {
-           p_user_id: userId,
-           p_earnings_to_add: plan.daily_earning,
-       });
-       if(rpcError) {
-           console.error("Failed to add daily earnings via RPC:", rpcError);
-       }
+    if (rpcError) {
+        console.error("Failed to add fixed earnings via RPC:", rpcError);
     }
 }
 
@@ -132,7 +94,7 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: 'Failed to save your approved assignment.', aiFeedback: aiResult.reason };
   }
   
-  // 5. Since it's approved, check if all daily tasks are done and update earnings
+  // 5. Since it's approved, directly update user's earnings with the fixed amount.
   await updateUserEarnings(supabase, user.id);
   
   revalidatePath('/assignments');

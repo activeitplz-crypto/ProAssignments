@@ -212,6 +212,20 @@ export async function deleteTask(formData: FormData) {
     return { error: null };
 }
 
+async function distributeEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
+  // This RPC call will add exactly 2000 to the user's balances.
+  const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
+    p_user_id: userId,
+    p_amount_to_add: 2000,
+  });
+
+  if (rpcError) {
+    console.error('Failed to distribute earnings via RPC from admin:', rpcError);
+    // Throw an error to be caught by the calling function
+    throw new Error('Failed to distribute earnings.');
+  }
+}
+
 export async function approveAssignment(formData: FormData) {
   const supabase = await verifyAdmin();
   const assignmentId = formData.get('assignmentId') as string;
@@ -225,57 +239,42 @@ export async function approveAssignment(formData: FormData) {
     .single();
 
   if (fetchError || !assignment) return { error: 'Assignment not found.' };
-  if (assignment.status === 'approved') return { error: 'Assignment already approved.' };
+  if (assignment.status === 'approved') {
+    // If it's already approved, do nothing to prevent double payment.
+    return { error: 'Assignment already approved.' };
+  }
 
-  const { error } = await supabase
-    .from('assignments')
-    .update({ status: 'approved' })
-    .eq('id', assignmentId);
+  // Use a transaction to ensure atomicity
+  const { error: transactionError } = await supabase.tx(async (tx) => {
+    // 1. Update assignment status
+    const { error: updateError } = await tx
+      .from('assignments')
+      .update({ status: 'approved' })
+      .eq('id', assignmentId);
+    
+    if (updateError) return { error: updateError };
 
-  if (error) {
-    console.error('Approve Assignment Error:', error);
-    return { error: 'Failed to approve assignment.' };
+    // 2. Distribute earnings by calling the RPC
+    const { error: rpcError } = await tx.rpc('add_fixed_earnings', {
+      p_user_id: assignment.user_id,
+      p_amount_to_add: 2000,
+    });
+    
+    if (rpcError) return { error: rpcError };
+
+    return { error: null };
+  });
+
+  if (transactionError) {
+    console.error('Approve Assignment Transaction Error:', transactionError);
+    return { error: 'Failed to approve assignment and distribute earnings.' };
   }
   
-  // Trigger earnings update check
-  await checkAndApplyDailyEarnings(supabase, assignment.user_id);
-
   revalidatePath('/admin');
   revalidatePath('/assignments');
+  revalidatePath('/dashboard');
   return { error: null };
 }
-
-async function checkAndApplyDailyEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
-    const { data: profile, error: profileError } = await supabase
-        .from('profiles').select('current_plan').eq('id', userId).single();
-    
-    if (profileError || !profile || !profile.current_plan) return;
-
-    const { data: plan, error: planError } = await supabase
-        .from('plans').select('daily_earning, daily_assignments').eq('name', profile.current_plan).single();
-    
-    if (planError || !plan) return;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const { count, error: countError } = await supabase
-        .from('assignments').select('*', { count: 'exact', head: true })
-        .eq('user_id', userId)
-        .eq('status', 'approved')
-        .gte('created_at', today.toISOString());
-
-    if (countError) return;
-
-    if (count !== null && count >= plan.daily_assignments) {
-        const { error: rpcError } = await supabase.rpc('add_daily_earnings', {
-           p_user_id: userId,
-           p_earnings_to_add: plan.daily_earning,
-       });
-       if (rpcError) console.error("RPC 'add_daily_earnings' Error:", rpcError);
-    }
-}
-
 
 export async function rejectAssignment(formData: FormData) {
   const supabase = await verifyAdmin();

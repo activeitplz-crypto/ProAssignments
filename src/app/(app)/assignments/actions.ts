@@ -12,7 +12,7 @@ const assignmentSchema = z.object({
   images: z.array(z.string()).min(1, 'At least one image is required.'),
 });
 
-async function updateUserEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
+async function distributeEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
   // This RPC call will add exactly 2000 to the user's balances.
   const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
     p_user_id: userId,
@@ -20,9 +20,9 @@ async function updateUserEarnings(supabase: ReturnType<typeof createClient>, use
   });
 
   if (rpcError) {
-    console.error('Failed to add fixed earnings via RPC:', rpcError);
+    console.error('Failed to distribute earnings via RPC:', rpcError);
     // Even if it fails, we don't block the UI. The assignment is still approved.
-    // Logging is important here.
+    // Logging is important here for manual correction if needed.
   }
 }
 
@@ -90,8 +90,8 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: 'Failed to save your approved assignment.', aiFeedback: aiResult.reason };
   }
   
-  // 5. Since it's approved, directly update user's earnings with the fixed amount.
-  await updateUserEarnings(supabase, user.id);
+  // 5. Since it's approved, directly distribute the fixed earnings.
+  await distributeEarnings(supabase, user.id);
   
   revalidatePath('/assignments');
   revalidatePath('/dashboard');

@@ -11,20 +11,6 @@ const assignmentSchema = z.object({
   images: z.array(z.string()).min(1, 'At least one image is required.'),
 });
 
-async function distributeEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
-  // This RPC call will add exactly 2000 to the user's balances.
-  const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
-    p_user_id: userId,
-    p_amount_to_add: 2000,
-  });
-
-  if (rpcError) {
-    console.error('Failed to distribute earnings via RPC:', rpcError);
-    // This is a critical failure. We should throw an error to be caught by the caller.
-    throw new Error('Failed to distribute earnings. Please contact support.');
-  }
-}
-
 export async function submitAssignmentWithImages(formData: z.infer<typeof assignmentSchema>) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -54,17 +40,10 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: 'You have already submitted and been approved for this task today.' };
   }
   
-  // 2. Auto-approve and distribute earnings since AI verification is removed.
+  // 2. Auto-approve the submission. Earnings will be distributed by an admin.
   const aiResult = { isApproved: true, reason: "Submission auto-approved." };
 
-  try {
-    await distributeEarnings(supabase, user.id);
-  } catch (distributionError: any) {
-    // If earnings fail, we stop and return an error. Don't save the assignment.
-    return { error: distributionError.message, aiFeedback: aiResult.reason, isApproved: false };
-  }
-
-  // 3. Now, insert the approved assignment record.
+  // 3. Insert the approved assignment record.
   const { error: insertError } = await supabase
     .from('assignments')
     .insert({
@@ -72,20 +51,21 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
       task_id: formData.taskId,
       title: formData.title,
       urls: [], 
-      status: 'approved',
+      status: 'approved', // Set status to approved directly
       feedback: aiResult.reason,
       created_at: new Date().toISOString(),
     });
 
   if (insertError) {
     console.error('Assignment Insert Error:', insertError);
-    // Although earnings were distributed, we should let the user know saving failed.
-    // This is a state that may require manual correction, so logging is vital.
-    return { error: 'Failed to save your approved assignment, but your earnings have been processed.', aiFeedback: aiResult.reason, isApproved: true };
+    return { error: 'Failed to save your assignment.', aiFeedback: aiResult.reason, isApproved: false };
   }
+  
+  // Note: Earnings are no longer distributed here to prevent errors.
+  // Admin must approve from the admin panel to distribute earnings.
   
   revalidatePath('/assignments');
   revalidatePath('/dashboard');
   
-  return { error: null, aiFeedback: aiResult.reason, isApproved: true };
+  return { error: null, aiFeedback: "Your assignment has been submitted and is pending final review.", isApproved: true };
 }

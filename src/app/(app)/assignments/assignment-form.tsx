@@ -93,19 +93,16 @@ export function AssignmentForm({ task }: AssignmentFormProps) {
         });
       } else {
         toast({
-          variant: result.isApproved ? 'default' : 'destructive',
-          title: `AI Verification: ${result.isApproved ? 'Approved & Earnings Added' : 'Rejected'}`,
+          title: `Submission Received!`,
           description: result.aiFeedback,
         });
-        if(result.isApproved) {
-            form.reset({
-                taskId: task.id,
-                title: task.title,
-                images: [],
-            });
-            setImagePreviews([]);
-            router.refresh();
-        }
+        form.reset({
+            taskId: task.id,
+            title: task.title,
+            images: [],
+        });
+        setImagePreviews([]);
+        router.refresh();
       }
     });
   }
@@ -178,7 +175,7 @@ export function AssignmentForm({ task }: AssignmentFormProps) {
 
         <Button type="submit" disabled={isPending || imagePreviews.length === 0} className="w-full sm:w-auto">
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Submit for AI Approval
+          Submit Assignment
         </Button>
       </form>
     </Form>

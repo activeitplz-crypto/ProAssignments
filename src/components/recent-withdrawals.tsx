@@ -1,4 +1,7 @@
 
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowDownCircle } from 'lucide-react';
 
@@ -31,6 +34,18 @@ const staticWithdrawals = [
 ];
 
 export function RecentWithdrawals() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % staticWithdrawals.length);
+    }, 5000); // Cycle every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
+  const currentWithdrawal = staticWithdrawals[currentIndex];
+
   return (
     <Card>
       <CardHeader>
@@ -43,20 +58,18 @@ export function RecentWithdrawals() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {staticWithdrawals.map((withdrawal, index) => (
+        <div className="h-10 overflow-hidden">
             <div
-              key={index}
-              className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
+              key={currentIndex}
+              className="flex animate-in fade-in-0 slide-in-from-bottom-2 duration-500 items-center justify-between rounded-lg bg-muted/50 p-3"
             >
               <p>
-                <span className="font-semibold">{withdrawal.name}</span> withdrew{' '}
+                <span className="font-semibold">{currentWithdrawal.name}</span> withdrew{' '}
                 <span className="font-bold text-primary">
-                  {withdrawal.amount.toLocaleString()} PKR
+                  {currentWithdrawal.amount.toLocaleString()} PKR
                 </span>
               </p>
             </div>
-          ))}
         </div>
       </CardContent>
     </Card>

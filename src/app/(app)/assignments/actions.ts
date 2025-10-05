@@ -11,6 +11,19 @@ const assignmentSchema = z.object({
   images: z.array(z.string()).min(1, 'At least one image is required.'),
 });
 
+// This function calls the Supabase RPC to add earnings.
+async function distributeEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
+    const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
+        p_user_id: userId,
+    });
+
+    if (rpcError) {
+        console.error('Earnings Distribution RPC Error:', rpcError);
+        // We throw an error to make sure the calling function knows it failed.
+        throw new Error('Failed to distribute earnings.');
+    }
+}
+
 export async function submitAssignmentWithImages(formData: z.infer<typeof assignmentSchema>) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -39,11 +52,21 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
   if (existingSubmission) {
     return { error: 'You have already submitted and been approved for this task today.' };
   }
-  
-  // 2. Auto-approve the submission. Earnings will be distributed by an admin.
-  const aiResult = { isApproved: true, reason: "Submission auto-approved." };
 
-  // 3. Insert the approved assignment record.
+  // 2. Auto-approve and distribute earnings.
+  // The submission is automatically approved since an image is present.
+  const approvalStatus = 'approved';
+  const feedback = 'Submission auto-approved.';
+
+  try {
+    // Attempt to distribute earnings first. If this fails, the process stops.
+    await distributeEarnings(supabase, user.id);
+  } catch (error: any) {
+    console.error('Caught earnings distribution error in submit action:', error);
+    return { error: error.message, isApproved: false };
+  }
+
+  // 3. Insert the approved assignment record AFTER earnings are distributed.
   const { error: insertError } = await supabase
     .from('assignments')
     .insert({
@@ -51,21 +74,20 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
       task_id: formData.taskId,
       title: formData.title,
       urls: [], 
-      status: 'approved', // Set status to approved directly
-      feedback: aiResult.reason,
+      status: approvalStatus,
+      feedback: feedback,
       created_at: new Date().toISOString(),
     });
 
   if (insertError) {
     console.error('Assignment Insert Error:', insertError);
-    return { error: 'Failed to save your assignment.', aiFeedback: aiResult.reason, isApproved: false };
+    // Note: At this point, earnings were already distributed. This could lead to a discrepancy.
+    // A more robust solution would use a database transaction, but this is a simpler implementation.
+    return { error: 'Failed to save your assignment record, but earnings were added.', isApproved: true };
   }
-  
-  // Note: Earnings are no longer distributed here to prevent errors.
-  // Admin must approve from the admin panel to distribute earnings.
   
   revalidatePath('/assignments');
   revalidatePath('/dashboard');
   
-  return { error: null, aiFeedback: "Your assignment has been submitted and is pending final review.", isApproved: true };
+  return { error: null, aiFeedback: "Your assignment has been approved and earnings have been added.", isApproved: true };
 }

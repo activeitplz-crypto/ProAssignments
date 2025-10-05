@@ -4,7 +4,6 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
-import { verifyAssignment, type VerifyAssignmentInput } from '@/ai/flows/verify-assignment-flow';
 
 const assignmentSchema = z.object({
   taskId: z.string().uuid('Invalid Task ID.'),
@@ -54,25 +53,10 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
   if (existingSubmission) {
     return { error: 'You have already submitted and been approved for this task today.' };
   }
+  
+  // 2. Auto-approve and distribute earnings since AI verification is removed.
+  const aiResult = { isApproved: true, reason: "Submission auto-approved." };
 
-  // 2. Prepare data and call AI verification flow
-  const aiInput: VerifyAssignmentInput = {
-    taskTitle: formData.title,
-    images: formData.images,
-  };
-
-  const aiResult = await verifyAssignment(aiInput);
-
-  // 3. If AI verification is NOT approved, just return feedback without saving anything.
-  if (!aiResult.isApproved) {
-    return { 
-        error: null, 
-        aiFeedback: aiResult.reason, 
-        isApproved: false 
-    };
-  }
-
-  // 4. If AI-approved, distribute earnings FIRST. This is the most critical step.
   try {
     await distributeEarnings(supabase, user.id);
   } catch (distributionError: any) {
@@ -80,7 +64,7 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: distributionError.message, aiFeedback: aiResult.reason, isApproved: false };
   }
 
-  // 5. Now, insert the approved assignment record.
+  // 3. Now, insert the approved assignment record.
   const { error: insertError } = await supabase
     .from('assignments')
     .insert({

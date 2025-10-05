@@ -9,7 +9,7 @@ import {
 import { UserProfileCard } from '@/components/user-profile-card';
 import { DollarSign, Zap, Briefcase, Wallet } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import { RecentWithdrawals } from '@/components/recent-withdrawals';
+import { RecentWithdrawals } from './recent-withdrawals';
 
 export default async function DashboardPage() {
   const supabase = createClient();

@@ -45,7 +45,7 @@ export default async function PlansPage() {
     .eq('id', user?.id || '')
     .single();
 
-  const { data: plans, error: plansError } = await supabase.from('plans').select('*').order('investment');
+  const { data: plans, error: plansError } = await supabase.from('plans').select('*').order('investment', { ascending: true });
   const { data: payments, error: paymentsError } = await supabase
     .from('payments')
     .select('*, plans(name)')

@@ -170,7 +170,7 @@ export default function AppLayout({
         </div>
       </nav>
 
-       <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-4 bg-background/95 px-4 shadow-sm backdrop-blur-sm md:justify-end md:px-6">
+       <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-4 border-b bg-background/95 px-4 shadow-sm backdrop-blur-sm md:justify-end md:px-6">
         <div className="flex items-center gap-2 md:hidden">
             <ProAssignmentIcon className="h-7 w-7" />
             <span className="font-bold">ProAssignment</span>

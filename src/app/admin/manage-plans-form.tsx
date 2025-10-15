@@ -70,7 +70,19 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
+      let hasError = false;
       for (const plan of values.plans) {
+        // Here, we ensure that if original_investment has a value, it's the higher one.
+        if (plan.original_investment && plan.original_investment < plan.investment) {
+            toast({
+                variant: 'destructive',
+                title: `Invalid Price for "${plan.name}"`,
+                description: 'Original Investment cannot be less than the Sale Price.',
+            });
+            hasError = true;
+            continue; // Skip saving this plan
+        }
+
         const result = await savePlan(plan);
         if (result?.error) {
           toast({
@@ -78,13 +90,15 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
             title: `Failed to save ${plan.name || 'new plan'}`,
             description: result.error,
           });
-          return; // Stop on first error
+          hasError = true;
         }
       }
-      toast({
-        title: 'Success',
-        description: 'All plan changes have been saved.',
-      });
+      if (!hasError) {
+        toast({
+            title: 'Success',
+            description: 'All plan changes have been saved.',
+        });
+      }
     });
   }
 
@@ -229,5 +243,3 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
     </Card>
   );
 }
-
-    

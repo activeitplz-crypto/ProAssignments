@@ -87,6 +87,10 @@ export default async function PlansPage() {
 
           const isOfferValid = plan.offer_expires_at ? new Date(plan.offer_expires_at) > new Date() : false;
           const isOffer = plan.original_investment && plan.original_investment > plan.investment && isOfferValid;
+          
+          const displayPrice = isOffer ? plan.investment : (plan.original_investment || plan.investment);
+          const originalPriceToShow = isOffer ? plan.original_investment : null;
+
 
           return (
             <div key={plan.id} className="flex flex-col">
@@ -101,12 +105,12 @@ export default async function PlansPage() {
                   <CardTitle className="font-headline text-2xl pt-2">{plan.name}</CardTitle>
                   <CardDescription className="flex flex-wrap items-baseline gap-2">
                     <span className="text-xs text-muted-foreground">Investment</span>
-                    {isOffer && plan.original_investment && (
+                    {originalPriceToShow && (
                         <del className="text-xl font-medium text-muted-foreground">
-                          PKR {plan.original_investment}
+                          PKR {originalPriceToShow}
                         </del>
                     )}
-                    <span className="text-3xl font-bold text-primary">PKR {plan.investment}</span>
+                    <span className="text-3xl font-bold text-primary">PKR {displayPrice}</span>
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1 space-y-4">
@@ -131,7 +135,7 @@ export default async function PlansPage() {
                         Pending Approval
                       </Button>
                     ) : (
-                      <PurchasePlanDialog plan={plan} />
+                      <PurchasePlanDialog plan={{...plan, investment: displayPrice}} />
                     )}
                 </CardFooter>
               </Card>

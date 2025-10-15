@@ -2,8 +2,9 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, TrendingUp, Award, MessageSquare, HelpCircle, Download } from 'lucide-react';
+import { ArrowRight, TrendingUp, Award, MessageSquare, HelpCircle, Download, ShieldCheck } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import Image from 'next/image';
 
 export default function LandingPage() {
   return (
@@ -81,27 +82,53 @@ export default function LandingPage() {
                 </CardHeader>
               </Card>
             </div>
-             <div className="mt-12 text-center">
-                <Card className="inline-block max-w-lg">
-                    <CardHeader>
-                        <CardTitle className="font-headline flex items-center justify-center gap-2">
-                            <Download className="h-6 w-6 text-primary" />
-                            Download Our App
-                        </CardTitle>
-                        <CardDescription>
-                            For a better and smoother experience, download and install our mobile application.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Button asChild size="lg">
-                            <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
-                                Download Now
-                            </Link>
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
           </div>
+        </section>
+        
+        <section className="py-12 md:py-24">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="grid items-center gap-8 md:grid-cols-2">
+                    <div className="space-y-4">
+                        <h2 className="font-headline text-3xl font-bold md:text-4xl">
+                           <ShieldCheck className="inline-block h-8 w-8 text-primary mr-2" />
+                            Officially Recognized & Secure
+                        </h2>
+                        <p className="text-lg text-muted-foreground">
+                            We are proud to be a platform registered and approved by the FBR (Federal Board of Revenue) and PSEB (Pakistan Software Export Board), ensuring a secure and transparent environment for your investments and earnings. Your trust is our foundation.
+                        </p>
+                    </div>
+                     <div className="flex justify-center">
+                        <Image 
+                            src="https://i.postimg.cc/vBn0tJ9N/IMG-20250930-WA0001.jpg" 
+                            alt="FBR and PSEB Approval" 
+                            width={400} 
+                            height={400}
+                            className="rounded-lg shadow-lg"
+                            data-ai-hint="approval document"
+                        />
+                    </div>
+                </div>
+                 <div className="mt-12 text-center">
+                    <Card className="inline-block max-w-lg">
+                        <CardHeader>
+                            <CardTitle className="font-headline flex items-center justify-center gap-2">
+                                <Download className="h-6 w-6 text-primary" />
+                                Download Our App
+                            </CardTitle>
+                            <CardDescription>
+                                For a better and smoother experience, download and install our mobile application.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Button asChild size="lg">
+                                <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
+                                    Download Now
+                                </Link>
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
         </section>
 
       </main>

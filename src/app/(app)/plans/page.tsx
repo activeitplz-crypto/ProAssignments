@@ -85,55 +85,57 @@ export default async function PlansPage() {
           const isPending = pendingPayments.has(plan.id);
           const isActive = activePlanName === plan.name;
 
-          const isOfferValid = plan.offer_expires_at ? new Date(plan.offer_expires_at) > new Date() : true;
+          const isOfferValid = plan.offer_expires_at ? new Date(plan.offer_expires_at) > new Date() : false;
           const isOffer = plan.original_investment && plan.original_investment > plan.investment && isOfferValid;
 
           return (
-            <Card key={plan.id} className={cn("flex flex-col", isOffer && "border-primary border-2 shadow-lg")}>
-              <CardHeader>
-                 {isOffer && plan.offer_name && (
-                  <Badge variant="destructive" className="absolute -top-3 right-4 self-end">
-                    {plan.offer_name} ❤️‍🔥
-                  </Badge>
-                )}
-                {isOffer && plan.offer_expires_at && <OfferCountdown expiresAt={plan.offer_expires_at} />}
-                <CardTitle className="font-headline text-2xl pt-2">{plan.name}</CardTitle>
-                <CardDescription className="flex flex-wrap items-baseline gap-2">
-                  <span className="text-xs text-muted-foreground">Investment</span>
-                  {isOffer && plan.original_investment && (
-                      <del className="text-xl font-medium text-muted-foreground">
-                        PKR {plan.original_investment}
-                      </del>
+            <div key={plan.id} className="flex flex-col">
+              {isOffer && plan.offer_expires_at && <OfferCountdown expiresAt={plan.offer_expires_at} />}
+              <Card className={cn("flex flex-col flex-1", isOffer ? "border-primary border-2 shadow-lg rounded-t-none" : "")}>
+                <CardHeader>
+                  {isOffer && plan.offer_name && (
+                    <Badge variant="destructive" className="absolute -top-3 right-4 self-end">
+                      {plan.offer_name} ❤️‍🔥
+                    </Badge>
                   )}
-                  <span className="text-3xl font-bold text-primary">PKR {plan.investment}</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 space-y-4">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                  <span>Daily Earning: PKR {plan.daily_earning.toFixed(2)}</span>
-                </div>
-                <div className="flex items-center">
-                  <ClipboardList className="mr-2 h-4 w-4 text-primary" />
-                  <span>Daily Assignments: {plan.daily_assignments}</span>
-                </div>
-              </CardContent>
-              <CardFooter>
-                 {isActive ? (
-                    <Button className="w-full bg-green-500 hover:bg-green-600" disabled>
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                      Active Plan
-                    </Button>
-                  ) : isPending ? (
-                    <Button className="w-full" disabled variant="secondary">
-                      <Clock className="mr-2 h-4 w-4" />
-                      Pending Approval
-                    </Button>
-                  ) : (
-                    <PurchasePlanDialog plan={plan} />
-                  )}
-              </CardFooter>
-            </Card>
+                  <CardTitle className="font-headline text-2xl pt-2">{plan.name}</CardTitle>
+                  <CardDescription className="flex flex-wrap items-baseline gap-2">
+                    <span className="text-xs text-muted-foreground">Investment</span>
+                    {isOffer && plan.original_investment && (
+                        <del className="text-xl font-medium text-muted-foreground">
+                          PKR {plan.original_investment}
+                        </del>
+                    )}
+                    <span className="text-3xl font-bold text-primary">PKR {plan.investment}</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 space-y-4">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                    <span>Daily Earning: PKR {plan.daily_earning.toFixed(2)}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <ClipboardList className="mr-2 h-4 w-4 text-primary" />
+                    <span>Daily Assignments: {plan.daily_assignments}</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  {isActive ? (
+                      <Button className="w-full bg-green-500 hover:bg-green-600" disabled>
+                        <CheckCircle className="mr-2 h-4 w-4" />
+                        Active Plan
+                      </Button>
+                    ) : isPending ? (
+                      <Button className="w-full" disabled variant="secondary">
+                        <Clock className="mr-2 h-4 w-4" />
+                        Pending Approval
+                      </Button>
+                    ) : (
+                      <PurchasePlanDialog plan={plan} />
+                    )}
+                </CardFooter>
+              </Card>
+            </div>
           );
         })}
       </div>
@@ -235,5 +237,3 @@ function PurchaseHistory({ payments }: { payments: any[] }) {
     </Card>
   )
 }
-
-    

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Timer } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Plan } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 export function OfferHeaderButton() {
   const [activeOffer, setActiveOffer] = useState<Plan | null>(null);
@@ -66,10 +67,10 @@ export function OfferHeaderButton() {
 
   if (activeOffer) {
     return (
-      <Button variant="destructive" size="sm" asChild>
+      <Button variant="default" size="sm" className="animate-pulse bg-green-600 text-white hover:bg-green-700" asChild>
         <Link href="/plans">
-          <Timer className="mr-2 h-4 w-4 animate-pulse" />
-          Offers end in {timeLeft}
+          <Timer className="mr-2 h-4 w-4" />
+          Special Offer!
         </Link>
       </Button>
     );

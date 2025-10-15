@@ -18,6 +18,7 @@ import {
   HelpCircle,
   Video,
   Share2,
+  Download,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -116,6 +117,7 @@ export default function AppLayout({
     { href: '/reviews', label: 'Reviews', icon: MessageSquare },
     { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
+    { href: 'https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43', label: 'Our App', icon: Download, target: '_blank' },
   ];
 
   const allNavItems = [...navItems, ...actionItems];

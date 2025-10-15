@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, TrendingUp, Award, MessageSquare, HelpCircle } from 'lucide-react';
+import { ArrowRight, TrendingUp, Award, MessageSquare, HelpCircle, Download } from 'lucide-react';
 import { Logo } from '@/components/logo';
 
 export default function LandingPage() {
@@ -33,6 +33,12 @@ export default function LandingPage() {
               <Link href="/signup">
                 Start Earning Today
                 <TrendingUp className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+             <Button size="lg" variant="outline" asChild>
+              <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
+                Download App
+                <Download className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
@@ -74,6 +80,26 @@ export default function LandingPage() {
                   </CardDescription>
                 </CardHeader>
               </Card>
+            </div>
+             <div className="mt-12 text-center">
+                <Card className="inline-block max-w-lg">
+                    <CardHeader>
+                        <CardTitle className="font-headline flex items-center justify-center gap-2">
+                            <Download className="h-6 w-6 text-primary" />
+                            Download Our App
+                        </CardTitle>
+                        <CardDescription>
+                            For a better and smoother experience, download and install our mobile application.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Button asChild size="lg">
+                            <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
+                                Download Now
+                            </Link>
+                        </Button>
+                    </CardContent>
+                </Card>
             </div>
           </div>
         </section>

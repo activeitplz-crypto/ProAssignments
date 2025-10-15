@@ -11,6 +11,7 @@ import { DollarSign, Zap, Briefcase, Wallet } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
 import { OfferBanner } from './offer-banner';
+import { DownloadAppCard } from './download-app-card';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -105,6 +106,8 @@ export default async function DashboardPage() {
       </div>
 
       <RecentWithdrawals />
+
+      <DownloadAppCard />
     </div>
   );
 }

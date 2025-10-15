@@ -83,7 +83,9 @@ export default async function PlansPage() {
         {(plans as Plan[]).map((plan) => {
           const isPending = pendingPayments.has(plan.id);
           const isActive = activePlanName === plan.name;
-          const isOffer = plan.original_investment && plan.original_investment > plan.investment;
+
+          const isOfferValid = plan.offer_expires_at ? new Date(plan.offer_expires_at) > new Date() : true;
+          const isOffer = plan.original_investment && plan.original_investment > plan.investment && isOfferValid;
 
           return (
             <Card key={plan.id} className={cn("flex flex-col", isOffer && "border-primary border-2 shadow-lg")}>
@@ -96,7 +98,7 @@ export default async function PlansPage() {
                 <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
                 <CardDescription className="flex flex-wrap items-baseline gap-2">
                   <span className="text-xs text-muted-foreground">Investment</span>
-                  {isOffer && (
+                  {isOffer && plan.original_investment && (
                       <del className="text-xl font-medium text-muted-foreground">
                         PKR {plan.original_investment}
                       </del>
@@ -231,3 +233,5 @@ function PurchaseHistory({ payments }: { payments: any[] }) {
     </Card>
   )
 }
+
+    

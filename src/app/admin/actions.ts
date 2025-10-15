@@ -141,6 +141,7 @@ const planSchema = z.object({
     daily_assignments: z.coerce.number().int().positive('Daily assignments must be a positive integer'),
     original_investment: z.coerce.number().nullable().optional(),
     offer_name: z.string().nullable().optional(),
+    offer_expires_at: z.string().nullable().optional(),
 });
 
 export async function savePlan(formData: z.infer<typeof planSchema>) {
@@ -151,6 +152,7 @@ export async function savePlan(formData: z.infer<typeof planSchema>) {
     // Ensure null if empty string
     if (planData.offer_name === '') planData.offer_name = null;
     if (planData.original_investment === 0) planData.original_investment = null;
+    if (planData.offer_expires_at === '') planData.offer_expires_at = null;
 
     try {
         if (id) {
@@ -502,3 +504,5 @@ export async function deleteSocialLink(formData: FormData) {
     revalidatePath('/social');
     return { error: null };
 }
+
+    

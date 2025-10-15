@@ -132,6 +132,7 @@ export type Database = {
           daily_assignments: number
           original_investment: number | null
           offer_name: string | null
+          offer_expires_at: string | null
         }
         Insert: {
           created_at?: string
@@ -143,6 +144,7 @@ export type Database = {
           daily_assignments: number
           original_investment?: number | null
           offer_name?: string | null
+          offer_expires_at?: string | null
         }
         Update: {
           created_at?: string
@@ -154,6 +156,7 @@ export type Database = {
           daily_assignments?: number
           original_investment?: number | null
           offer_name?: string | null
+          offer_expires_at?: string | null
         }
         Relationships: []
       }
@@ -451,3 +454,5 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
+
+    

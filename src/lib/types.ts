@@ -9,6 +9,7 @@ export interface Plan {
   created_at: string;
   original_investment: number | null;
   offer_name: string | null;
+  offer_expires_at: string | null;
 }
 
 export interface Profile {
@@ -115,3 +116,5 @@ export interface Upline {
   name: string | null;
   referral_code: string;
 }
+
+    

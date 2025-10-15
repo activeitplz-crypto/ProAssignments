@@ -35,6 +35,7 @@ const planSchema = z.object({
   daily_assignments: z.coerce.number().int().positive('Daily assignments must be a positive integer'),
   original_investment: z.coerce.number().nullable().optional(),
   offer_name: z.string().nullable().optional(),
+  offer_expires_at: z.string().nullable().optional(),
 });
 
 
@@ -53,7 +54,12 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      plans: initialPlans.map(p => ({...p, original_investment: p.original_investment || null, offer_name: p.offer_name || null})) || [],
+      plans: initialPlans.map(p => ({
+          ...p, 
+          original_investment: p.original_investment || null, 
+          offer_name: p.offer_name || null,
+          offer_expires_at: p.offer_expires_at ? new Date(p.offer_expires_at).toISOString().substring(0, 16) : null,
+        })) || [],
     },
   });
 
@@ -178,6 +184,19 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name={`plans.${index}.offer_expires_at`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Offer Expires At (Optional)</FormLabel>
+                        <FormControl>
+                          <Input type="datetime-local" {...field} value={field.value ?? ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
                  <Button
                     type="button"
@@ -194,7 +213,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                 <Button
                 type="button"
                 variant="outline"
-                onClick={() => append({ name: '', investment: 0, daily_earning: 0, daily_assignments: 1, original_investment: null, offer_name: null })}
+                onClick={() => append({ name: '', investment: 0, daily_earning: 0, daily_assignments: 1, original_investment: null, offer_name: null, offer_expires_at: null })}
                 >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add New Plan
@@ -210,3 +229,5 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
     </Card>
   );
 }
+
+    

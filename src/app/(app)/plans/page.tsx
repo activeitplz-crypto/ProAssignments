@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { OfferCountdown } from './offer-countdown';
 
 export default async function PlansPage() {
   const supabase = createClient();
@@ -95,7 +96,8 @@ export default async function PlansPage() {
                     {plan.offer_name} ❤️‍🔥
                   </Badge>
                 )}
-                <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
+                {isOffer && plan.offer_expires_at && <OfferCountdown expiresAt={plan.offer_expires_at} />}
+                <CardTitle className="font-headline text-2xl pt-2">{plan.name}</CardTitle>
                 <CardDescription className="flex flex-wrap items-baseline gap-2">
                   <span className="text-xs text-muted-foreground">Investment</span>
                   {isOffer && plan.original_investment && (

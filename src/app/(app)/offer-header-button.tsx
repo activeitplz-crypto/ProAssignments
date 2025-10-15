@@ -65,12 +65,11 @@ export function OfferHeaderButton() {
     return <Skeleton className="h-9 w-32" />;
   }
 
-  if (activeOffer) {
+  if (activeOffer && timeLeft !== 'Offer Ended') {
     return (
       <Button variant="default" size="sm" className="animate-pulse bg-green-600 text-white hover:bg-green-700" asChild>
         <Link href="/plans">
-          <Timer className="mr-2 h-4 w-4" />
-          Special Offer!
+          Special Offer! {timeLeft}
         </Link>
       </Button>
     );

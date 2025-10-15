@@ -29,7 +29,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import type { Session } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
-import { OfferHeaderButton } from './offer-header-button';
 
 export default function AppLayout({
   children,
@@ -179,13 +178,9 @@ export default function AppLayout({
         </div>
 
         <div className="flex items-center gap-4">
-            {hasPlan ? (
-              <Button variant="outline" size="sm" asChild>
-                  <Link href="/plans">Plans</Link>
-              </Button>
-            ) : (
-              <OfferHeaderButton />
-            )}
+            <Button variant="outline" size="sm" asChild>
+                <Link href="/plans">Plans</Link>
+            </Button>
             <div className="hidden md:flex">
                 <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
             </div>

@@ -10,6 +10,7 @@ import { UserProfileCard } from '@/components/user-profile-card';
 import { DollarSign, Zap, Briefcase, Wallet } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
+import { OfferBanner } from './offer-banner';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -40,9 +41,13 @@ export default async function DashboardPage() {
     current_balance: user.current_balance,
   };
 
+  const hasPlan = !!user.current_plan;
+
   return (
     <div className="flex flex-col gap-6">
       <UserProfileCard name={userData.name} username={userData.username} avatarUrl={userData.avatarUrl} />
+      
+      {!hasPlan && <OfferBanner />}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-card/80">

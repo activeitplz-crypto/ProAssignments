@@ -29,6 +29,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import type { Session } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
+import { OfferHeaderButton } from './offer-header-button';
 
 export default function AppLayout({
   children,
@@ -120,6 +121,7 @@ export default function AppLayout({
 
   const allNavItems = [...navItems, ...actionItems];
 
+  const hasPlan = !!user.current_plan;
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">
@@ -177,9 +179,13 @@ export default function AppLayout({
         </div>
 
         <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" asChild>
-                <Link href="/plans">Plans</Link>
-            </Button>
+            {hasPlan ? (
+              <Button variant="outline" size="sm" asChild>
+                  <Link href="/plans">Plans</Link>
+              </Button>
+            ) : (
+              <OfferHeaderButton />
+            )}
             <div className="hidden md:flex">
                 <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
             </div>

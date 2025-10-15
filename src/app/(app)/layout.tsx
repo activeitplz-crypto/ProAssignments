@@ -170,19 +170,14 @@ export default function AppLayout({
         </div>
       </nav>
 
-       <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between gap-4 bg-primary px-4 text-primary-foreground shadow-md md:justify-end md:px-6">
+       <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-sm md:justify-end md:px-6">
         <div className="flex items-center gap-2 md:hidden">
             <ProAssignmentIcon className="h-7 w-7" />
             <span className="font-bold">ProAssignment</span>
         </div>
 
         <div className="flex items-center gap-4">
-            <Button 
-                variant="ghost" 
-                size="sm" 
-                asChild 
-                className="hover:bg-primary/90 hover:text-primary-foreground"
-            >
+            <Button variant="outline" size="sm" asChild>
                 <Link href="/plans">Plans</Link>
             </Button>
             <div className="hidden md:flex">

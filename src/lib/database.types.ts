@@ -130,6 +130,8 @@ export type Database = {
           name: string
           period_days: number
           daily_assignments: number
+          original_investment: number | null
+          offer_name: string | null
         }
         Insert: {
           created_at?: string
@@ -139,6 +141,8 @@ export type Database = {
           name: string
           period_days: number
           daily_assignments: number
+          original_investment?: number | null
+          offer_name?: string | null
         }
         Update: {
           created_at?: string
@@ -148,6 +152,8 @@ export type Database = {
           name?: string
           period_days?: number
           daily_assignments?: number
+          original_investment?: number | null
+          offer_name?: string | null
         }
         Relationships: []
       }

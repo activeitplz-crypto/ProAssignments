@@ -83,13 +83,24 @@ export default async function PlansPage() {
         {(plans as Plan[]).map((plan) => {
           const isPending = pendingPayments.has(plan.id);
           const isActive = activePlanName === plan.name;
+          const isOffer = plan.original_investment && plan.original_investment > plan.investment;
 
           return (
-            <Card key={plan.id} className="flex flex-col">
+            <Card key={plan.id} className={cn("flex flex-col", isOffer && "border-primary border-2 shadow-lg")}>
               <CardHeader>
+                 {isOffer && plan.offer_name && (
+                  <Badge variant="destructive" className="absolute -top-3 right-4 self-end">
+                    {plan.offer_name} ❤️‍🔥
+                  </Badge>
+                )}
                 <CardTitle className="font-headline text-2xl">{plan.name}</CardTitle>
-                <CardDescription className="flex flex-col">
+                <CardDescription className="flex flex-wrap items-baseline gap-2">
                   <span className="text-xs text-muted-foreground">Investment</span>
+                  {isOffer && (
+                      <del className="text-xl font-medium text-muted-foreground">
+                        PKR {plan.original_investment}
+                      </del>
+                  )}
                   <span className="text-3xl font-bold text-primary">PKR {plan.investment}</span>
                 </CardDescription>
               </CardHeader>

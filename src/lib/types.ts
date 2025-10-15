@@ -7,6 +7,8 @@ export interface Plan {
   period_days: number;
   daily_assignments: number;
   created_at: string;
+  original_investment: number | null;
+  offer_name: string | null;
 }
 
 export interface Profile {

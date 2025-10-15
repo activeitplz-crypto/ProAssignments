@@ -33,6 +33,8 @@ const planSchema = z.object({
   investment: z.coerce.number().positive('Investment must be a positive number'),
   daily_earning: z.coerce.number().positive('Daily earning must be a positive number'),
   daily_assignments: z.coerce.number().int().positive('Daily assignments must be a positive integer'),
+  original_investment: z.coerce.number().nullable().optional(),
+  offer_name: z.string().nullable().optional(),
 });
 
 
@@ -41,7 +43,7 @@ const formSchema = z.object({
 });
 
 interface ManagePlansFormProps {
-  plans: Omit<Plan, 'period_days' | 'created_at'>[];
+  plans: Plan[];
 }
 
 export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
@@ -51,7 +53,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      plans: initialPlans || [],
+      plans: initialPlans.map(p => ({...p, original_investment: p.original_investment || null, offer_name: p.offer_name || null})) || [],
     },
   });
 
@@ -63,7 +65,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     startTransition(async () => {
       for (const plan of values.plans) {
-        const result = await savePlan(plan as any);
+        const result = await savePlan(plan);
         if (result?.error) {
           toast({
             variant: 'destructive',
@@ -85,7 +87,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
       <CardHeader>
         <CardTitle>Manage Investment Plans</CardTitle>
         <CardDescription>
-          Add, edit, and save investment plans.
+          Add, edit, and create special offers for investment plans.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -93,7 +95,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             {fields.map((field, index) => (
               <Card key={field.id} className="relative p-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <input
                     type="hidden"
                     {...form.register(`plans.${index}.id`)}
@@ -111,33 +113,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name={`plans.${index}.investment`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Investment (PKR)</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="1000" {...field} />
-                        </FormControl>
-                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`plans.${index}.daily_earning`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Daily Earning (PKR)</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="1500" {...field} />
-                        </FormControl>
-                         <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
+                   <FormField
                     control={form.control}
                     name={`plans.${index}.daily_assignments`}
                     render={({ field }) => (
@@ -145,6 +121,58 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                         <FormLabel>Daily Assignments</FormLabel>
                         <FormControl>
                           <Input type="number" placeholder="1" {...field} />
+                        </FormControl>
+                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name={`plans.${index}.daily_earning`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Daily Earning (PKR)</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="50" {...field} />
+                        </FormControl>
+                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name={`plans.${index}.investment`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Investment / Sale Price (PKR)</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="1000" {...field} />
+                        </FormControl>
+                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name={`plans.${index}.original_investment`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Original Investment (Optional)</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="e.g. 1500 (old price)" {...field} value={field.value ?? ''} />
+                        </FormControl>
+                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name={`plans.${index}.offer_name`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Offer Name (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g., Eid Offer" {...field} value={field.value ?? ''} />
                         </FormControl>
                          <FormMessage />
                       </FormItem>
@@ -166,7 +194,7 @@ export function ManagePlansForm({ plans: initialPlans }: ManagePlansFormProps) {
                 <Button
                 type="button"
                 variant="outline"
-                onClick={() => append({ name: '', investment: 0, daily_earning: 0, daily_assignments: 0 })}
+                onClick={() => append({ name: '', investment: 0, daily_earning: 0, daily_assignments: 1, original_investment: null, offer_name: null })}
                 >
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add New Plan

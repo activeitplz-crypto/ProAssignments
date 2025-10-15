@@ -139,12 +139,18 @@ const planSchema = z.object({
     investment: z.coerce.number().positive('Investment must be a positive number'),
     daily_earning: z.coerce.number().positive('Daily earning must be a positive number'),
     daily_assignments: z.coerce.number().int().positive('Daily assignments must be a positive integer'),
+    original_investment: z.coerce.number().nullable().optional(),
+    offer_name: z.string().nullable().optional(),
 });
 
 export async function savePlan(formData: z.infer<typeof planSchema>) {
     const supabase = await verifyAdmin();
     const validatedData = planSchema.parse(formData);
     const { id, ...planData } = validatedData;
+    
+    // Ensure null if empty string
+    if (planData.offer_name === '') planData.offer_name = null;
+    if (planData.original_investment === 0) planData.original_investment = null;
 
     try {
         if (id) {

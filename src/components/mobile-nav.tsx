@@ -41,7 +41,7 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
+        <Button variant="ghost" size="icon" className="md:hidden text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground">
           <Menu className="h-5 w-5" />
           <span className="sr-only">Open navigation menu</span>
         </Button>

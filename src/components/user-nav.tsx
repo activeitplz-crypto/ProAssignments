@@ -33,10 +33,10 @@ export function UserNav({ name, email, avatarUrl, expiresAt }: UserNavProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-           <Avatar className="h-9 w-9">
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-primary/90">
+           <Avatar className="h-9 w-9 border-2 border-primary-foreground/50">
               <AvatarImage src={avatarUrl || ''} alt={`@${name}`} data-ai-hint="profile picture" />
-              <AvatarFallback>{initials}</AvatarFallback>
+              <AvatarFallback className="bg-primary text-primary-foreground">{initials}</AvatarFallback>
             </Avatar>
         </Button>
       </DropdownMenuTrigger>

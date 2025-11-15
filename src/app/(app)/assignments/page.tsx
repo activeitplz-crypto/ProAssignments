@@ -13,6 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AssignmentForm } from './assignment-form';
 import type { Task, Assignment } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 // This component now only shows "Approved" or "Pending"
 function getStatusBadge(isApproved: boolean) {

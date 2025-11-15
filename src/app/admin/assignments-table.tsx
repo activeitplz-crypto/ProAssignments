@@ -21,6 +21,7 @@ import { approveAssignment, rejectAssignment } from './actions';
 import { useToast } from '@/hooks/use-toast';
 import { Check, ExternalLink, Loader2, X } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 type EnrichedAssignment = Assignment & {
   profiles: { name: string | null; email: string | null } | null;
@@ -175,9 +176,9 @@ function AssignmentRow({ assignment }: { assignment: EnrichedAssignment }) {
                         ? 'destructive'
                         : 'secondary'
                     }
-                    className={
-                        assignment.status === 'approved' ? 'bg-green-500 hover:bg-green-600' : ''
-                    }
+                    className={cn(
+                        assignment.status === 'approved' && 'bg-green-500 hover:bg-green-600'
+                    )}
                     >
                     {assignment.status}
                 </Badge>

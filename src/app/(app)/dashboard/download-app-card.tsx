@@ -23,7 +23,7 @@ export function DownloadAppCard() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button asChild>
+        <Button asChild className="rounded-t-full rounded-b-lg px-8">
           <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
             Download Now
           </Link>

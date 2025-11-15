@@ -191,7 +191,7 @@ export default function AppLayout({
       </header>
       <main className="flex-1 p-4 pb-20 md:pb-4 lg:p-6">{children}</main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
+      <nav className="curved-nav fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
         <div className="grid h-16 grid-cols-4 items-center justify-around">
           {navItems.slice(0, 4).map((item) => (
             <Link

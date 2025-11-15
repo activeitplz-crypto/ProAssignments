@@ -17,6 +17,7 @@ import { AdminActionForms } from './admin-action-forms';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Withdrawal } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 type EnrichedWithdrawal = Withdrawal & {
   profiles: { name: string | null; email: string | null } | null;

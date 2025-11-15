@@ -29,6 +29,9 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    
+    --pink: 330 84% 60%;
+    --purple: 270 91% 60%;
   }
 
   .dark {
@@ -56,6 +59,9 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    --pink: 330 84% 60%;
+    --purple: 270 91% 60%;
   }
 }
 
@@ -69,9 +75,15 @@
 }
 
 @layer utilities {
-  @keyframes border-spin {
+  @keyframes gradient-bg {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
     100% {
-      transform: rotate(360deg);
+      background-position: 0% 50%;
     }
   }
 }

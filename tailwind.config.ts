@@ -62,6 +62,12 @@ export default {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
+        pink: {
+          '500': 'hsl(var(--pink))'
+        },
+        purple: {
+          '500': 'hsl(var(--purple))'
+        }
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -85,10 +91,15 @@ export default {
             height: '0',
           },
         },
+        'gradient-bg': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'gradient-bg': 'gradient-bg 5s ease infinite',
       },
     },
   },

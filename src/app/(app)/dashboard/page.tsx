@@ -48,10 +48,10 @@ export default async function DashboardPage() {
     <div className="flex flex-col gap-6">
       <UserProfileCard name={userData.name} username={userData.username} avatarUrl={userData.avatarUrl} />
       
-      {!hasPlan && <OfferBanner />}
+      {hasPlan && <OfferBanner />}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-card/80">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-normal text-muted-foreground">
               Total Earnings
@@ -64,7 +64,7 @@ export default async function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card className="bg-card/80">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-normal text-muted-foreground">
               Current Balance
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card className="bg-card/80">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-normal text-muted-foreground">
               Today's Earnings
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-         <Card className="bg-card/80">
+         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-normal text-muted-foreground">
               Active Plan

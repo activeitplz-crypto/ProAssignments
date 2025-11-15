@@ -67,3 +67,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  @keyframes border-spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}

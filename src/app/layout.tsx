@@ -6,7 +6,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'ProAssignment',
   description: 'Manage your investment plans with ease. Earn daily by completing tasks.',
-  keywords: ['ProAssignment', 'online earning', 'daily tasks', 'investment plans', 'earning app', 'pakistan earning'],
+  keywords: ['ProAssignment', 'online earning', 'daily tasks', 'investment plans', 'earning app', 'pakistan earning', 'assignment work', 'earning by assignment', 'assignment', 'assignment writing'],
 };
 
 export default function RootLayout({

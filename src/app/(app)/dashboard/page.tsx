@@ -48,7 +48,7 @@ export default async function DashboardPage() {
     <div className="flex flex-col gap-6">
       <UserProfileCard name={userData.name} username={userData.username} avatarUrl={userData.avatarUrl} />
       
-      {hasPlan && <OfferBanner />}
+      {!hasPlan && <OfferBanner />}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="transform transition-transform duration-300 hover:scale-105">

@@ -66,7 +66,6 @@ export default function AppLayout({
         .single();
       
       if (error || !profile) {
-        console.error('Error fetching profile:', error);
         // Could redirect or show an error state
       } else {
         setUser(profile);

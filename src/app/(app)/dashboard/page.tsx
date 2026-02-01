@@ -3,11 +3,12 @@ import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { UserProfileCard } from '@/components/user-profile-card';
-import { DollarSign, Zap, Briefcase, Wallet } from 'lucide-react';
+import { DollarSign, Zap, Briefcase, Wallet, Video } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
 import { OfferBanner } from './offer-banner';
@@ -105,6 +106,30 @@ export default async function DashboardPage() {
       </div>
 
       <RecentWithdrawals />
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-headline flex items-center gap-2">
+            <Video className="h-6 w-6 text-primary" />
+            Welcome Video
+          </CardTitle>
+          <CardDescription>
+            Watch this video to get started with our platform.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="aspect-video overflow-hidden rounded-lg border">
+            <iframe
+              src="https://www.youtube.com/embed/GGu-mLeZg4U?si=3BMZnRh-7Ty1W93U"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="h-full w-full"
+            ></iframe>
+          </div>
+        </CardContent>
+      </Card>
 
       <DownloadAppCard />
     </div>

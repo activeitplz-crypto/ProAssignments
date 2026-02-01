@@ -28,7 +28,6 @@ export default async function DashboardPage() {
     .single();
   
   if (error || !user) {
-    console.error('Dashboard Error:', error);
     return <div>Could not load user data. Please try refreshing.</div>;
   }
   

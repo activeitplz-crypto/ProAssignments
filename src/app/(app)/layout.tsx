@@ -1,4 +1,3 @@
-
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -30,6 +29,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import type { Session } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AppLayout({
   children,
@@ -42,6 +42,7 @@ export default function AppLayout({
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     const getSessionData = async () => {
@@ -66,7 +67,14 @@ export default function AppLayout({
         .single();
       
       if (error || !profile) {
-        // Could redirect or show an error state
+        toast({
+          variant: 'destructive',
+          title: 'User Profile Not Found',
+          description: 'Your account data is missing. Please sign up again.',
+        });
+        await supabase.auth.signOut();
+        router.push('/signup');
+        return;
       } else {
         setUser(profile);
       }
@@ -85,7 +93,7 @@ export default function AppLayout({
     );
 
     return () => subscription.unsubscribe();
-  }, [router, supabase, supabase.auth]);
+  }, [router, supabase, supabase.auth, toast]);
 
 
   if (loading) {

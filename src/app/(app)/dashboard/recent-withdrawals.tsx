@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ArrowDownCircle } from 'lucide-react';
 
 const staticWithdrawals = [
-  { name: 'Ahmad', amount: 2300 }, { name: 'Sana', amount: 4800 },
+  { name: 'Saim', amount: 2300 }, { name: 'Sana', amount: 4800 },
   { name: 'Bilal', amount: 7200 }, { name: 'Ayesha', amount: 3500 },
   { name: 'Hamza', amount: 9000 }, { name: 'Mehak', amount: 2800 },
   { name: 'Zain', amount: 9500 }, { name: 'Maria', amount: 5600 },
@@ -31,7 +30,7 @@ const staticWithdrawals = [
   { name: 'Rehan', amount: 3500 }, { name: 'Mishal', amount: 2100 },
   { name: 'Kamran', amount: 7800 }, { name: 'Zoya', amount: 2500 },
   { name: 'Imran', amount: 4400 }, { name: 'Mahira', amount: 6900 },
-  { name: 'Ahmad', amount: 3400 }, { name: 'Ayesha', amount: 6800 },
+  { name: 'Saim', amount: 3400 }, { name: 'Ayesha', amount: 6800 },
   { name: 'Bilal', amount: 2900 }, { name: 'Mehak', amount: 4500 },
   { name: 'Hamza', amount: 9200 }, { name: 'Zara', amount: 2300 },
   { name: 'Usman', amount: 5600 }, { name: 'Hina', amount: 3100 },

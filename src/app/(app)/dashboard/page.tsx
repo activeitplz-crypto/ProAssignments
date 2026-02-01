@@ -120,7 +120,7 @@ export default async function DashboardPage() {
         <CardContent>
           <div className="aspect-video overflow-hidden rounded-lg border">
             <iframe
-              src="https://www.youtube.com/embed/GGu-mLeZg4U?si=3BMZnRh-7Ty1W93U"
+              src="https://www.youtube.com/embed/GGu-mLeZg4U?autoplay=1&mute=1&rel=0"
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -15,6 +16,7 @@ import Link from 'next/link';
 import { RamzanBanner } from './ramzan-banner';
 import { BlogCard } from './blog-card';
 import { HousewifeBlogCard } from './housewife-blog-card';
+import { PartTimeBlogCard } from './part-time-blog-card';
 import { MemberReviews } from './member-reviews';
 
 export default async function DashboardPage() {
@@ -109,6 +111,7 @@ export default async function DashboardPage() {
             <VideoTutorialCard video={latestVideo} />
             <BlogCard />
             <HousewifeBlogCard />
+            <PartTimeBlogCard />
             <MemberReviews />
           </div>
           <div className="space-y-4">

@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -6,11 +7,26 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { UserProfileCard } from '@/components/user-profile-card';
 import { ProfileForm } from './profile-form';
 import { redirect } from 'next/navigation';
-import { DollarSign, Zap, Briefcase, Wallet, User, Settings, ShieldCheck, Fingerprint, Mail, Calendar } from 'lucide-react';
+import { 
+  DollarSign, 
+  Zap, 
+  Briefcase, 
+  Wallet, 
+  Fingerprint, 
+  Mail, 
+  Calendar, 
+  Bell, 
+  ArrowDownToLine, 
+  Users, 
+  HelpCircle,
+  Settings,
+  ShieldCheck
+} from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
 
 export default async function ProfilePage() {
   const supabase = createClient();
@@ -37,14 +53,9 @@ export default async function ProfilePage() {
     );
   }
 
+  const initials = user.name?.split(' ').map((n) => n[0]).join('').toUpperCase() || 'U';
+
   const stats = [
-    { 
-      title: 'Current Balance', 
-      value: `PKR ${user.current_balance.toFixed(2)}`, 
-      icon: Wallet,
-      color: 'from-[#4F46E5] to-[#06B6D4]',
-      description: 'Available for withdrawal'
-    },
     { 
       title: "Today's Earnings", 
       value: `PKR ${user.today_earning.toFixed(2)}`, 
@@ -69,128 +80,165 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <div className="mx-auto max-w-6xl space-y-10 pb-20">
-      {/* Hero Header */}
-      <div className="relative">
-        <UserProfileCard 
-          name={user.name || 'Anonymous'}
-          username={user.username || 'anonymous'}
-          avatarUrl={user.avatar_url}
-        />
+    <div className="min-h-screen bg-background pb-24">
+      {/* Immersive Blue Header */}
+      <div className="bg-primary pt-12 pb-24 rounded-b-[2.5rem] px-6 relative shadow-2xl">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-16 w-16 border-2 border-white/30 shadow-lg">
+              <AvatarImage src={user.avatar_url || ''} alt={user.name || ''} className="object-cover" />
+              <AvatarFallback className="bg-white/20 text-white font-bold">{initials}</AvatarFallback>
+            </Avatar>
+            <div className="text-white">
+              <h1 className="text-xl font-bold leading-tight">{user.name || 'Anonymous'}</h1>
+              <p className="text-sm opacity-80 font-medium">@{user.username || 'user'}</p>
+            </div>
+          </div>
+          <div className="bg-white/10 p-3 rounded-full text-white backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all cursor-pointer">
+            <Bell className="h-6 w-6" />
+          </div>
+        </div>
       </div>
 
-      {/* Modern Stats Grid */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.title} className="group relative overflow-hidden border-none bg-card/40 shadow-xl backdrop-blur-md transition-all hover:shadow-2xl hover:-translate-y-1">
-            <div className={`absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r ${stat.color} opacity-50 group-hover:opacity-100 transition-opacity`} />
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/70">
-                {stat.title}
-              </CardTitle>
-              <div className={`rounded-full bg-gradient-to-br ${stat.color} p-2 text-white shadow-lg shadow-primary/20`}>
-                <stat.icon className="h-4 w-4" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="font-display text-3xl text-foreground">
-                {stat.value}
-              </p>
-              <p className="mt-1 text-[10px] font-medium text-muted-foreground italic">
-                {stat.description}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Overlapping Balance Card */}
+      <div className="px-6 -mt-16 max-w-xl mx-auto">
+        <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-white">
+          <CardContent className="p-8 space-y-8">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground font-medium">Available Balance</span>
+              <span className="text-3xl font-black tracking-tight">
+                PKR {user.current_balance.toFixed(2)}
+              </span>
+            </div>
+            
+            <Separator className="bg-muted/50" />
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
-        {/* Identity & Security Column */}
-        <div className="space-y-8 lg:col-span-4">
-          <Card className="border-none bg-card/30 shadow-2xl backdrop-blur-xl overflow-hidden rounded-3xl">
-            <div className="h-1.5 bg-gradient-to-r from-primary to-purple-500" />
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3 text-xl font-black italic tracking-tighter">
-                <Fingerprint className="h-6 w-6 text-primary" />
-                IDENTITY
-              </CardTitle>
-              <CardDescription className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/60">Verified Member Credentials</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-[10px] font-black text-primary/70 uppercase">
-                  <Fingerprint className="h-3 w-3" />
-                  Unique System ID
+            <div className="grid grid-cols-4 gap-4">
+              <Link href="/withdraw" className="flex flex-col items-center gap-3 group">
+                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors">
+                  <ArrowDownToLine className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
                 </div>
-                <div className="group relative">
-                  <p className="break-all font-mono text-[10px] bg-muted/20 p-4 rounded-2xl border border-white/5 text-muted-foreground select-all transition-colors group-hover:bg-muted/40">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Withdraw</span>
+              </Link>
+              
+              <Link href="/plans" className="flex flex-col items-center gap-3 group">
+                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors">
+                  <Zap className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Plans</span>
+              </Link>
+
+              <Link href="/referrals" className="flex flex-col items-center gap-3 group">
+                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors">
+                  <Users className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Referrals</span>
+              </Link>
+
+              <Link href="/guide" className="flex flex-col items-center gap-3 group">
+                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors">
+                  <HelpCircle className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Guide</span>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="max-w-4xl mx-auto px-6 mt-10 space-y-10">
+        
+        {/* Compact Stats Grid */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {stats.map((stat) => (
+            <Card key={stat.title} className="border-none bg-card/50 shadow-md">
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardTitle className="text-[10px] font-black uppercase text-muted-foreground">
+                  {stat.title}
+                </CardTitle>
+                <stat.icon className="h-4 w-4 text-primary/60" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-xl font-bold">{stat.value}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+          {/* Identity Info */}
+          <div className="space-y-8 lg:col-span-4">
+            <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
+              <div className="h-1 bg-primary" />
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg font-bold">
+                  <Fingerprint className="h-5 w-5 text-primary" />
+                  IDENTITY
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-1">
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Unique System ID</p>
+                  <p className="break-all font-mono text-[10px] bg-muted/30 p-3 rounded-xl border text-muted-foreground select-all">
                     {user.id}
                   </p>
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 group">
-                  <div className="p-3 rounded-2xl bg-primary/10 text-primary transition-transform group-hover:scale-110">
-                    <Mail className="h-5 w-5" />
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                      <Mail className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-bold text-muted-foreground uppercase leading-none">Email</p>
+                      <p className="text-xs font-bold">{user.email || 'N/A'}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[9px] font-black text-muted-foreground/60 uppercase">Email Contact</p>
-                    <p className="text-sm font-bold text-foreground">{user.email || 'N/A'}</p>
+
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-purple-500/10 text-purple-500">
+                      <Calendar className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-bold text-muted-foreground uppercase leading-none">Joined</p>
+                      <p className="text-xs font-bold">
+                        {user.plan_start ? new Date(user.plan_start).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'New Member'}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 group">
-                  <div className="p-3 rounded-2xl bg-purple-500/10 text-purple-500 transition-transform group-hover:scale-110">
-                    <Calendar className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-[9px] font-black text-muted-foreground/60 uppercase">Member Since</p>
-                    <p className="text-sm font-bold text-foreground">
-                      {user.plan_start ? new Date(user.plan_start).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'New Member'}
-                    </p>
+                <div className="pt-4 border-t border-muted">
+                  <div className="flex items-center gap-3 bg-green-500/5 p-3 rounded-2xl border border-green-500/10">
+                    <ShieldCheck className="h-5 w-5 text-green-600" />
+                    <div className="text-[10px] font-bold text-green-700 leading-tight uppercase">
+                      Certified Partner <br/>
+                      <span className="opacity-70 text-[8px]">FBR & PSEB Verified</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </CardContent>
+            </Card>
+          </div>
 
-              <Separator className="bg-white/5" />
-
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-500/10 to-emerald-500/5 p-5 border border-green-500/20">
-                <div className="absolute -right-4 -bottom-4 opacity-10">
-                  <ShieldCheck className="h-20 w-20 text-green-500" />
-                </div>
-                <div className="flex items-center gap-3 relative z-10">
-                  <div className="bg-green-500 shadow-lg shadow-green-500/40 rounded-full p-2">
-                    <ShieldCheck className="h-5 w-5 text-white" />
+          {/* Form Settings */}
+          <div className="lg:col-span-8">
+            <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
+              <CardHeader className="bg-muted/30">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <CardTitle className="text-2xl font-bold">SETTINGS</CardTitle>
+                    <CardDescription className="text-xs">Update your public presence</CardDescription>
                   </div>
-                  <div>
-                    <p className="text-xs font-black text-green-700 uppercase tracking-tighter">Certified Partner</p>
-                    <p className="text-[10px] text-green-600/80 font-bold">FBR & PSEB Registered</p>
-                  </div>
+                  <Settings className="h-5 w-5 text-primary opacity-50" />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Form Settings Column */}
-        <div className="lg:col-span-8">
-          <Card className="border-none bg-card/40 shadow-2xl backdrop-blur-2xl rounded-3xl overflow-hidden">
-            <CardHeader className="pb-10 pt-8 border-b border-white/5 bg-gradient-to-b from-white/5 to-transparent">
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <CardTitle className="font-display text-4xl text-foreground tracking-tight">SETTINGS</CardTitle>
-                  <CardDescription className="text-xs font-medium text-muted-foreground/80">Manage your public presence and account visibility.</CardDescription>
-                </div>
-                <div className="p-3 rounded-full bg-primary/10 border border-primary/20">
-                  <Settings className="h-6 w-6 text-primary animate-[spin_10s_linear_infinite]" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-10">
-              <ProfileForm user={user} />
-            </CardContent>
-          </Card>
+              </CardHeader>
+              <CardContent className="pt-8">
+                <ProfileForm user={user} />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

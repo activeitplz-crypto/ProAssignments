@@ -45,6 +45,8 @@ export default function AppLayout({
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  const isProfilePage = pathname === '/profile';
+
   useEffect(() => {
     const getSessionData = async () => {
       const { data: { session: currentSession } } = await supabase.auth.getSession();
@@ -182,23 +184,22 @@ export default function AppLayout({
         </div>
       </nav>
 
-       <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-sm md:justify-end md:px-6">
-        <div className="flex items-center gap-2 md:hidden">
-            <ProAssignmentIcon className="h-7 w-7" />
-            <span className="font-bold">ProAssignment</span>
-        </div>
+       {!isProfilePage && (
+         <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-sm md:justify-end md:px-6">
+          <div className="flex items-center gap-2 md:hidden">
+              <ProAssignmentIcon className="h-7 w-7" />
+              <span className="font-bold">ProAssignment</span>
+          </div>
 
-        <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" asChild>
-                <Link href="/plans">Plans</Link>
-            </Button>
-            <div className="hidden md:flex">
-                <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
-            </div>
-            <MobileNav navItems={navItems} actionItems={actionItems} />
-        </div>
-      </header>
-      <main className="flex-1 p-4 pb-20 md:pb-4 lg:p-6">{children}</main>
+          <div className="flex items-center gap-4">
+              <div className="hidden md:flex">
+                  <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
+              </div>
+              <MobileNav navItems={navItems} actionItems={actionItems} />
+          </div>
+        </header>
+       )}
+      <main className={cn("flex-1 pb-20 md:pb-4", !isProfilePage && "p-4 lg:p-6")}>{children}</main>
 
       <nav className="curved-nav fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
         <div className="grid h-16 grid-cols-5 items-center justify-around">

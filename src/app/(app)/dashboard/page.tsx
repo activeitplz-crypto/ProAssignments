@@ -1,4 +1,3 @@
-
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -68,7 +67,7 @@ export default async function DashboardPage() {
         
         <RamzanBanner />
 
-        {/* 4. Earnings Stats Summary */}
+        {/* 4. Earnings Stats & Quick Actions Summary */}
         <div className="grid grid-cols-2 gap-3">
           <Card className="border-none shadow-md rounded-3xl bg-white overflow-hidden group hover:translate-y-[-2px] transition-all">
             <CardContent className="p-4 flex items-center gap-3">
@@ -81,17 +80,20 @@ export default async function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-md rounded-3xl bg-white overflow-hidden group hover:translate-y-[-2px] transition-all">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                <Wallet className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Lifetime</p>
-                <p className="text-sm font-black text-blue-600">PKR {user.total_earning.toFixed(2)}</p>
-              </div>
-            </CardContent>
-          </Card>
+          
+          <Link href="/withdraw" className="block">
+            <Card className="border-none shadow-md rounded-3xl bg-white overflow-hidden group hover:translate-y-[-2px] transition-all cursor-pointer">
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                  <Wallet className="h-5 w-5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Request</p>
+                  <p className="text-sm font-black text-blue-600 uppercase">Withdraw</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
 
         {/* 5. Notice Board */}

@@ -55,22 +55,36 @@ export default async function ProfilePage() {
 
   const initials = user.name?.split(' ').map((n) => n[0]).join('').toUpperCase() || 'U';
 
+  // Helper to render currency with small decimals
+  const renderCurrency = (amount: number) => {
+    const parts = amount.toFixed(2).split('.');
+    return (
+      <div className="flex items-baseline">
+        <span>{parseInt(parts[0]).toLocaleString()}</span>
+        <span className="text-sm opacity-70">.{parts[1]}</span>
+      </div>
+    );
+  };
+
   const stats = [
     { 
       title: "Today's Earnings", 
-      value: `PKR ${user.today_earning.toFixed(2)}`, 
+      value: user.today_earning, 
+      isCurrency: true,
       icon: Zap,
       description: 'Earned in last 24h'
     },
     { 
       title: 'Total Earnings', 
-      value: `PKR ${user.total_earning.toFixed(2)}`, 
+      value: user.total_earning, 
+      isCurrency: true,
       icon: DollarSign,
       description: 'Lifetime income'
     },
     { 
       title: 'Active Plan', 
       value: user.current_plan || 'No Plan', 
+      isCurrency: false,
       icon: Briefcase,
       description: 'Your current status'
     },
@@ -108,7 +122,7 @@ export default async function ProfilePage() {
             <div className="flex items-baseline gap-2">
               <span className="text-lg font-bold text-white/80">PKR</span>
               <span className="text-6xl font-black tracking-tighter text-white">
-                {user.current_balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {Math.floor(user.current_balance).toLocaleString()}
               </span>
             </div>
           </div>
@@ -166,7 +180,16 @@ export default async function ProfilePage() {
                 <stat.icon className="h-4 w-4 text-primary/60" />
               </CardHeader>
               <CardContent>
-                <p className="text-xl font-bold">{stat.value}</p>
+                <div className="text-xl font-bold">
+                  {stat.isCurrency ? (
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xs text-muted-foreground font-normal">PKR</span>
+                      {renderCurrency(stat.value as number)}
+                    </div>
+                  ) : (
+                    stat.value
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}

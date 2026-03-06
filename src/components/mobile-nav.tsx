@@ -60,7 +60,7 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
             <SheetTitle className="flex items-center gap-3">
               <ProAssignmentIcon className="h-10 w-10 border border-white/20" />
               <div className="flex flex-col items-start">
-                <span className="text-xl font-black tracking-tighter uppercase italic leading-none">PROASSIGNMENT</span>
+                <span className="text-xl font-black tracking-tighter uppercase italic leading-none text-white">PROASSIGNMENT</span>
                 <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/40">Elite Partner Hub</span>
               </div>
             </SheetTitle>

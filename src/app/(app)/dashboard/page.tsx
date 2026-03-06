@@ -64,7 +64,7 @@ export default async function DashboardPage() {
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
       
       {/* 1. Immersive Elite Header */}
-      <div className="bg-primary pt-24 pb-24 px-6 relative rounded-b-[3.5rem] shadow-2xl overflow-hidden">
+      <div className="bg-primary pt-24 pb-20 px-6 relative rounded-b-[3.5rem] shadow-2xl overflow-hidden">
         {/* Decorative elements for elite feel */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-[100px]" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full -ml-20 -mb-20 blur-3xl" />
@@ -97,8 +97,8 @@ export default async function DashboardPage() {
         {/* 3. High-End Integrated Navigation & Stats */}
         <Card className="border-none shadow-2xl rounded-[3rem] bg-white overflow-hidden border border-white/20">
             <CardContent className="p-0">
-                {/* Upper: Live Statistics */}
-                <div className="p-8 border-b border-slate-50 bg-slate-50/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                {/* Upper: Live Statistics - Tightened Spacing */}
+                <div className="px-8 pt-8 pb-4 border-b border-slate-50 bg-slate-50/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                     <div className="flex items-center gap-5">
                         <div className="h-16 w-16 rounded-[1.5rem] bg-green-500/10 flex items-center justify-center shadow-inner">
                             <TrendingUp className="h-8 w-8 text-green-600" />
@@ -113,24 +113,24 @@ export default async function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Lower: Elite 5-Button Command Grid */}
-                <div className="grid grid-cols-5 gap-2 p-6 md:p-8">
+                {/* Lower: Elite 5-Button Command Grid - Reduced top padding to tighten gap */}
+                <div className="grid grid-cols-5 gap-2 px-4 py-6 md:px-8 md:py-8">
                     {quickNav.map((item) => (
-                        <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-3 p-3 rounded-[2rem] transition-all duration-500 hover:bg-slate-50 active:scale-90 group">
+                        <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-3 p-2 rounded-[2rem] transition-all duration-500 hover:bg-slate-50 active:scale-90 group">
                             <div className={cn(
-                                "h-14 w-14 md:h-16 md:w-16 flex items-center justify-center rounded-[1.25rem] shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:shadow-xl",
+                                "h-12 w-12 md:h-16 md:w-16 flex items-center justify-center rounded-[1.25rem] shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:shadow-xl",
                                 item.bg
                             )}>
-                                <item.icon className={cn("h-6 w-6 md:h-7 md:w-7 transition-transform duration-500 group-hover:rotate-12", item.color)} />
+                                <item.icon className={cn("h-5 w-5 md:h-7 md:w-7 transition-transform duration-500 group-hover:rotate-12", item.color)} />
                             </div>
-                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900 transition-colors">{item.label}</span>
+                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900 transition-colors text-center">{item.label}</span>
                         </Link>
                     ))}
                 </div>
             </CardContent>
         </Card>
         
-        {/* Elite Promo Area */}
+        {/* Elite Promo Area - Positioned high for mobile visibility */}
         <RamzanBanner />
 
         {/* Dynamic Desktop Grid (2-column on desktop, 1 on mobile) */}

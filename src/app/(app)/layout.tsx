@@ -199,11 +199,15 @@ export default function AppLayout({
            "flex h-20 shrink-0 items-center justify-between px-6 md:justify-end transition-all border-none z-50",
            !isDashboard ? "sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm" : "absolute top-0 left-0 right-0 bg-transparent"
          )}>
-          <div className={cn("flex items-center gap-2 md:hidden", isDashboard && "text-white")}>
+          <div className={cn("flex items-center gap-2 md:hidden", isDashboard ? "text-white" : "text-slate-900")}>
               <ProAssignmentIcon className="h-8 w-8" />
               <div className="flex flex-col">
-                <span className="text-xs font-black uppercase tracking-tighter leading-none italic">PROASSIGNMENT</span>
-                <span className="text-[6px] font-black uppercase tracking-[0.3em] opacity-50">Mobile Station</span>
+                <span className={cn("text-xs font-black uppercase tracking-tighter leading-none italic", isDashboard ? "text-white" : "text-slate-900")}>
+                  PROASSIGNMENT
+                </span>
+                <span className={cn("text-[6px] font-black uppercase tracking-[0.3em] opacity-50", isDashboard ? "text-white/60" : "text-slate-500")}>
+                  Mobile Station
+                </span>
               </div>
           </div>
 

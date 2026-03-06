@@ -18,6 +18,7 @@ import {
   Video,
   Share2,
   Download,
+  Zap,
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -99,8 +100,11 @@ export default function AppLayout({
 
   if (loading) {
     return (
-        <div className="flex min-h-screen w-full items-center justify-center">
-            <Loader2 className="h-10 w-10 animate-spin" />
+        <div className="flex min-h-screen w-full items-center justify-center bg-[#F8FAFC]">
+            <div className="flex flex-col items-center gap-4">
+                <ProAssignmentIcon className="h-16 w-16 animate-pulse" />
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
         </div>
     )
   }
@@ -117,89 +121,105 @@ export default function AppLayout({
   ];
 
   const actionItems = [
-    { href: '/referrals', label: 'Referrals', icon: Users },
-    { href: '/watch', label: 'Guidelines', icon: Video },
+    { href: '/plans', label: 'Invest Plans', icon: Zap },
+    { href: '/referrals', label: 'My Network', icon: Users },
+    { href: '/guide', label: 'Master Guide', icon: HelpCircle },
+    { href: '/watch', label: 'Tutorials', icon: Video },
     { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },
-    { href: '/social', label: 'Social', icon: Share2 },
-    { href: '/reviews', label: 'Reviews', icon: MessageSquare },
-    { href: '/guide', label: 'Guide', icon: HelpCircle },
-    { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
-    { href: 'https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43', label: 'Our App', icon: Download, target: '_blank' },
+    { href: '/social', label: 'Social Hub', icon: Share2 },
   ];
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">
-      <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-60 md:flex-col md:border-r">
-        <div className="flex h-16 items-center gap-2 border-b px-6">
-          <ProAssignmentIcon className="h-8 w-8" />
-          <span className="text-sm font-bold">ProAssignment</span>
+    <div className="flex min-h-screen w-full flex-col bg-[#F8FAFC] text-foreground md:pl-64">
+      {/* 1. Desktop Sidebar (Hidden on Mobile) */}
+      <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-64 md:flex-col md:border-r md:bg-white md:shadow-2xl md:shadow-slate-200/50">
+        <div className="flex h-20 items-center gap-3 border-b px-8">
+          <ProAssignmentIcon className="h-9 w-9" />
+          <div className="flex flex-col">
+            <span className="text-sm font-black uppercase tracking-tighter leading-none italic">PRO<span className="text-primary">ASSIGNMENT</span></span>
+            <span className="text-[7px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-50">Identity Portal</span>
+          </div>
         </div>
-        <div className="flex flex-1 flex-col justify-between overflow-y-auto py-4">
-          <div className="flex flex-col gap-2 px-4">
+        <div className="flex flex-1 flex-col justify-between overflow-y-auto py-8">
+          <div className="flex flex-col gap-1.5 px-4">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                  pathname === item.href && 'bg-primary text-primary-foreground hover:text-primary-foreground/90'
+                  'flex items-center gap-4 rounded-2xl px-4 py-3.5 text-xs font-black uppercase tracking-tight transition-all duration-300 group',
+                  pathname === item.href 
+                    ? 'bg-primary text-white shadow-xl shadow-primary/20' 
+                    : 'text-slate-500 hover:bg-slate-50 hover:text-primary'
                 )}
               >
-                <item.icon className="h-5 w-5" />
+                <item.icon className={cn("h-5 w-5 transition-transform duration-300 group-hover:scale-110", pathname === item.href ? "text-white" : "text-slate-400")} />
                 <span>{item.label}</span>
               </Link>
             ))}
           </div>
-          <div className="mt-auto flex flex-col gap-2 px-4">
-             {actionItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                target={item.target}
-                rel={item.target === '_blank' ? 'noopener noreferrer' : undefined}
-                className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                  pathname === item.href && 'bg-muted text-primary'
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
+          
+          <div className="px-4 mt-8">
+             <div className="h-px bg-slate-100 w-full mb-8" />
+             <div className="flex flex-col gap-1.5">
+                {actionItems.map((item) => (
+                <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                    'flex items-center gap-4 rounded-2xl px-4 py-3 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 border border-transparent',
+                    pathname === item.href 
+                        ? 'bg-slate-900 text-white shadow-lg' 
+                        : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
+                    )}
+                >
+                    <item.icon className="h-4 w-4 opacity-60" />
+                    <span>{item.label}</span>
+                </Link>
+                ))}
+             </div>
+          </div>
+
+          <div className="mt-auto px-4 pt-8">
             <form action={logout}>
-                <button type="submit" className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                    <LogOut className="h-5 w-5" />
-                    <span>Log out</span>
+                <button type="submit" className="flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:bg-red-50 hover:text-red-500 transition-all duration-500 group">
+                    <div className="h-8 w-8 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-red-500/10">
+                        <LogOut className="h-4 w-4" />
+                    </div>
+                    <span>Terminate Session</span>
                 </button>
             </form>
           </div>
         </div>
       </nav>
 
+       {/* 2. Global Mobile/Desktop Adaptive Header */}
        {!isProfilePage && (
          <header className={cn(
-           "flex h-16 shrink-0 items-center justify-between px-4 md:justify-end md:px-6 transition-all border-none shadow-none",
-           !isDashboard ? "sticky top-0 z-40 bg-card border-b shadow-sm" : "absolute top-0 left-0 right-0 z-50 bg-transparent"
+           "flex h-20 shrink-0 items-center justify-between px-6 md:justify-end transition-all border-none z-50",
+           !isDashboard ? "sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm" : "absolute top-0 left-0 right-0 bg-transparent"
          )}>
           <div className={cn("flex items-center gap-2 md:hidden", isDashboard && "text-white")}>
-              <ProAssignmentIcon className="h-7 w-7" />
-              <span className="font-bold">ProAssignment</span>
+              <ProAssignmentIcon className="h-8 w-8" />
+              <div className="flex flex-col">
+                <span className="text-xs font-black uppercase tracking-tighter leading-none italic">PRO<span className="text-primary">ASSIGNMENT</span></span>
+                <span className="text-[6px] font-black uppercase tracking-[0.3em] opacity-50">Mobile Station</span>
+              </div>
           </div>
 
           <div className="flex items-center gap-4">
-              {!isDashboard && (
-                <div className="hidden md:flex">
-                    <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
-                </div>
-              )}
+              <div className="hidden md:flex">
+                  <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
+              </div>
               <MobileNav navItems={navItems} actionItems={actionItems} dashboardMode={isDashboard} />
           </div>
         </header>
        )}
+
       <main className={cn(
-        "flex-1 pb-4", 
-        !isProfilePage && "p-4 lg:p-6",
-        isDashboard && "pt-0 p-0 lg:p-0"
+        "flex-1 pb-12", 
+        !isProfilePage && "p-4 md:p-8 lg:p-10",
+        isDashboard && "pt-0 p-0 md:p-0 lg:p-0"
       )}>{children}</main>
     </div>
   );

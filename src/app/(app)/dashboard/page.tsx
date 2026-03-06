@@ -11,6 +11,7 @@ import {
   ClipboardList,
   FileCheck2,
   User as UserIcon,
+  Sparkles,
 } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
@@ -39,7 +40,7 @@ export default async function DashboardPage() {
     .single();
   
   if (error || !user) {
-    return <div className="p-8 text-center">Could not load user data. Please try refreshing.</div>;
+    return <div className="p-8 text-center font-black uppercase tracking-widest text-destructive">User Context Sync Error</div>;
   }
 
   // Fetch the latest tutorial video for direct playback
@@ -61,20 +62,30 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
       
-      {/* 1. Immersive Blue Header Section */}
-      <div className="bg-primary pt-20 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-white space-y-6 text-center">
-            <div className="space-y-1">
-                <h1 className="text-2xl font-black tracking-tighter uppercase italic">Hello, {user.name?.split(' ')[0]}</h1>
+      {/* 1. Immersive Elite Header */}
+      <div className="bg-primary pt-24 pb-24 px-6 relative rounded-b-[3.5rem] shadow-2xl overflow-hidden">
+        {/* Decorative elements for elite feel */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full -ml-20 -mb-20 blur-3xl" />
+        
+        <div className="max-w-5xl mx-auto relative z-10">
+          <div className="text-white space-y-8 text-center">
+            <div className="space-y-2">
+                <div className="flex items-center justify-center gap-2">
+                    <span className="bg-white/20 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.3em] backdrop-blur-md border border-white/10">Authorized Terminal</span>
+                    <Sparkles className="h-3 w-3 text-yellow-400/60" />
+                </div>
+                <h1 className="text-3xl md:text-4xl font-black tracking-tighter uppercase italic leading-none">
+                    Hello, {user.name?.split(' ')[0]}
+                </h1>
             </div>
 
-            {/* Integrated Balance Display */}
-            <div className="flex flex-col items-center space-y-2 py-2">
-                <span className="text-white/60 font-bold uppercase text-[9px] tracking-[0.3em]">Available Balance</span>
-                <div className="flex items-baseline gap-2">
-                    <span className="text-sm font-bold text-white/80">PKR</span>
-                    <span className="text-5xl font-black tracking-tighter text-white">
+            {/* Integrated Central Balance Display */}
+            <div className="flex flex-col items-center space-y-2 py-4">
+                <span className="text-white/60 font-black uppercase text-[10px] tracking-[0.4em] opacity-70">Available Liquidity</span>
+                <div className="flex items-baseline gap-3">
+                    <span className="text-xl font-bold text-white/60 italic">PKR</span>
+                    <span className="text-6xl md:text-7xl font-black tracking-tighter text-white drop-shadow-2xl">
                     {Math.floor(user.current_balance).toLocaleString()}
                     </span>
                 </div>
@@ -83,46 +94,55 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* 2. Overlapping Content Area */}
-      <div className="px-4 -mt-12 space-y-5 max-w-4xl mx-auto w-full pb-24 relative z-20">
+      {/* 2. Overlapping Content Command Center */}
+      <div className="px-4 -mt-12 space-y-6 max-w-5xl mx-auto w-full pb-32 relative z-20">
         
-        {/* 3. New Integrated Navigation & Today Stats Card */}
-        <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden">
+        {/* 3. High-End Integrated Navigation & Stats */}
+        <Card className="border-none shadow-2xl rounded-[3rem] bg-white overflow-hidden border border-white/20">
             <CardContent className="p-0">
-                {/* Upper: Today's Earning Stat */}
-                <div className="p-6 border-b border-slate-50 bg-slate-50/30 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 rounded-2xl bg-green-500/10 flex items-center justify-center">
-                            <TrendingUp className="h-6 w-6 text-green-600" />
+                {/* Upper: Live Statistics */}
+                <div className="p-8 border-b border-slate-50 bg-slate-50/30 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                    <div className="flex items-center gap-5">
+                        <div className="h-16 w-16 rounded-[1.5rem] bg-green-500/10 flex items-center justify-center shadow-inner">
+                            <TrendingUp className="h-8 w-8 text-green-600" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Today's Revenue</p>
-                            <p className="text-xl font-black text-green-600">PKR {user.today_earning.toFixed(2)}</p>
+                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">Today's Revenue Stream</p>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-xs font-bold text-green-600/60">PKR</span>
+                                <p className="text-2xl font-black text-green-600 leading-none">{user.today_earning.toFixed(2)}</p>
+                            </div>
                         </div>
                     </div>
-                    <div className="text-right">
-                        <span className="bg-green-500/10 text-green-600 text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full">Active Now</span>
+                    <div className="flex items-center gap-3">
+                        <span className="bg-green-500/10 text-green-600 text-[9px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full border border-green-500/10 animate-pulse">Identity Verified</span>
                     </div>
                 </div>
 
-                {/* Lower: 5-Button Navigation Grid */}
-                <div className="grid grid-cols-5 gap-1 p-4">
+                {/* Lower: Elite 5-Button Command Grid */}
+                <div className="grid grid-cols-5 gap-2 p-6 md:p-8">
                     {quickNav.map((item) => (
-                        <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-2 p-2 rounded-2xl transition-all hover:bg-slate-50 active:scale-90">
-                            <div className={`h-12 w-12 ${item.bg} flex items-center justify-center rounded-2xl shadow-sm`}>
-                                <item.icon className={`h-5 w-5 ${item.color}`} />
+                        <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-3 p-3 rounded-[2rem] transition-all duration-500 hover:bg-slate-50 active:scale-90 group">
+                            <div className={cn(
+                                "h-14 w-14 md:h-16 md:w-16 flex items-center justify-center rounded-[1.25rem] shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:shadow-xl",
+                                item.bg
+                            )}>
+                                <item.icon className={cn("h-6 w-6 md:h-7 md:w-7 transition-transform duration-500 group-hover:rotate-12", item.color)} />
                             </div>
-                            <span className="text-[9px] font-black uppercase tracking-tight text-slate-600">{item.label}</span>
+                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900 transition-colors">{item.label}</span>
                         </Link>
                     ))}
                 </div>
             </CardContent>
         </Card>
         
+        {/* Elite Promo Area */}
         <RamzanBanner />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-4">
+        {/* Dynamic Desktop Grid (2-column on desktop, 1 on mobile) */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          {/* Main Feed Column */}
+          <div className="md:col-span-7 space-y-6">
             <RecentWithdrawals />
             <VideoTutorialCard video={latestVideo} />
             <BlogCard />
@@ -131,8 +151,25 @@ export default async function DashboardPage() {
             <MemberReviews />
             <FaqSection />
           </div>
-          <div className="space-y-4">
-            <DownloadAppCard />
+
+          {/* Secondary Info Column */}
+          <div className="md:col-span-5 space-y-6">
+            {/* Sticky Sidebar on Desktop */}
+            <div className="md:sticky md:top-24 space-y-6">
+                <DownloadAppCard />
+                {/* Additional Sidebar elements can go here */}
+                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-2xl -mr-16 -mt-16" />
+                    <div className="relative z-10 space-y-4">
+                        <div className="flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+                            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/40">Network Status</span>
+                        </div>
+                        <h4 className="text-xl font-black uppercase italic tracking-tighter leading-none">System <span className="text-primary">Operational</span></h4>
+                        <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest leading-relaxed">AI Verification nodes and Payout Gateways are running at peak efficiency.</p>
+                    </div>
+                </div>
+            </div>
           </div>
         </div>
       </div>

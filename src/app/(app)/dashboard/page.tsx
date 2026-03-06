@@ -6,7 +6,6 @@ import {
 } from '@/components/ui/card';
 import { 
   Megaphone, 
-  Bell, 
   Info, 
   Zap, 
   ArrowUpRight, 
@@ -42,14 +41,8 @@ export default async function DashboardPage() {
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
       
       {/* 1. Immersive Blue Header Section */}
-      <div className="bg-primary pt-6 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg">
+      <div className="bg-primary pt-10 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-end text-white mb-6">
-            <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white backdrop-blur-md cursor-pointer border border-white/10 hover:bg-white/20 transition-all shadow-inner">
-               <Bell className="h-5 w-5" />
-            </div>
-          </div>
-
           <div className="text-white space-y-6 text-center">
             <div className="space-y-1">
                 <h1 className="text-2xl font-black tracking-tighter uppercase italic">Hello, {user.name?.split(' ')[0]}</h1>

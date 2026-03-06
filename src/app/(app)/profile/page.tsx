@@ -17,7 +17,6 @@ import {
   Fingerprint, 
   Mail, 
   Calendar, 
-  Bell, 
   ArrowDownToLine, 
   Users, 
   HelpCircle,
@@ -99,7 +98,7 @@ export default async function ProfilePage() {
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/5 rounded-full -ml-10 -mb-10 blur-2xl" />
         
         <div className="max-w-4xl mx-auto relative z-10 space-y-10">
-          {/* Top Bar: User Info & Notification */}
+          {/* Top Bar: User Info */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Avatar className="h-14 w-14 border-2 border-white/30 shadow-lg">
@@ -110,9 +109,6 @@ export default async function ProfilePage() {
                 <h1 className="text-lg font-bold leading-tight">{user.name || 'Anonymous'}</h1>
                 <p className="text-xs opacity-70 font-medium">@{user.username || 'user'}</p>
               </div>
-            </div>
-            <div className="bg-white/10 p-2.5 rounded-full text-white backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all cursor-pointer">
-              <Bell className="h-5 w-5" />
             </div>
           </div>
 

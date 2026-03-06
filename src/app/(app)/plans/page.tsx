@@ -79,7 +79,7 @@ export default async function PlansPage() {
           <h1 className="text-4xl font-black tracking-tighter uppercase italic text-white leading-none">
             Investment <span className="text-white/80">Plans</span>
           </h1>
-          <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] max-w-xs mx-auto">Select a certified pathway to maximize your daily revenue</p>
+          <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] max-w-xs mx-auto">Select a certified plan to maximize your daily earning</p>
         </div>
       </div>
 
@@ -142,7 +142,7 @@ export default async function PlansPage() {
                                 <CheckCircle className="h-4 w-4 text-green-600" />
                             </div>
                             <div>
-                                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Daily Revenue</p>
+                                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Daily Earning</p>
                                 <p className="text-sm font-black text-slate-900 italic leading-none">PKR {plan.daily_earning.toFixed(2)}</p>
                             </div>
                         </div>
@@ -151,8 +151,8 @@ export default async function PlansPage() {
                                 <ClipboardList className="h-4 w-4 text-primary" />
                             </div>
                             <div>
-                                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Assignment Pool</p>
-                                <p className="text-sm font-black text-slate-900 italic leading-none">{plan.daily_assignments} Tasks/Day</p>
+                                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Assignment</p>
+                                <p className="text-sm font-black text-slate-900 italic leading-none">{plan.daily_assignments} Assignment</p>
                             </div>
                         </div>
                     </CardContent>
@@ -196,7 +196,7 @@ function PurchasePlanDialog({ plan }: { plan: Plan }) {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="w-full h-14 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all bg-primary hover:bg-primary/90 text-white group">
-          <span>Select Pathway</span>
+          <span>Select Plan</span>
           <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
         </Button>
       </DialogTrigger>

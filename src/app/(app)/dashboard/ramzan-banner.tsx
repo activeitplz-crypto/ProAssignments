@@ -19,7 +19,7 @@ export function RamzanBanner() {
         
         <CardContent className="p-6 relative z-10">
           <div className="flex items-center gap-2 mb-3">
-            <span className="bg-white/20 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] backdrop-blur-md border border-white/10">Best Offer</span>
+            <span className="bg-white/20 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] backdrop-blur-md border border-white/10">Ramzan mubarak</span>
             <div className="flex gap-0.5 text-yellow-300">
               <Star className="h-2.5 w-2.5 fill-current" />
               <Star className="h-2.5 w-2.5 fill-current" />
@@ -29,10 +29,10 @@ export function RamzanBanner() {
           
           <div className="space-y-1.5 max-w-[80%]">
             <h3 className="text-2xl font-black tracking-tighter leading-none uppercase">
-              20% EXTRA<br/>
-              <span className="text-emerald-200">REWARDS</span>
+              RAMZAN SPECIAL<br/>
+              <span className="text-emerald-200">OFFER</span>
             </h3>
-            <p className="text-[10px] font-bold text-white/80 uppercase tracking-tight">Ramzan special program is live!</p>
+            <p className="text-[10px] font-bold text-white/80 uppercase tracking-tight">GET 20% OFF ON ALL THE PLANS</p>
           </div>
           
           <div className="mt-5 flex">

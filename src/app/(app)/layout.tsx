@@ -202,7 +202,7 @@ export default function AppLayout({
           <div className={cn("flex items-center gap-2 md:hidden", isDashboard && "text-white")}>
               <ProAssignmentIcon className="h-8 w-8" />
               <div className="flex flex-col">
-                <span className="text-xs font-black uppercase tracking-tighter leading-none italic">PRO<span className="text-primary">ASSIGNMENT</span></span>
+                <span className="text-xs font-black uppercase tracking-tighter leading-none italic">PROASSIGNMENT</span>
                 <span className="text-[6px] font-black uppercase tracking-[0.3em] opacity-50">Mobile Station</span>
               </div>
           </div>

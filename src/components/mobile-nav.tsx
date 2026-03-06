@@ -34,11 +34,6 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  const allItems = [
-    ...navItems,
-    ...actionItems,
-  ];
-
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -48,8 +43,8 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
           className={cn(
             "md:hidden h-12 w-12 rounded-2xl transition-all duration-300 active:scale-90",
             dashboardMode 
-              ? "bg-white/10 text-white hover:bg-white/20 border border-white/10 backdrop-blur-md" 
-              : "bg-primary/5 text-primary hover:bg-primary/10 border border-primary/10"
+              ? "bg-white/20 text-white hover:bg-white/30 border border-white/20 backdrop-blur-md shadow-lg" 
+              : "bg-slate-900 text-white hover:bg-slate-800 shadow-xl"
           )}
         >
           <Menu className="h-6 w-6" />
@@ -65,7 +60,7 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
             <SheetTitle className="flex items-center gap-3">
               <ProAssignmentIcon className="h-10 w-10 border border-white/20" />
               <div className="flex flex-col items-start">
-                <span className="text-xl font-black tracking-tighter uppercase italic leading-none">PRO<span className="text-primary">ASSIGNMENT</span></span>
+                <span className="text-xl font-black tracking-tighter uppercase italic leading-none">PROASSIGNMENT</span>
                 <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/40">Elite Partner Hub</span>
               </div>
             </SheetTitle>
@@ -145,7 +140,7 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
             </Link>
 
             <form action={logout} className="w-full">
-                <button type="submit" className="flex w-full items-center justify-center gap-3 rounded-2xl bg-red-500/10 border border-red-500/20 py-4 text-xs font-black uppercase tracking-[0.2em] text-red-500 hover:bg-red-500 hover:text-white transition-all duration-500">
+                <button type="submit" className="flex w-full items-center justify-center gap-3 rounded-2xl bg-red-500/10 border border-red-500/20 py-4 text-xs font-black uppercase tracking-[0.2em] text-red-500 hover:bg-red-50 hover:text-white transition-all duration-500">
                     <LogOut className="h-4 w-4" />
                     <span>Terminate Session</span>
                 </button>

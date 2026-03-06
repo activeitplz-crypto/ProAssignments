@@ -72,10 +72,6 @@ export default async function DashboardPage() {
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="text-white space-y-8 text-center">
             <div className="space-y-2">
-                <div className="flex items-center justify-center gap-2">
-                    <span className="bg-white/20 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.3em] backdrop-blur-md border border-white/10">Authorized Terminal</span>
-                    <Sparkles className="h-3 w-3 text-yellow-400/60" />
-                </div>
                 <h1 className="text-3xl md:text-4xl font-black tracking-tighter uppercase italic leading-none">
                     Hello, {user.name?.split(' ')[0]}
                 </h1>
@@ -83,7 +79,7 @@ export default async function DashboardPage() {
 
             {/* Integrated Central Balance Display */}
             <div className="flex flex-col items-center space-y-2 py-4">
-                <span className="text-white/60 font-black uppercase text-[10px] tracking-[0.4em] opacity-70">Available Liquidity</span>
+                <span className="text-white/60 font-black uppercase text-[10px] tracking-[0.4em] opacity-70">Available Balance</span>
                 <div className="flex items-baseline gap-3">
                     <span className="text-xl font-bold text-white/60 italic">PKR</span>
                     <span className="text-6xl md:text-7xl font-black tracking-tighter text-white drop-shadow-2xl">
@@ -108,15 +104,12 @@ export default async function DashboardPage() {
                             <TrendingUp className="h-8 w-8 text-green-600" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">Today's Revenue Stream</p>
+                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">Today's Revenue</p>
                             <div className="flex items-baseline gap-1">
                                 <span className="text-xs font-bold text-green-600/60">PKR</span>
                                 <p className="text-2xl font-black text-green-600 leading-none">{user.today_earning.toFixed(2)}</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <span className="bg-green-500/10 text-green-600 text-[9px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full border border-green-500/10 animate-pulse">Identity Verified</span>
                     </div>
                 </div>
 
@@ -158,18 +151,6 @@ export default async function DashboardPage() {
             {/* Sticky Sidebar on Desktop */}
             <div className="md:sticky md:top-24 space-y-6">
                 <DownloadAppCard />
-                {/* Additional Sidebar elements can go here */}
-                <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-2xl -mr-16 -mt-16" />
-                    <div className="relative z-10 space-y-4">
-                        <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-                            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-white/40">Network Status</span>
-                        </div>
-                        <h4 className="text-xl font-black uppercase italic tracking-tighter leading-none">System <span className="text-primary">Operational</span></h4>
-                        <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest leading-relaxed">AI Verification nodes and Payout Gateways are running at peak efficiency.</p>
-                    </div>
-                </div>
             </div>
           </div>
         </div>

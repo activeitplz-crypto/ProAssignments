@@ -151,8 +151,8 @@ export default async function PlansPage() {
                                 <ClipboardList className="h-4 w-4 text-primary" />
                             </div>
                             <div>
-                                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Assignment</p>
-                                <p className="text-sm font-black text-slate-900 italic leading-none">{plan.daily_assignments} Assignment</p>
+                                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Daily Assignment</p>
+                                <p className="text-sm font-black text-slate-900 italic leading-none">{plan.daily_assignments} Daily Assignment</p>
                             </div>
                         </div>
                     </CardContent>

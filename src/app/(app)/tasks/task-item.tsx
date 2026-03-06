@@ -66,7 +66,7 @@ export function TaskItem({ task, taskNumber }: TaskItemProps) {
             ) : (
                 <>
                     <ExternalLink className="h-4 w-4 group-hover:rotate-12 transition-transform" />
-                    <span>Launch Task</span>
+                    <span>View Task</span>
                 </>
             )}
           </Link>

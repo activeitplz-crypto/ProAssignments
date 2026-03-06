@@ -15,6 +15,7 @@ import { DownloadAppCard } from './download-app-card';
 import Link from 'next/link';
 import { RamzanBanner } from './ramzan-banner';
 import { BlogCard } from './blog-card';
+import { HousewifeBlogCard } from './housewife-blog-card';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -107,6 +108,7 @@ export default async function DashboardPage() {
             <RecentWithdrawals />
             <VideoTutorialCard video={latestVideo} />
             <BlogCard />
+            <HousewifeBlogCard />
           </div>
           <div className="space-y-4">
             <DownloadAppCard />

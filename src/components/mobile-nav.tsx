@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -52,7 +51,7 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
         {/* Decorative background light */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/40 rounded-full blur-[80px] -mr-32 -mt-32" />
         
-        <SheetHeader className="p-8 border-b border-slate-900/5 relative z-10">
+        <SheetHeader className="p-8 relative z-10">
           <div className="flex items-center justify-between">
             <SheetTitle className="flex items-center gap-3">
               <ProAssignmentIcon className="h-10 w-10 border border-slate-900/10 shadow-sm" />

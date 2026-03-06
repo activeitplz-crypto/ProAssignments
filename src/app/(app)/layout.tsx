@@ -1,4 +1,3 @@
-
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -133,7 +132,7 @@ export default function AppLayout({
     <div className="flex min-h-screen w-full flex-col bg-[#F8FAFC] text-foreground md:pl-64">
       {/* 1. Desktop Sidebar (Hidden on Mobile) */}
       <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-64 md:flex-col md:border-r md:bg-white md:shadow-2xl md:shadow-slate-200/50">
-        <div className="flex h-20 items-center gap-3 border-b px-8">
+        <div className="flex h-20 items-center gap-3 px-8">
           <ProAssignmentIcon className="h-9 w-9" />
           <div className="flex flex-col">
             <span className="text-sm font-black tracking-tighter leading-none italic text-slate-900">ProAssignment</span>

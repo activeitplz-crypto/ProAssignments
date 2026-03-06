@@ -185,26 +185,28 @@ export default function AppLayout({
 
        {!isProfilePage && (
          <header className={cn(
-           "sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between px-4 md:justify-end md:px-6 transition-all",
-           !isDashboard ? "border-b bg-card shadow-sm" : "bg-transparent"
+           "flex h-16 shrink-0 items-center justify-between px-4 md:justify-end md:px-6 transition-all",
+           !isDashboard ? "sticky top-0 z-40 border-b bg-card shadow-sm" : "relative z-10 bg-transparent"
          )}>
-          <div className="flex items-center gap-2 md:hidden">
+          <div className={cn("flex items-center gap-2 md:hidden", isDashboard && "text-white")}>
               <ProAssignmentIcon className="h-7 w-7" />
               <span className="font-bold">ProAssignment</span>
           </div>
 
           <div className="flex items-center gap-4">
-              <div className="hidden md:flex">
-                  <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
-              </div>
-              <MobileNav navItems={navItems} actionItems={actionItems} />
+              {!isDashboard && (
+                <div className="hidden md:flex">
+                    <UserNav name={user.name || ''} email={user.email || ''} avatarUrl={user.avatar_url} />
+                </div>
+              )}
+              <MobileNav navItems={navItems} actionItems={actionItems} dashboardMode={isDashboard} />
           </div>
         </header>
        )}
       <main className={cn(
         "flex-1 pb-20 md:pb-4", 
         !isProfilePage && "p-4 lg:p-6",
-        isDashboard && "pt-0"
+        isDashboard && "pt-0 p-0 lg:p-0"
       )}>{children}</main>
 
       <nav className="curved-nav fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">

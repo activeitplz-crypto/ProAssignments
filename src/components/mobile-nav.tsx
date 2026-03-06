@@ -27,9 +27,10 @@ interface NavItem {
 interface MobileNavProps {
   navItems: NavItem[];
   actionItems: NavItem[];
+  dashboardMode?: boolean;
 }
 
-export function MobileNav({ navItems, actionItems }: MobileNavProps) {
+export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -41,8 +42,8 @@ export function MobileNav({ navItems, actionItems }: MobileNavProps) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="h-5 w-5" />
+        <Button variant="ghost" size="icon" className={cn("md:hidden", dashboardMode && "text-white hover:bg-white/10")}>
+          <Menu className="h-6 w-6" />
           <span className="sr-only">Open navigation menu</span>
         </Button>
       </SheetTrigger>

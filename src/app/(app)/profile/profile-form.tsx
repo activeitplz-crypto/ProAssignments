@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -137,7 +138,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
                           className="bg-muted/30 border-none h-14 text-base font-bold focus:ring-2 focus:ring-primary/20 rounded-2xl transition-all shadow-inner" 
                         />
                     </FormControl>
-                    <FormDescription className="text-[10px] font-bold text-muted-foreground/50 italic">Must match your withdrawal documents.</FormDescription>
                     <FormMessage />
                     </FormItem>
                 )}
@@ -160,7 +160,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
                           />
                         </div>
                     </FormControl>
-                    <FormDescription className="text-[10px] font-bold text-muted-foreground/50 italic">Your public identifier for referrals.</FormDescription>
                     <FormMessage />
                     </FormItem>
                 )}
@@ -219,7 +218,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
             ) : (
               <Save className="mr-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
             )}
-            COMMIT CHANGES
+            Save
           </Button>
         </div>
       </form>

@@ -258,7 +258,7 @@ export default async function ProfilePage() {
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
                     <CardTitle className="text-2xl font-black tracking-tighter">EDIT ACCOUNT</CardTitle>
-                    <CardDescription className="text-xs font-medium">Update your public presence</CardDescription>
+                    <CardDescription className="text-xs font-medium">Profile Picture</CardDescription>
                   </div>
                   <Settings className="h-6 w-6 text-primary opacity-20" />
                 </div>

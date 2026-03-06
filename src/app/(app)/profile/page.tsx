@@ -60,30 +60,31 @@ export default async function ProfilePage() {
       title: "Today's Earnings", 
       value: `PKR ${user.today_earning.toFixed(2)}`, 
       icon: Zap,
-      color: 'from-[#F59E0B] to-[#F97316]',
       description: 'Earned in last 24h'
     },
     { 
       title: 'Total Earnings', 
       value: `PKR ${user.total_earning.toFixed(2)}`, 
       icon: DollarSign,
-      color: 'from-[#10B981] to-[#059669]',
       description: 'Lifetime income'
     },
     { 
       title: 'Active Plan', 
       value: user.current_plan || 'No Plan', 
       icon: Briefcase,
-      color: 'from-[#8B5CF6] to-[#D946EF]',
       description: 'Your current status'
     },
   ];
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      {/* Immersive Blue Header */}
-      <div className="bg-primary pt-12 pb-24 rounded-b-[2.5rem] px-6 relative shadow-2xl">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+      {/* Immersive Primary Header */}
+      <div className="bg-primary pt-12 pb-24 rounded-b-[3rem] px-6 relative shadow-2xl overflow-hidden">
+        {/* Decorative subtle patterns */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/5 rounded-full -ml-10 -mb-10 blur-2xl" />
+        
+        <div className="max-w-4xl mx-auto flex items-center justify-between relative z-10">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16 border-2 border-white/30 shadow-lg">
               <AvatarImage src={user.avatar_url || ''} alt={user.name || ''} className="object-cover" />
@@ -100,46 +101,49 @@ export default async function ProfilePage() {
         </div>
       </div>
 
-      {/* Overlapping Balance Card */}
+      {/* Overlapping Primary Balance Card */}
       <div className="px-6 -mt-16 max-w-xl mx-auto">
         <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-white">
-          <CardContent className="p-8 space-y-8">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground font-medium">Available Balance</span>
-              <span className="text-3xl font-black tracking-tight">
-                PKR {user.current_balance.toFixed(2)}
-              </span>
+          <CardContent className="p-10 space-y-8">
+            <div className="flex flex-col items-center text-center space-y-2">
+              <span className="text-muted-foreground font-black uppercase text-[10px] tracking-[0.25em]">Total Balance</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-sm font-bold text-primary opacity-70">PKR</span>
+                <span className="text-5xl font-black tracking-tighter text-foreground">
+                  {user.current_balance.toFixed(2)}
+                </span>
+              </div>
             </div>
             
             <Separator className="bg-muted/50" />
 
             <div className="grid grid-cols-4 gap-4">
               <Link href="/withdraw" className="flex flex-col items-center gap-3 group">
-                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors">
+                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors shadow-sm">
                   <ArrowDownToLine className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Withdraw</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Withdraw</span>
               </Link>
               
               <Link href="/plans" className="flex flex-col items-center gap-3 group">
-                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors">
+                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors shadow-sm">
                   <Zap className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Plans</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Plans</span>
               </Link>
 
               <Link href="/referrals" className="flex flex-col items-center gap-3 group">
-                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors">
+                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors shadow-sm">
                   <Users className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Referrals</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Referrals</span>
               </Link>
 
               <Link href="/guide" className="flex flex-col items-center gap-3 group">
-                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors">
+                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors shadow-sm">
                   <HelpCircle className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
                 </div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Guide</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Guide</span>
               </Link>
             </div>
           </CardContent>
@@ -154,7 +158,7 @@ export default async function ProfilePage() {
           {stats.map((stat) => (
             <Card key={stat.title} className="border-none bg-card/50 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase text-muted-foreground">
+                <CardTitle className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">
                   {stat.title}
                 </CardTitle>
                 <stat.icon className="h-4 w-4 text-primary/60" />
@@ -169,17 +173,17 @@ export default async function ProfilePage() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
           {/* Identity Info */}
           <div className="space-y-8 lg:col-span-4">
-            <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
-              <div className="h-1 bg-primary" />
+            <Card className="border-none shadow-xl rounded-[2rem] overflow-hidden">
+              <div className="h-1.5 bg-primary" />
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg font-bold">
+                <CardTitle className="flex items-center gap-2 text-base font-bold uppercase tracking-tighter">
                   <Fingerprint className="h-5 w-5 text-primary" />
-                  IDENTITY
+                  USER IDENTITY
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-1">
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Unique System ID</p>
+                  <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Unique ID</p>
                   <p className="break-all font-mono text-[10px] bg-muted/30 p-3 rounded-xl border text-muted-foreground select-all">
                     {user.id}
                   </p>
@@ -191,7 +195,7 @@ export default async function ProfilePage() {
                       <Mail className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="text-[9px] font-bold text-muted-foreground uppercase leading-none">Email</p>
+                      <p className="text-[9px] font-black text-muted-foreground uppercase leading-none">Email</p>
                       <p className="text-xs font-bold">{user.email || 'N/A'}</p>
                     </div>
                   </div>
@@ -201,7 +205,7 @@ export default async function ProfilePage() {
                       <Calendar className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="text-[9px] font-bold text-muted-foreground uppercase leading-none">Joined</p>
+                      <p className="text-[9px] font-black text-muted-foreground uppercase leading-none">Member Since</p>
                       <p className="text-xs font-bold">
                         {user.plan_start ? new Date(user.plan_start).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'New Member'}
                       </p>
@@ -224,17 +228,17 @@ export default async function ProfilePage() {
 
           {/* Form Settings */}
           <div className="lg:col-span-8">
-            <Card className="border-none shadow-xl rounded-3xl overflow-hidden">
-              <CardHeader className="bg-muted/30">
+            <Card className="border-none shadow-xl rounded-[2rem] overflow-hidden">
+              <CardHeader className="bg-muted/30 p-8">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
-                    <CardTitle className="text-2xl font-bold">SETTINGS</CardTitle>
-                    <CardDescription className="text-xs">Update your public presence</CardDescription>
+                    <CardTitle className="text-2xl font-black tracking-tighter">EDIT ACCOUNT</CardTitle>
+                    <CardDescription className="text-xs font-medium">Update your public presence</CardDescription>
                   </div>
-                  <Settings className="h-5 w-5 text-primary opacity-50" />
+                  <Settings className="h-6 w-6 text-primary opacity-20" />
                 </div>
               </CardHeader>
-              <CardContent className="pt-8">
+              <CardContent className="p-8">
                 <ProfileForm user={user} />
               </CardContent>
             </Card>

@@ -6,10 +6,10 @@ import {
 } from '@/components/ui/card';
 import { 
   TrendingUp,
-  Wallet,
+  Zap,
+  ArrowDownToLine,
   ClipboardList,
   FileCheck2,
-  Home,
   User as UserIcon,
 } from 'lucide-react';
 import { redirect } from 'next/navigation';
@@ -52,8 +52,8 @@ export default async function DashboardPage() {
   const quickNav = [
     { href: '/tasks', label: 'Tasks', icon: ClipboardList, color: 'text-orange-500', bg: 'bg-orange-500/10' },
     { href: '/assignments', label: 'Submit', icon: FileCheck2, color: 'text-green-500', bg: 'bg-green-500/10' },
-    { href: '/dashboard', label: 'Home', icon: Home, color: 'text-primary', bg: 'bg-primary/10' },
-    { href: '/withdraw', label: 'Wallet', icon: Wallet, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { href: '/plans', label: 'Plans', icon: Zap, color: 'text-primary', bg: 'bg-primary/10' },
+    { href: '/withdraw', label: 'Withdraw', icon: ArrowDownToLine, color: 'text-blue-500', bg: 'bg-blue-500/10' },
     { href: '/profile', label: 'Profile', icon: UserIcon, color: 'text-purple-500', bg: 'bg-purple-500/10' },
   ];
 

@@ -105,7 +105,7 @@ export default async function DashboardPage() {
                             <TrendingUp className="h-8 w-8 text-green-600" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">Today's Revenue</p>
+                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1">Today's Earning</p>
                             <div className="flex items-baseline gap-1">
                                 <span className="text-xs font-bold text-green-600/60">PKR</span>
                                 <p className="text-2xl font-black text-green-600 leading-none">{user.today_earning.toFixed(2)}</p>

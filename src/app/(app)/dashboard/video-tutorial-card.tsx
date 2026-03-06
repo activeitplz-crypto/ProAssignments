@@ -22,11 +22,11 @@ export function VideoTutorialCard({ video }: VideoTutorialCardProps) {
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
               <div className="flex items-center gap-2">
-                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/60">Guidelines</span>
+                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/60">Work Guidelines</span>
                   <Sparkles className="h-3 w-3 text-yellow-300/60" />
               </div>
               <h3 className="text-lg font-black tracking-tighter uppercase italic leading-none">
-                {video?.title || "Video Guidelines"}
+                {video?.title || "How to Work on ProAssignment"}
               </h3>
           </div>
           <div className="bg-white/10 p-2 rounded-full border border-white/10">
@@ -53,7 +53,7 @@ export function VideoTutorialCard({ video }: VideoTutorialCardProps) {
         </div>
         
         <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest text-center">
-          Master the platform in minutes by watching above
+          Master the assignment process by watching the tutorial above
         </p>
       </div>
     </Card>

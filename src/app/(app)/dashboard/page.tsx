@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -13,6 +14,7 @@ import { VideoTutorialCard } from './video-tutorial-card';
 import { DownloadAppCard } from './download-app-card';
 import Link from 'next/link';
 import { RamzanBanner } from './ramzan-banner';
+import { BlogCard } from './blog-card';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -104,8 +106,11 @@ export default async function DashboardPage() {
           <div className="space-y-4">
             <RecentWithdrawals />
             <VideoTutorialCard video={latestVideo} />
+            <BlogCard />
           </div>
-          <DownloadAppCard />
+          <div className="space-y-4">
+            <DownloadAppCard />
+          </div>
         </div>
       </div>
     </div>

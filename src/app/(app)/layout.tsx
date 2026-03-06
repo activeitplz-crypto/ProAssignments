@@ -209,8 +209,8 @@ export default function AppLayout({
         isDashboard && "pt-0 p-0 lg:p-0"
       )}>{children}</main>
 
-      {/* Clean Meta-Style Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background border-t border-slate-200 shadow-lg">
+      {/* Clean Meta-Style Bottom Navigation with Top Shadow */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background border-t border-slate-200 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
         <div className="flex items-center justify-around px-2 h-16 pb-safe">
           {bottomNavItems.map((item) => {
             const isActive = pathname === item.href;

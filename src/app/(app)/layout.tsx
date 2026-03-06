@@ -29,7 +29,6 @@ import { UserNav } from '@/components/user-nav';
 import { useRouter, usePathname } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import type { Session } from '@supabase/supabase-js';
-import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AppLayout({
@@ -46,6 +45,7 @@ export default function AppLayout({
   const { toast } = useToast();
 
   const isProfilePage = pathname === '/profile';
+  const isDashboard = pathname === '/dashboard';
 
   useEffect(() => {
     const getSessionData = async () => {
@@ -57,7 +57,6 @@ export default function AppLayout({
         return;
       }
       
-      // Redirect admin away from user dashboard
       if (currentSession.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         router.push('/admin');
         return;
@@ -108,7 +107,7 @@ export default function AppLayout({
   }
   
   if (!session || !user) {
-    return null; // Or a redirect component
+    return null;
   }
   
   const navItems = [
@@ -185,7 +184,10 @@ export default function AppLayout({
       </nav>
 
        {!isProfilePage && (
-         <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b bg-card px-4 shadow-sm md:justify-end md:px-6">
+         <header className={cn(
+           "sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between px-4 md:justify-end md:px-6 transition-all",
+           !isDashboard ? "border-b bg-card shadow-sm" : "bg-transparent"
+         )}>
           <div className="flex items-center gap-2 md:hidden">
               <ProAssignmentIcon className="h-7 w-7" />
               <span className="font-bold">ProAssignment</span>
@@ -199,7 +201,11 @@ export default function AppLayout({
           </div>
         </header>
        )}
-      <main className={cn("flex-1 pb-20 md:pb-4", !isProfilePage && "p-4 lg:p-6")}>{children}</main>
+      <main className={cn(
+        "flex-1 pb-20 md:pb-4", 
+        !isProfilePage && "p-4 lg:p-6",
+        isDashboard && "pt-0"
+      )}>{children}</main>
 
       <nav className="curved-nav fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
         <div className="grid h-16 grid-cols-5 items-center justify-around">

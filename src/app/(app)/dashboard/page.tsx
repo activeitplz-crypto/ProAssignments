@@ -24,6 +24,7 @@ import { HousewifeBlogCard } from './housewife-blog-card';
 import { PartTimeBlogCard } from './part-time-blog-card';
 import { MemberReviews } from './member-reviews';
 import { FaqSection } from './faq-section';
+import { cn } from '@/lib/utils';
 
 export default async function DashboardPage() {
   const supabase = createClient();

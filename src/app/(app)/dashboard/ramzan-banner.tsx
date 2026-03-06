@@ -2,34 +2,43 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { Moon, Star, Zap } from 'lucide-react';
+import { Moon, Star, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export function RamzanBanner() {
   return (
-    <Link href="/plans">
-      <Card className="border-none bg-gradient-to-r from-emerald-600 to-teal-700 text-white overflow-hidden relative group cursor-pointer active:scale-95 transition-all shadow-lg rounded-[1.5rem]">
-        <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:scale-110 transition-transform">
-          <Moon className="h-20 w-20 rotate-12" />
+    <Link href="/plans" className="block group">
+      <Card className="border-none bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-800 text-white overflow-hidden relative active:scale-[0.98] transition-all shadow-xl rounded-[2.5rem]">
+        {/* Modern decorative elements */}
+        <div className="absolute top-[-20px] right-[-20px] w-48 h-48 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-30px] left-[-30px] w-40 h-40 bg-black/10 rounded-full blur-2xl" />
+        
+        <div className="absolute top-6 right-8 opacity-20 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
+          <Moon className="h-20 w-20" />
         </div>
-        <div className="absolute bottom-0 left-10 p-2 opacity-10">
-          <Star className="h-10 w-10" />
-        </div>
-        <CardContent className="p-6 relative z-10 flex items-center justify-between">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Limited Time</span>
-              <div className="flex text-yellow-300">
-                <Star className="h-3 w-3 fill-current" />
-                <Star className="h-3 w-3 fill-current" />
-                <Star className="h-3 w-3 fill-current" />
-              </div>
+        
+        <CardContent className="p-8 relative z-10">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="bg-white/20 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] backdrop-blur-md border border-white/10">Best Offer</span>
+            <div className="flex gap-0.5 text-yellow-300">
+              <Star className="h-3 w-3 fill-current" />
+              <Star className="h-3 w-3 fill-current" />
+              <Star className="h-3 w-3 fill-current" />
             </div>
-            <h3 className="text-xl font-black tracking-tight uppercase">Ramzan Special Offer</h3>
-            <p className="text-sm font-medium opacity-90">Get up to 20% extra daily earnings this month!</p>
           </div>
-          <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md shrink-0">
-            <Zap className="h-6 w-6 text-yellow-300" />
+          
+          <div className="space-y-2 max-w-[75%]">
+            <h3 className="text-4xl font-black tracking-tighter leading-none uppercase">
+              20% EXTRA<br/>
+              <span className="text-emerald-200">REWARDS</span>
+            </h3>
+            <p className="text-[11px] font-bold text-white/80 uppercase tracking-tight">Ramzan special earning program is live!</p>
+          </div>
+          
+          <div className="mt-8 flex">
+            <div className="inline-flex items-center gap-2 bg-white text-emerald-800 px-6 py-3 rounded-full text-[11px] font-black uppercase tracking-widest shadow-xl group-hover:px-8 transition-all duration-300">
+              Claim Now <ArrowRight className="h-4 w-4" />
+            </div>
           </div>
         </CardContent>
       </Card>

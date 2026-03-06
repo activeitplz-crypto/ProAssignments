@@ -72,7 +72,7 @@ export default async function DashboardPage() {
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="text-white space-y-8 text-center">
             <div className="flex flex-col items-center gap-1">
-                <span className="text-white/50 font-black uppercase text-[10px] tracking-[0.4em]">Hello,</span>
+                <span className="text-white/50 font-black uppercase text-[10px] tracking-[0.4em]">Hello!</span>
                 <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-none text-white drop-shadow-lg">
                     {user.name?.split(' ')[0]}
                 </h1>
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Lower: Elite 5-Button Command Grid - Reduced top padding to tighten gap */}
+                {/* Lower: Elite 5-Button Command Grid */}
                 <div className="grid grid-cols-5 gap-2 px-4 py-6 md:px-8 md:py-8">
                     {quickNav.map((item) => (
                         <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-3 p-2 rounded-[2rem] transition-all duration-500 hover:bg-slate-50 active:scale-90 group">
@@ -131,10 +131,10 @@ export default async function DashboardPage() {
             </CardContent>
         </Card>
         
-        {/* Elite Promo Area - Positioned high for mobile visibility */}
+        {/* Elite Promo Area */}
         <RamzanBanner />
 
-        {/* Dynamic Desktop Grid (2-column on desktop, 1 on mobile) */}
+        {/* Dynamic Desktop Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Main Feed Column */}
           <div className="md:col-span-7 space-y-6">
@@ -149,7 +149,6 @@ export default async function DashboardPage() {
 
           {/* Secondary Info Column */}
           <div className="md:col-span-5 space-y-6">
-            {/* Sticky Sidebar on Desktop */}
             <div className="md:sticky md:top-24 space-y-6">
                 <DownloadAppCard />
             </div>

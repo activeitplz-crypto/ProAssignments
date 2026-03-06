@@ -21,7 +21,7 @@ const reviews = [
     name: 'Hina Tariq',
     avatar: 'https://i.postimg.cc/FKFzRyPv/download_(2).jpg',
     rating: 4.5,
-    content: 'Mujhe online kaam dhundhna mushkil lag raha tha lekin ProAssignments से start karna easy tha. Daily assignments mil jate hain aur kaam bhi zyada complicated nahi hota. Ghar baith kar kaam karne ka ye acha option hai.'
+    content: 'Mujhe online kaam dhundhna mushkil lag raha tha lekin ProAssignments se start karna easy tha. Daily assignments mil jate hain aur kaam bhi zyada complicated nahi hota. Ghar baith kar kaam karne ka ye acha option hai.'
   },
   {
     name: 'Usman Ali',

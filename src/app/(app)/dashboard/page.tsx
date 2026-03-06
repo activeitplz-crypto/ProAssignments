@@ -66,7 +66,6 @@ export default async function DashboardPage() {
           <div className="text-white space-y-6 text-center">
             <div className="space-y-1">
                 <h1 className="text-2xl font-black tracking-tighter uppercase italic">Hello, {user.name?.split(' ')[0]}</h1>
-                <p className="text-[9px] opacity-70 font-black uppercase tracking-[0.3em]">Work Command Center</p>
             </div>
 
             {/* Integrated Balance Display */}

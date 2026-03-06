@@ -47,7 +47,7 @@ export default async function GuidePage() {
                     </div>
                     <div className="space-y-0.5">
                         <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Platform Overview</span>
-                        <h2 className="text-2xl font-black tracking-tighter uppercase italic text-slate-900 leading-none">What is <span className="text-primary">ProAssignment?</span></h2>
+                        <h2 className="text-2xl font-black tracking-tighter italic text-slate-900 leading-none">What is <span className="text-primary">ProAssignment?</span></h2>
                     </div>
                 </div>
                 <p className="text-sm font-medium text-muted-foreground leading-relaxed">

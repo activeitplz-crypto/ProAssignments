@@ -136,7 +136,7 @@ export default function AppLayout({
         <div className="flex h-20 items-center gap-3 border-b px-8">
           <ProAssignmentIcon className="h-9 w-9" />
           <div className="flex flex-col">
-            <span className="text-sm font-black uppercase tracking-tighter leading-none italic text-slate-900">PROASSIGNMENT</span>
+            <span className="text-sm font-black tracking-tighter leading-none italic text-slate-900">ProAssignment</span>
           </div>
         </div>
         <div className="flex flex-1 flex-col justify-between overflow-y-auto py-8">
@@ -201,8 +201,8 @@ export default function AppLayout({
           <div className={cn("flex items-center gap-2 md:hidden", isDashboard ? "text-white" : "text-slate-900")}>
               <ProAssignmentIcon className="h-8 w-8" />
               <div className="flex flex-col">
-                <span className={cn("text-xs font-black uppercase tracking-tighter leading-none italic", isDashboard ? "text-white" : "text-slate-900")}>
-                  PROASSIGNMENT
+                <span className={cn("text-xs font-black tracking-tighter leading-none italic", isDashboard ? "text-white" : "text-slate-900")}>
+                  ProAssignment
                 </span>
               </div>
           </div>

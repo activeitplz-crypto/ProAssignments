@@ -21,7 +21,7 @@ export function DownloadAppCard() {
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1 rounded-full backdrop-blur-md">
                     <Smartphone className="h-3 w-3 text-primary" />
-                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/70">Official Ecosystem</span>
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/70">Mobile App</span>
                 </div>
                 <Sparkles className="h-4 w-4 text-yellow-400/40 animate-pulse" />
             </div>
@@ -39,7 +39,7 @@ export function DownloadAppCard() {
           
           <div className="mt-8 flex items-center justify-between">
             <div className="inline-flex items-center gap-2 bg-white text-slate-950 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.15em] shadow-xl group-hover:px-8 transition-all duration-500">
-              Install Now <Download className="h-4 w-4" />
+              Download App <Download className="h-4 w-4" />
             </div>
             
             <div className="flex flex-col items-end opacity-20">

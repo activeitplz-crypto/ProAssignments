@@ -26,10 +26,10 @@ export function EliteMeetingVideo() {
           </div>
         </div>
 
-        {/* Vertical Video Container with Clean UI and Sound Enabled */}
+        {/* Vertical Video Container with Clean UI and Background Playback */}
         <div className="relative rounded-2xl overflow-hidden bg-black/40 shadow-inner border border-white/5" style={{ padding: '176.67% 0 0 0' }}>
             <iframe 
-                src="https://player.vimeo.com/video/1171151985?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&title=0&byline=0&portrait=0" 
+                src="https://player.vimeo.com/video/1171151985?autoplay=1&muted=1&loop=1&background=1&badge=0&autopause=0&player_id=0&app_id=58479" 
                 frameBorder="0" 
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" 
                 className="absolute top-0 left-0 w-full h-full"

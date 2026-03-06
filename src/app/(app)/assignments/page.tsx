@@ -5,11 +5,10 @@ import {
   Card,
   CardContent,
 } from '@/components/ui/card';
-import { FileCheck2, Info, CheckCircle, Clock, Sparkles, ShieldCheck } from 'lucide-react';
+import { Info, CheckCircle, Clock, Sparkles, ShieldCheck } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AssignmentForm } from './assignment-form';
 import type { Task, Assignment } from '@/lib/types';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 // This component now only shows "Approved" or "Pending"
@@ -18,14 +17,14 @@ function getStatusBadge(isApproved: boolean) {
         return (
             <div className="flex items-center gap-2 bg-green-500/10 text-green-600 px-4 py-1.5 rounded-full border border-green-500/10">
                 <CheckCircle className="h-3 w-3" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Verified Hub</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Assignment is Verified</span>
             </div>
         );
     }
     return (
         <div className="flex items-center gap-2 bg-slate-100 text-slate-400 px-4 py-1.5 rounded-full border border-slate-200">
             <Clock className="h-3 w-3" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Waiting Proof</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">Pending Submission</span>
         </div>
     );
 }
@@ -141,10 +140,6 @@ export default async function AssignmentsPage() {
                             <span className="text-xl font-black text-slate-900 leading-none">{index + 1}</span>
                         </div>
                         <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                                <FileCheck2 className="h-3 w-3 text-primary" />
-                                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/60">Verified Document</span>
-                            </div>
                             <h3 className="font-black text-slate-900 uppercase tracking-tighter text-lg leading-none">{task.title}</h3>
                         </div>
                     </div>
@@ -159,7 +154,7 @@ export default async function AssignmentsPage() {
                             </div>
                             <div className="text-center space-y-1">
                                 <p className="text-lg font-black uppercase tracking-tighter text-green-700 leading-none">Task Finalized</p>
-                                <p className="text-[10px] font-bold text-green-600/60 uppercase tracking-widest">Earnings added to your central balance</p>
+                                <p className="text-[10px] font-bold text-green-600/60 uppercase tracking-widest">Earnings added to your balance</p>
                             </div>
                          </div>
                       ) : (

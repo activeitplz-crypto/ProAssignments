@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useTransition } from 'react';
-import { Loader2, Image as ImageIcon, Trash2, FileCheck2, Zap, ArrowRight } from 'lucide-react';
+import { Loader2, Image as ImageIcon, Trash2, FileCheck2, ArrowRight } from 'lucide-react';
 import { submitAssignmentWithImages } from './actions';
 import { useRouter } from 'next/navigation';
 import type { Task } from '@/lib/types';
@@ -199,7 +199,7 @@ export function AssignmentForm({ task }: AssignmentFormProps) {
                 ) : (
                   <>
                     <FileCheck2 className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                    <span>Submit Proof for AI Scan</span>
+                    <span>Submit Assignment</span>
                     <ArrowRight className="h-4 w-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
                   </>
                 )}

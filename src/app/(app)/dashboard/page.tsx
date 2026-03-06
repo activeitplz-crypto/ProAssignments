@@ -15,7 +15,6 @@ import Link from 'next/link';
 import { RamzanBanner } from './ramzan-banner';
 import { BlogCard } from './blog-card';
 import { HousewifeBlogCard } from './housewife-blog-card';
-import { TopEarnersCard } from './top-earners-card';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -112,7 +111,6 @@ export default async function DashboardPage() {
           </div>
           <div className="space-y-4">
             <DownloadAppCard />
-            <TopEarnersCard />
           </div>
         </div>
       </div>

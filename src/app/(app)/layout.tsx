@@ -1,4 +1,3 @@
-
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -13,7 +12,6 @@ import {
   FileCheck2,
   ImageIcon,
   Users,
-  Award,
   MessageSquare,
   HelpCircle,
   Video,
@@ -127,7 +125,6 @@ export default function AppLayout({
     { href: '/watch', label: 'Guidelines', icon: Video },
     { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/social', label: 'Social', icon: Share2 },
-    { href: '/top-users', label: 'Top Users', icon: Award },
     { href: '/reviews', label: 'Reviews', icon: MessageSquare },
     { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },

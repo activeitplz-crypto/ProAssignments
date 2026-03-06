@@ -1,42 +1,9 @@
-
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Video } from 'lucide-react';
 import type { Video as VideoType } from '@/lib/types';
-
-function getYouTubeEmbedUrl(url: string): string | null {
-  try {
-    const urlObj = new URL(url);
-    let videoId: string | null = null;
-
-    if (urlObj.hostname.includes('youtube.com')) {
-      if (urlObj.pathname.startsWith('/shorts/')) {
-        videoId = urlObj.pathname.substring('/shorts/'.length);
-      } else if (urlObj.pathname.startsWith('/live/')) {
-        videoId = urlObj.pathname.substring('/live/'.length);
-      } else {
-        videoId = urlObj.searchParams.get('v');
-      }
-    } else if (urlObj.hostname.includes('youtu.be')) {
-      videoId = urlObj.pathname.slice(1);
-    }
-    
-    // Clean up potential query parameters from the videoId
-    if (videoId) {
-        const queryIndex = videoId.indexOf('?');
-        if (queryIndex !== -1) {
-            videoId = videoId.substring(0, queryIndex);
-        }
-    }
-
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-  } catch (error) {
-    console.error("Invalid URL for embedding:", url);
-    return null;
-  }
-  return null;
-}
+import { getYouTubeEmbedUrl } from '@/lib/utils';
 
 export default async function WatchVideosPage() {
   const supabase = createClient();

@@ -33,6 +33,14 @@ export default async function DashboardPage() {
     return <div className="p-8 text-center">Could not load user data. Please try refreshing.</div>;
   }
 
+  // Fetch the latest tutorial video for direct playback
+  const { data: latestVideo } = await supabase
+    .from('videos')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
       
@@ -67,25 +75,25 @@ export default async function DashboardPage() {
         {/* 4. Earnings Stats & Quick Actions Summary */}
         <div className="grid grid-cols-2 gap-3">
           <Card className="border-none shadow-md rounded-3xl bg-white overflow-hidden group hover:translate-y-[-2px] transition-all">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+            <CardContent className="p-4 flex items-center gap-3 h-full">
+              <div className="h-10 w-10 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
                 <TrendingUp className="h-5 w-5 text-green-600" />
               </div>
-              <div>
-                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Today</p>
+              <div className="min-w-0">
+                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest truncate">Today</p>
                 <p className="text-sm font-black text-green-600">PKR {user.today_earning.toFixed(2)}</p>
               </div>
             </CardContent>
           </Card>
           
-          <Link href="/withdraw" className="block">
-            <Card className="border-none shadow-md rounded-3xl bg-white overflow-hidden group hover:translate-y-[-2px] transition-all cursor-pointer">
-              <CardContent className="p-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+          <Link href="/withdraw" className="block h-full">
+            <Card className="border-none shadow-md rounded-3xl bg-white overflow-hidden group hover:translate-y-[-2px] transition-all cursor-pointer h-full">
+              <CardContent className="p-4 flex items-center gap-3 h-full">
+                <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
                   <Wallet className="h-5 w-5 text-blue-600" />
                 </div>
-                <div>
-                  <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest">Request</p>
+                <div className="min-w-0">
+                  <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest truncate">Request</p>
                   <p className="text-sm font-black text-blue-600 uppercase">Withdraw</p>
                 </div>
               </CardContent>
@@ -97,7 +105,7 @@ export default async function DashboardPage() {
           <div className="space-y-4">
             <RecentPurchases />
             <RecentWithdrawals />
-            <VideoTutorialCard />
+            <VideoTutorialCard video={latestVideo} />
           </div>
           <DownloadAppCard />
         </div>

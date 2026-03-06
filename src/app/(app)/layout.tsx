@@ -121,9 +121,9 @@ export default function AppLayout({
   ];
 
   const actionItems = [
-    { href: '/plans', label: 'Invest Plans', icon: Zap },
-    { href: '/referrals', label: 'My Network', icon: Users },
-    { href: '/guide', label: 'Master Guide', icon: HelpCircle },
+    { href: '/plans', label: 'Plans', icon: Zap },
+    { href: '/referrals', label: 'Referral', icon: Users },
+    { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: '/watch', label: 'Tutorials', icon: Video },
     { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/social', label: 'Social Hub', icon: Share2 },
@@ -185,7 +185,7 @@ export default function AppLayout({
                     <div className="h-8 w-8 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-red-500/10">
                         <LogOut className="h-4 w-4" />
                     </div>
-                    <span>Terminate Session</span>
+                    <span>Logout</span>
                 </button>
             </form>
           </div>

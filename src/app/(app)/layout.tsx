@@ -185,8 +185,8 @@ export default function AppLayout({
 
        {!isProfilePage && (
          <header className={cn(
-           "flex h-16 shrink-0 items-center justify-between px-4 md:justify-end md:px-6 transition-all",
-           !isDashboard ? "sticky top-0 z-40 border-b bg-card shadow-sm" : "relative z-10 bg-primary"
+           "flex h-16 shrink-0 items-center justify-between px-4 md:justify-end md:px-6 transition-all border-none shadow-none",
+           !isDashboard ? "sticky top-0 z-40 bg-card border-b shadow-sm" : "absolute top-0 left-0 right-0 z-50 bg-transparent"
          )}>
           <div className={cn("flex items-center gap-2 md:hidden", isDashboard && "text-white")}>
               <ProAssignmentIcon className="h-7 w-7" />

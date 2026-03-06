@@ -47,7 +47,7 @@ export default async function DashboardPage() {
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
       
       {/* 1. Immersive Blue Header Section */}
-      <div className="bg-primary pt-10 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg">
+      <div className="bg-primary pt-20 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg">
         <div className="max-w-4xl mx-auto">
           <div className="text-white space-y-6 text-center">
             <div className="space-y-1">

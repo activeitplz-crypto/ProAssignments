@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -73,28 +72,14 @@ export function RamzanBanner() {
           <Moon className="h-14 w-14" />
         </div>
         
-        <CardContent className="p-6 relative z-10">
-          <div className="flex items-center justify-between mb-3">
+        <CardContent className="p-6 relative z-10 space-y-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
                 <span className="bg-white/20 px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-[0.2em] backdrop-blur-md border border-white/10">RAMAZAN MUBARAK</span>
                 <div className="flex gap-0.5 text-yellow-300">
                   <Star className="h-2.5 w-2.5 fill-current" />
                   <Star className="h-2.5 w-2.5 fill-current" />
                   <Star className="h-2.5 w-2.5 fill-current" />
-                </div>
-            </div>
-
-            {/* Live Countdown Badge */}
-            <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-md border border-white/5 shadow-inner">
-                <Timer className="h-3 w-3 text-emerald-300 animate-pulse" />
-                <div className="font-mono text-[10px] font-black flex gap-1">
-                    <span className="w-5 text-center">{String(timeLeft.days).padStart(2, '0')}d</span>
-                    <span className="opacity-30">:</span>
-                    <span className="w-5 text-center">{String(timeLeft.hours).padStart(2, '0')}h</span>
-                    <span className="opacity-30">:</span>
-                    <span className="w-5 text-center">{String(timeLeft.minutes).padStart(2, '0')}m</span>
-                    <span className="opacity-30">:</span>
-                    <span className="w-5 text-center text-emerald-300">{String(timeLeft.seconds).padStart(2, '0')}s</span>
                 </div>
             </div>
           </div>
@@ -107,9 +92,23 @@ export function RamzanBanner() {
             <p className="text-[10px] font-bold text-white/80 uppercase tracking-tight">LIMITED TIME DISCOUNT ON ALL THE PLANS</p>
           </div>
           
-          <div className="mt-5 flex">
-            <div className="inline-flex items-center gap-2 bg-white text-emerald-800 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md group-hover:px-6 transition-all duration-300">
+          <div className="mt-2 flex items-center justify-between gap-4">
+            <div className="inline-flex items-center gap-2 bg-white text-emerald-800 px-4 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md group-hover:px-6 transition-all duration-300 shrink-0">
               Claim Now <ArrowRight className="h-3.5 w-3.5" />
+            </div>
+
+            {/* Repositioned Live Countdown */}
+            <div className="flex items-center gap-2 bg-black/20 px-3 py-2 rounded-2xl backdrop-blur-md border border-white/5 shadow-inner">
+                <Timer className="h-3 w-3 text-emerald-300 animate-pulse" />
+                <div className="font-mono text-[10px] font-black flex gap-1">
+                    <span className="w-5 text-center">{String(timeLeft.days).padStart(2, '0')}d</span>
+                    <span className="opacity-30">:</span>
+                    <span className="w-5 text-center">{String(timeLeft.hours).padStart(2, '0')}h</span>
+                    <span className="opacity-30">:</span>
+                    <span className="w-5 text-center">{String(timeLeft.minutes).padStart(2, '0')}m</span>
+                    <span className="opacity-30">:</span>
+                    <span className="w-5 text-center text-emerald-300">{String(timeLeft.seconds).padStart(2, '0')}s</span>
+                </div>
             </div>
           </div>
         </CardContent>

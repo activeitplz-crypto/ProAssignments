@@ -115,7 +115,6 @@ export default function AppLayout({
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
   ];
 
-  // Symmetrical layout with Home in the center
   const bottomNavItems = [
     { href: '/tasks', label: 'Tasks', icon: ClipboardList },
     { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
@@ -205,37 +204,37 @@ export default function AppLayout({
         </header>
        )}
       <main className={cn(
-        "flex-1 pb-28 md:pb-4", 
+        "flex-1 pb-32 md:pb-4", 
         !isProfilePage && "p-4 lg:p-6",
         isDashboard && "pt-0 p-0 lg:p-0"
       )}>{children}</main>
 
-      {/* Modern Bottom Navigation with Meta-Style Crisp Top Border */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-        <div className="flex items-center justify-around px-2 h-16 pb-safe">
+      {/* High-End Modern Bottom Navigation with Squircle Active State */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[#0B1224] border-t border-white/5 shadow-[0_-10px_40px_-5px_rgba(0,0,0,0.3)]">
+        <div className="flex items-center justify-around px-4 h-20 pb-safe">
           {bottomNavItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={cn(
-                  'relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 group',
-                  isActive ? 'text-primary' : 'text-slate-400 dark:text-slate-500'
-                )}
+                className="relative flex flex-col items-center justify-center flex-1 h-full group"
               >
-                <div className="flex flex-col items-center gap-1">
+                <div className={cn(
+                  "relative flex items-center justify-center w-14 h-14 transition-all duration-500",
+                  isActive ? "bg-primary rounded-[1.25rem] shadow-[0_8px_20px_-4px_rgba(59,130,246,0.5)] scale-100" : "scale-90 group-hover:scale-100"
+                )}>
                   <item.icon className={cn(
-                    'h-6 w-6 transition-all', 
-                    isActive ? 'scale-110 fill-primary/10' : 'scale-100 group-hover:text-slate-600'
+                    "h-6 w-6 transition-all duration-300",
+                    isActive ? "text-white" : "text-white/40 group-hover:text-white/70"
                   )} />
-                  <span className={cn(
-                    'text-[9px] font-bold uppercase tracking-tight transition-all', 
-                    isActive ? 'opacity-100' : 'opacity-60'
-                  )}>
-                    {item.label}
-                  </span>
                 </div>
+                <span className={cn(
+                  "text-[8px] font-black uppercase tracking-widest mt-1 transition-all duration-300",
+                  isActive ? "opacity-100 text-primary" : "opacity-0 text-white/30"
+                )}>
+                  {item.label}
+                </span>
               </Link>
             );
           })}

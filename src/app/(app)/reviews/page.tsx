@@ -1,7 +1,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Sparkles } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { Review } from '@/lib/types';
 import { redirect } from 'next/navigation';
@@ -24,54 +24,52 @@ export default async function ReviewsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2 text-3xl">
-            <MessageSquare className="h-8 w-8 text-primary" />
-            Customer Reviews
-          </CardTitle>
-          <CardDescription>
-            See what our users are saying about their experience with ProAssignment.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {reviews && reviews.length > 0 ? (
-            <div className="space-y-6">
-              {(reviews as Review[]).map((review) => (
-                <Card key={review.id} className="bg-muted/50">
-                  <CardContent className="p-6">
-                    <blockquote className="border-l-4 border-primary pl-4">
-                      <p className="text-lg italic text-foreground">
+    <div className="max-w-4xl mx-auto space-y-10 py-6">
+      <div className="text-center space-y-2">
+          <div className="flex items-center justify-center gap-2 mb-2">
+              <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Member Proof</span>
+              <Sparkles className="h-4 w-4 text-yellow-500" />
+          </div>
+          <h1 className="text-4xl font-black tracking-tighter uppercase italic leading-none">
+            Customer <span className="text-primary">Reviews</span>
+          </h1>
+          <p className="text-muted-foreground text-sm font-medium">Real experiences from our certified partners.</p>
+      </div>
+
+      <div className="space-y-8 px-4">
+        {reviews && reviews.length > 0 ? (
+          reviews.map((review: Review) => (
+            <Card key={review.id} className="border-none shadow-lg rounded-[2rem] bg-white overflow-hidden group">
+              <CardContent className="p-10 flex flex-col items-center text-center space-y-6">
+                <Avatar className="h-20 w-20 border-4 border-primary/10 shadow-md">
+                    <AvatarImage src={review.avatar_url || ''} alt={review.name} className="object-cover" />
+                    <AvatarFallback className="bg-primary/5 font-bold text-primary">
+                        {review.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                </Avatar>
+                
+                <div className="space-y-3">
+                    <cite className="text-lg not-italic font-black uppercase tracking-tight text-slate-900">
+                      {review.name}
+                    </cite>
+                    <blockquote className="max-w-xl">
+                      <p className="text-base font-medium italic text-slate-600 leading-relaxed">
                         “{review.content}”
                       </p>
                     </blockquote>
-                    <div className="mt-4 flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border-2 border-primary/50">
-                            <AvatarImage src={review.avatar_url || ''} alt={review.name} data-ai-hint="user avatar" />
-                            <AvatarFallback>
-                                {review.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                        </Avatar>
-                        <cite className="text-md not-italic font-semibold text-foreground">
-                          {review.name}
-                        </cite>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="flex h-48 flex-col items-center justify-center rounded-lg border-2 border-dashed bg-muted">
-                <p className="text-center text-muted-foreground">
-                    No reviews have been added yet.
-                    <br />
-                    Check back soon to see what our users think!
-                </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <div className="flex h-64 flex-col items-center justify-center rounded-[2.5rem] border-2 border-dashed bg-muted/30">
+              <MessageSquare className="h-12 w-12 text-muted-foreground/20 mb-4" />
+              <p className="text-center text-muted-foreground font-bold uppercase tracking-widest text-xs">
+                  No member reviews available yet.
+              </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

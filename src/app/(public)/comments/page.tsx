@@ -2,146 +2,72 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { MessageSquare } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Image from 'next/image';
 
 const staticReviews = [
     {
-        name: 'Javeria Khalid',
-        avatar_url: 'https://i.postimg.cc/fbKrfcT5/8978109f62887c264ea9730af469b85b.jpg',
-        content: 'Mujhe laga tha ke ghar baithe earning sirf ek sapna hai. Lekin ProAssignments ne woh sapna haqeeqat bana diya. Ab main apni pocket money khud manage karti hun 🌸',
+        name: 'Amna Abbas',
+        avatar_url: 'https://i.postimg.cc/s2fxXYnR/download_(1).jpg',
+        content: 'Main ne recently ProAssignments join kiya hai aur experience kaafi acha raha. Assignments simple hotay hain aur instructions clear hoti hain. Mujhe ghar baith kar kaam karne ka moka mil raha hai. Daily thori bohat earning bhi ho jati hai jo kaafi helpful hai.',
     },
     {
-        name: 'Arsalan Siddiqui',
-        avatar_url: 'https://i.postimg.cc/TYMp0X47/c46a0aee637bb89bcf3dc82030b565fc.jpg',
-        content: 'ProAssignments meri zindagi ka best platform hai. Pehle mujhe scams mile the, ab safe aur reliable earning ho rahi hai. Bohot recommend karta hun.',
+        name: 'Areeba Khan',
+        avatar_url: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
+        content: 'ProAssignments mere liye ek acha platform sabit hua. Main student hun aur free time mein assignments likh kar earning kar leti hun. Process simple hai aur guide bhi easily mil jati hai. Mujhe yahan ka system kaafi easy laga.',
     },
     {
-        name: 'Nida Yasir',
-        avatar_url: 'https://i.postimg.cc/5tkPxG8z/ce6fbe88ff98c81d43702f35cf0b81a5.jpg',
-        content: 'Iss platform ki sabse achi baat hai ke koi hidden charges nahi hain. Jo earn karo wohi balance me show hota hai. Mujhe transparency bohot pasand aayi 👍',
+        name: 'Hina Tariq',
+        avatar_url: 'https://i.postimg.cc/FKFzRyPv/download_(2).jpg',
+        content: 'Mujhe online kaam dhundhna mushkil lag raha tha lekin ProAssignments se start karna easy tha. Daily assignments mil jate hain aur kaam bhi zyada complicated nahi hota. Ghar baith kar kaam karne ka ye acha option hai.',
     },
     {
-        name: 'Ali Shan',
-        avatar_url: 'https://i.postimg.cc/PrzdVzkZ/a3c2836ac35d8dbce05ee5ef99ce72a2.jpg',
-        content: 'Main har kisi ko ek mashwara dunga: ProAssignments try zaroor karo. Ek baar join karoge to khud samjh jaoge ke yeh real hai 💯',
-    },
-    {
-        name: 'Mehwish Akram',
-        avatar_url: 'https://i.postimg.cc/MTM9XDYF/dc559e5a8c4f781c7730c29f1cb3a4e0.jpg',
-        content: 'Main ghar bethe bore ho jati thi, ab assignments complete karke productive feel karti hun. Upar se earning bhi hoti hai 😍',
-    },
-    {
-        name: 'Adnan Chaudhry',
-        avatar_url: 'https://i.postimg.cc/5tGJQswc/aba08316130788b888ba6e27c57c1a7b.jpg',
-        content: 'Mera ek hi sentence hai: ProAssignments = Trust + Earning + Growth. Bas sab kuch is me cover ho gaya ✅',
-    },
-    {
-        name: 'Komal Nisar',
-        avatar_url: 'https://i.postimg.cc/MGtD9L94/dd5acf514bb073ed8855c9f2c426e360.jpg',
-        content: 'Pehle mujhe koi samjhata nahi tha kaise earn karna hai. Yahaan guide section aur support team ne har step clear kar diya. Ab daily ka kaam easy hai.',
-    },
-    {
-        name: 'Waleed Asif',
-        avatar_url: 'https://i.postimg.cc/g2gmmzj2/b9ed805a8c5ae4324bf9ff937a93545a.jpg',
-        content: 'Main choti si feedback dunga: Yahaan paisa safe hai, kaam easy hai aur support 10/10 hai. Recommended 💯',
-    },
-    {
-        name: 'Amna Sheikh',
-        avatar_url: 'https://i.postimg.cc/8CyY7sgj/e1b0a8ef3252efbb578145216cb32332.jpg',
-        content: 'Mujhe lagta tha online earning fake hai. Lekin ProAssignments ne mera view change kar diya. Ab har din ek new motivation milta hai 🌹',
-    },
-    {
-        name: 'Shahzaib Rauf',
-        avatar_url: 'https://i.postimg.cc/T3dfzLRs/d0b617342641cefc6b72c4f0b6e0af10.jpg',
-        content: 'Ek student ke liye pocket money sab kuch hoti hai. Ab main apna kharcha khud chalata hun aur family proud feel karti hai.',
-    },
-    {
-        name: 'Samreen Abbas',
-        avatar_url: 'https://i.postimg.cc/6qZbb02v/835624a066f3ecc6fbc030f9829e992d.jpg',
-        content: 'Har assignment karne ke baad mujhe lagta hai ke main apna waqt sahi jagah laga rahi hun. Bohot acha aur positive environment hai yahaan.',
-    },
-    {
-        name: 'Yasir Mehmood',
-        avatar_url: 'https://i.postimg.cc/50YxshxN/f07ef9df0d94afe6c635b189080a4627.jpg',
-        content: 'Scam free aur transparent. Bas yehi 2 words sab kuch bayan kar dete hain. Thank you ProAssignments for this trusted platform 🌟',
-    },
-    {
-        name: 'Iram Zehra',
-        avatar_url: 'https://i.postimg.cc/850bS6Qm/92c68039daa89691f88e3a5c867e2c81.jpg',
-        content: 'Mujhe sabse zyada pasand aaya yahaan ka user-friendly system. Sab kuch simple aur easy hai. Mujhe koi technical knowledge bhi nahi thi lekin samajh aa gaya.',
-    },
-    {
-        name: 'Moiz Khan',
-        avatar_url: 'https://i.postimg.cc/PqgQZN1K/Screenshot_20250908-112659.jpg',
-        content: 'Alhamdulillah yahaan se mera pehla earning experience bohot acha raha. Ab is platform ko long term use karne ka plan hai.',
-    },
-    {
-        name: 'Anila Yousaf',
-        avatar_url: 'https://i.postimg.cc/sXkwWh6D/9375fd7623ae18bcb9da6cc428e1d6c0.jpg',
-        content: 'Maine pehle socha yeh bhi fraud hoga. Lekin jab mere dost ko payment receive hui tab believe kiya. Ab main khud bhi daily earning karti hun.',
-    },
-    {
-        name: 'Danish Irfan',
-        avatar_url: 'https://i.postimg.cc/44MFPNsC/b7762884f4bb07a2e306f9d59107012d.jpg',
-        content: 'ProAssignments = Peace of mind. Main har din ek assignment karta hun aur without stress paisa mil jata hai 💵',
-    },
-    {
-        name: 'Farah Gul',
-        avatar_url: 'https://i.postimg.cc/wxNWpwMt/996c309c49534bbd6ffd24a2e86eafc5.jpg',
-        content: 'Yahaan ke assignments easy aur samajhne laayak hote hain. Har koi is platform se easily earn kar sakta hai. Recommended to everyone 🌸',
-    },
-    {
-        name: 'Shoaib Latif',
-        avatar_url: 'https://i.postimg.cc/WzKKJsbv/c49e128382f1d0b59192354bda2e6900.jpg',
-        content: 'The best platform for online earning. I am very happy with their service.',
+        name: 'Usman Ali',
+        avatar_url: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
+        content: 'Main ne curiosity mein ProAssignments join kiya tha aur experience theek raha. Assignments mil jate hain aur kaam simple hota hai. Jo log writing kar sakte hain unke liye ye ek acha side earning option ho sakta hai.',
     }
 ];
 
 export default function CommentsPage() {
   return (
-    <div className="container mx-auto max-w-4xl space-y-6 py-8">
-      <div className="text-center">
-        <h1 className="font-headline flex items-center justify-center gap-2 text-3xl font-bold">
-            <MessageSquare className="h-8 w-8 text-primary" />
-            User Comments
+    <div className="container mx-auto max-w-4xl space-y-12 py-12 px-4">
+      <div className="text-center space-y-4">
+        <h1 className="font-display flex items-center justify-center gap-3 text-5xl tracking-wider text-foreground">
+            <MessageSquare className="h-10 w-10 text-primary" />
+            <span>USER <span className="text-primary">COMMENTS</span></span>
         </h1>
-        <p className="text-muted-foreground">
-            See what our users are saying about their experience.
+        <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-xs">
+            What our community says about their journey
         </p>
       </div>
       
-      {staticReviews && staticReviews.length > 0 ? (
-        <div className="space-y-6">
-          {staticReviews.map((review, index) => (
-            <Card key={index} className="bg-muted/50">
-              <CardContent className="p-6">
-                <blockquote className="border-l-4 border-primary pl-4">
-                  <p className="text-lg italic text-foreground">
-                    “{review.content}”
-                  </p>
-                </blockquote>
-                <div className="mt-4 flex items-center gap-3">
-                    <Avatar className="h-12 w-12 border-2 border-primary/50">
-                        <AvatarImage src={review.avatar_url || ''} alt={review.name} data-ai-hint="user avatar" />
-                        <AvatarFallback>
-                            {review.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                    </Avatar>
-                    <cite className="text-md not-italic font-semibold text-foreground">
-                      {review.name}
-                    </cite>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="flex h-48 flex-col items-center justify-center rounded-lg border-2 border-dashed bg-muted">
-            <p className="text-center text-muted-foreground">
-                No comments have been added yet.
-            </p>
-        </div>
-      )}
+      <div className="space-y-8">
+        {staticReviews.map((review, index) => (
+          <Card key={index} className="border-none shadow-xl rounded-[2.5rem] overflow-hidden bg-white group hover:translate-y-[-4px] transition-all duration-500">
+            <CardContent className="p-10 flex flex-col items-center text-center space-y-6">
+              <Avatar className="h-24 w-24 border-[6px] border-primary/10 shadow-lg group-hover:scale-110 transition-transform duration-500">
+                  <AvatarImage src={review.avatar_url} alt={review.name} className="object-cover" />
+                  <AvatarFallback className="bg-primary/5 text-2xl font-black text-primary">
+                      {review.name.split(' ').map(n => n[0]).join('')}
+                  </AvatarFallback>
+              </Avatar>
+              
+              <div className="space-y-4 max-w-2xl">
+                  <cite className="text-xl not-italic font-black uppercase tracking-tighter text-slate-900 leading-none">
+                    {review.name}
+                  </cite>
+                  <blockquote className="relative">
+                    <p className="text-lg font-medium italic text-slate-600 leading-relaxed">
+                      “{review.content}”
+                    </p>
+                  </blockquote>
+              </div>
+              
+              <div className="pt-2">
+                  <span className="bg-green-500/10 text-green-600 text-[8px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full">Verified Partner</span>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }

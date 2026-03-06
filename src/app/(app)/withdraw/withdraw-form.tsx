@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -89,13 +88,13 @@ export function WithdrawForm({ currentBalance, canWithdraw }: WithdrawFormProps)
                 <FormLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Amount to Transfer</FormLabel>
                 <FormControl>
                     <div className="relative">
-                        <div className="absolute left-5 top-1/2 -translate-y-1/2 font-black text-slate-400 text-sm">PKR</div>
+                        <div className="absolute left-6 top-1/2 -translate-y-1/2 font-black text-slate-400 text-xs">PKR</div>
                         <Input 
                             type="number" 
                             step="0.01" 
                             placeholder="e.g., 1500" 
                             {...field} 
-                            className="bg-slate-50 border-none h-14 pl-14 rounded-2xl font-bold text-slate-900 shadow-inner px-6"
+                            className="bg-slate-50 border-none h-14 pl-16 rounded-2xl font-bold text-slate-900 shadow-inner"
                         />
                     </div>
                 </FormControl>
@@ -155,7 +154,7 @@ export function WithdrawForm({ currentBalance, canWithdraw }: WithdrawFormProps)
             name="account_number"
             render={({ field }) => (
                 <FormItem className="space-y-3">
-                <FormLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Network Address</FormLabel>
+                <FormLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Account Number</FormLabel>
                 <FormControl>
                     <div className="relative">
                         <div className="absolute right-5 top-1/2 -translate-y-1/2">
@@ -187,7 +186,7 @@ export function WithdrawForm({ currentBalance, canWithdraw }: WithdrawFormProps)
                 ) : (
                   <>
                     <Wallet className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                    <span>Authorize Capital Payout</span>
+                    <span>Withdraw</span>
                     <ArrowRight className="h-4 w-4 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300" />
                   </>
                 )}

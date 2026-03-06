@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
+import { RecentPurchases } from './recent-purchases';
+import { VideoTutorialCard } from './video-tutorial-card';
 import { DownloadAppCard } from './download-app-card';
 import Link from 'next/link';
 import { RamzanBanner } from './ramzan-banner';
@@ -92,7 +94,11 @@ export default async function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <RecentWithdrawals />
+          <div className="space-y-4">
+            <RecentPurchases />
+            <RecentWithdrawals />
+            <VideoTutorialCard />
+          </div>
           <DownloadAppCard />
         </div>
       </div>

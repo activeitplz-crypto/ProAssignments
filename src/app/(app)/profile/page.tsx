@@ -79,7 +79,7 @@ export default async function ProfilePage() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Immersive Primary Header with Balance Inside */}
-      <div className="bg-primary pt-12 pb-32 rounded-b-[3.5rem] px-6 relative shadow-2xl overflow-hidden">
+      <div className="bg-primary pt-12 pb-24 rounded-b-[3.5rem] px-6 relative shadow-2xl overflow-hidden">
         {/* Decorative subtle patterns */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/5 rounded-full -ml-10 -mb-10 blur-2xl" />
@@ -115,9 +115,9 @@ export default async function ProfilePage() {
         </div>
       </div>
 
-      {/* Overlapping Action Card */}
-      <div className="px-6 -mt-16 max-w-xl mx-auto">
-        <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-white">
+      {/* Action Card - Positioned below without overlap */}
+      <div className="px-6 mt-8 max-w-xl mx-auto">
+        <Card className="rounded-[2.5rem] border-none shadow-xl overflow-hidden bg-white">
           <CardContent className="p-8">
             <div className="grid grid-cols-4 gap-4">
               <Link href="/withdraw" className="flex flex-col items-center gap-3 group">

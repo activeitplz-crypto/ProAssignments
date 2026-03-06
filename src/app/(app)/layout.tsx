@@ -116,7 +116,10 @@ export default function AppLayout({
   ];
 
   const bottomNavItems = [
-    ...navItems,
+    { href: '/tasks', label: 'Tasks', icon: ClipboardList },
+    { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
+    { href: '/dashboard', label: 'Home', icon: Home },
+    { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
     { href: '/profile', label: 'Profile', icon: UserIcon },
   ];
 

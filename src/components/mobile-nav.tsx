@@ -41,10 +41,7 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
           variant="ghost" 
           size="icon" 
           className={cn(
-            "md:hidden h-12 w-12 rounded-2xl transition-all duration-300 active:scale-90",
-            dashboardMode 
-              ? "bg-white/20 text-white hover:bg-white/30 border border-white/20 backdrop-blur-md shadow-lg" 
-              : "bg-slate-900 text-white hover:bg-slate-800 shadow-xl"
+            "md:hidden h-12 w-12 rounded-2xl transition-all duration-300 active:scale-90 bg-[#9bd7dd] text-slate-900 hover:bg-[#9bd7dd]/90 shadow-lg border-none"
           )}
         >
           <Menu className="h-6 w-6" />

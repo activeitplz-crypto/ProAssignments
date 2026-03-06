@@ -33,8 +33,20 @@ export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchem
   if (formData.amount > profile.current_balance) {
     return { error: 'Insufficient balance.' };
   }
+
+  // 1. Deduct amount from current balance immediately
+  const { error: deductionError } = await supabase
+    .from('profiles')
+    .update({ current_balance: profile.current_balance - formData.amount })
+    .eq('id', user.id);
+
+  if (deductionError) {
+    console.error('Balance Deduction Error:', deductionError);
+    return { error: 'Failed to update balance for withdrawal.' };
+  }
   
-  const { error } = await supabase
+  // 2. Record the withdrawal request
+  const { error: insertError } = await supabase
     .from('withdrawals')
     .insert({
       user_id: user.id,
@@ -47,8 +59,9 @@ export async function requestWithdrawal(formData: z.infer<typeof withdrawalSchem
       },
     });
 
-  if (error) {
-    console.error('Withdrawal Request Error:', error);
+  if (insertError) {
+    console.error('Withdrawal Request Error:', insertError);
+    // Note: In a production app, we would use an RPC/Transaction to rollback the deduction if this fails.
     return { error: 'Failed to submit withdrawal request.' };
   }
   

@@ -91,3 +91,25 @@ export async function logout() {
   await supabase.auth.signOut();
   redirect('/login');
 }
+
+/**
+ * Resets the daily earning for the logged-in user to 0.
+ * This is intended to be called at the start of a new day.
+ */
+export async function resetDailyEarnings() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) return;
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ today_earning: 0 })
+    .eq('id', user.id);
+
+  if (error) {
+    console.error('Failed to reset daily earnings:', error);
+  } else {
+    revalidatePath('/dashboard');
+  }
+}

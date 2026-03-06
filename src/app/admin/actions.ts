@@ -120,17 +120,53 @@ export async function rejectWithdrawal(formData: FormData) {
   const supabase = await verifyAdmin();
   const withdrawalId = formData.get('withdrawalId') as string;
 
-  const { error } = await supabase
-    .from('withdrawals')
-    .update({ status: 'rejected' })
-    .eq('id', withdrawalId);
+  try {
+    // 1. Fetch withdrawal details
+    const { data: withdrawal, error: fetchError } = await supabase
+      .from('withdrawals')
+      .select('user_id, amount, status')
+      .eq('id', withdrawalId)
+      .single();
 
-  if (error) {
-    console.error('Reject Withdrawal Error:', error);
-    return { error: 'Failed to reject withdrawal.' };
+    if (fetchError || !withdrawal) throw new Error('Withdrawal not found.');
+    
+    // Only process if it's currently pending to avoid double refunds
+    if (withdrawal.status !== 'pending') throw new Error('Withdrawal is already processed.');
+
+    // 2. Fetch current user balance
+    const { data: profile, error: profileFetchError } = await supabase
+      .from('profiles')
+      .select('current_balance')
+      .eq('id', withdrawal.user_id)
+      .single();
+
+    if (profileFetchError || !profile) throw new Error('User profile not found for refund.');
+
+    // 3. Update profile balance (refund the amount)
+    const { error: refundError } = await supabase
+      .from('profiles')
+      .update({ current_balance: profile.current_balance + withdrawal.amount })
+      .eq('id', withdrawal.user_id);
+
+    if (refundError) throw new Error('Failed to refund balance to user.');
+
+    // 4. Finally reject the withdrawal record
+    const { error: updateError } = await supabase
+      .from('withdrawals')
+      .update({ status: 'rejected' })
+      .eq('id', withdrawalId);
+
+    if (updateError) throw new Error('Failed to update withdrawal status.');
+
+  } catch (error: any) {
+    console.error('Reject Withdrawal Logic Error:', error.message);
+    return { error: error.message };
   }
 
   revalidatePath('/admin');
+  revalidatePath('/dashboard');
+  revalidatePath('/withdraw');
+  return { error: null };
 }
 
 const planSchema = z.object({
@@ -504,5 +540,3 @@ export async function deleteSocialLink(formData: FormData) {
     revalidatePath('/social');
     return { error: null };
 }
-
-    

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -23,7 +24,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { ProAssignmentIcon } from '@/components/pro-assignment-icon';
 import { MobileNav } from '@/components/mobile-nav';
-import { logout } from '@/app/auth/actions';
+import { logout, resetDailyEarnings } from '@/app/auth/actions';
 import { UserNav } from '@/components/user-nav';
 import { useRouter, usePathname } from 'next/navigation';
 import type { Profile } from '@/lib/types';
@@ -96,6 +97,28 @@ export default function AppLayout({
     return () => subscription.unsubscribe();
   }, [router, supabase, supabase.auth, toast]);
 
+  // Logic to handle 12:00 AM Daily Earning Reset
+  useEffect(() => {
+    const handleDailyResetCheck = async () => {
+      if (!user) return;
+
+      const lastResetKey = 'pro_assignment_last_reset_day';
+      const today = new Date().toDateString(); // e.g., "Mon Oct 30 2023"
+      const lastResetDay = localStorage.getItem(lastResetKey);
+
+      if (lastResetDay !== today) {
+        // It's a new day! Reset the daily earning in the database.
+        await resetDailyEarnings();
+        localStorage.setItem(lastResetKey, today);
+        console.log('Daily earnings reset for new day:', today);
+      }
+    };
+
+    if (!loading && session && user) {
+      handleDailyResetCheck();
+    }
+  }, [loading, session, user]);
+
 
   if (loading) {
     return (
@@ -131,7 +154,7 @@ export default function AppLayout({
   return (
     <div className="flex min-h-screen w-full flex-col bg-[#F8FAFC] text-foreground md:pl-64">
       {/* 1. Desktop Sidebar (Hidden on Mobile) */}
-      <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-64 md:flex-col md:border-r md:bg-white md:shadow-2xl md:shadow-slate-200/50">
+      <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-64 md:flex-col md:bg-white md:shadow-2xl md:shadow-slate-200/50">
         <div className="flex h-20 items-center gap-3 px-8">
           <ProAssignmentIcon className="h-9 w-9" />
           <div className="flex flex-col">
@@ -158,7 +181,6 @@ export default function AppLayout({
           </div>
           
           <div className="px-4 mt-8">
-             <div className="h-px bg-slate-100 w-full mb-8" />
              <div className="flex flex-col gap-1.5">
                 {actionItems.map((item) => (
                 <Link

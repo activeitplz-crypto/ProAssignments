@@ -27,7 +27,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import type { Session } from '@supabase/supabase-js';
 import { useToast } from '@/hooks/use-toast';
-import { NoPlanPopup } from '@/components/no-plan-popup';
+import { PurchaseNotification } from '@/components/purchase-notification';
 
 export default function AppLayout({
   children,
@@ -234,8 +234,8 @@ export default function AppLayout({
         </header>
        )}
 
-      {/* Logic-based Popup for No Plan Users */}
-      <NoPlanPopup hasPlan={!!user.current_plan} />
+      {/* Community Activity Notification for No Plan Users */}
+      <PurchaseNotification hasPlan={!!user.current_plan} />
 
       <main className={cn(
         "flex-1 pb-12", 

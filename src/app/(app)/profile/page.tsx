@@ -78,72 +78,74 @@ export default async function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      {/* Immersive Primary Header */}
-      <div className="bg-primary pt-12 pb-24 rounded-b-[3rem] px-6 relative shadow-2xl overflow-hidden">
+      {/* Immersive Primary Header with Balance Inside */}
+      <div className="bg-primary pt-12 pb-32 rounded-b-[3.5rem] px-6 relative shadow-2xl overflow-hidden">
         {/* Decorative subtle patterns */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/5 rounded-full -ml-10 -mb-10 blur-2xl" />
         
-        <div className="max-w-4xl mx-auto flex items-center justify-between relative z-10">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16 border-2 border-white/30 shadow-lg">
-              <AvatarImage src={user.avatar_url || ''} alt={user.name || ''} className="object-cover" />
-              <AvatarFallback className="bg-white/20 text-white font-bold">{initials}</AvatarFallback>
-            </Avatar>
-            <div className="text-white">
-              <h1 className="text-xl font-bold leading-tight">{user.name || 'Anonymous'}</h1>
-              <p className="text-sm opacity-80 font-medium">@{user.username || 'user'}</p>
+        <div className="max-w-4xl mx-auto relative z-10 space-y-10">
+          {/* Top Bar: User Info & Notification */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-14 w-14 border-2 border-white/30 shadow-lg">
+                <AvatarImage src={user.avatar_url || ''} alt={user.name || ''} className="object-cover" />
+                <AvatarFallback className="bg-white/20 text-white font-bold">{initials}</AvatarFallback>
+              </Avatar>
+              <div className="text-white">
+                <h1 className="text-lg font-bold leading-tight">{user.name || 'Anonymous'}</h1>
+                <p className="text-xs opacity-70 font-medium">@{user.username || 'user'}</p>
+              </div>
+            </div>
+            <div className="bg-white/10 p-2.5 rounded-full text-white backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all cursor-pointer">
+              <Bell className="h-5 w-5" />
             </div>
           </div>
-          <div className="bg-white/10 p-3 rounded-full text-white backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all cursor-pointer">
-            <Bell className="h-6 w-6" />
+
+          {/* Integrated Balance Display */}
+          <div className="flex flex-col items-center text-center space-y-3">
+            <span className="text-white/60 font-bold uppercase text-[10px] tracking-[0.3em]">Available Balance</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-bold text-white/80">PKR</span>
+              <span className="text-6xl font-black tracking-tighter text-white">
+                {user.current_balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Overlapping Primary Balance Card */}
+      {/* Overlapping Action Card */}
       <div className="px-6 -mt-16 max-w-xl mx-auto">
         <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden bg-white">
-          <CardContent className="p-10 space-y-8">
-            <div className="flex flex-col items-center text-center space-y-2">
-              <span className="text-muted-foreground font-black uppercase text-[10px] tracking-[0.25em]">Total Balance</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-sm font-bold text-primary opacity-70">PKR</span>
-                <span className="text-5xl font-black tracking-tighter text-foreground">
-                  {user.current_balance.toFixed(2)}
-                </span>
-              </div>
-            </div>
-            
-            <Separator className="bg-muted/50" />
-
+          <CardContent className="p-8">
             <div className="grid grid-cols-4 gap-4">
               <Link href="/withdraw" className="flex flex-col items-center gap-3 group">
-                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors shadow-sm">
-                  <ArrowDownToLine className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
+                <div className="bg-primary/5 p-4 rounded-3xl group-hover:bg-primary/10 transition-all shadow-sm border border-primary/5">
+                  <ArrowDownToLine className="h-6 w-6 text-primary transition-transform group-hover:-translate-y-0.5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Withdraw</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">Withdraw</span>
               </Link>
               
               <Link href="/plans" className="flex flex-col items-center gap-3 group">
-                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors shadow-sm">
-                  <Zap className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
+                <div className="bg-primary/5 p-4 rounded-3xl group-hover:bg-primary/10 transition-all shadow-sm border border-primary/5">
+                  <Zap className="h-6 w-6 text-primary transition-transform group-hover:-translate-y-0.5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Plans</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">Plans</span>
               </Link>
 
               <Link href="/referrals" className="flex flex-col items-center gap-3 group">
-                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors shadow-sm">
-                  <Users className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
+                <div className="bg-primary/5 p-4 rounded-3xl group-hover:bg-primary/10 transition-all shadow-sm border border-primary/5">
+                  <Users className="h-6 w-6 text-primary transition-transform group-hover:-translate-y-0.5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Referrals</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">Referrals</span>
               </Link>
 
               <Link href="/guide" className="flex flex-col items-center gap-3 group">
-                <div className="bg-muted/50 p-4 rounded-full group-hover:bg-primary/10 transition-colors shadow-sm">
-                  <HelpCircle className="h-6 w-6 text-foreground group-hover:text-primary transition-colors" />
+                <div className="bg-primary/5 p-4 rounded-3xl group-hover:bg-primary/10 transition-all shadow-sm border border-primary/5">
+                  <HelpCircle className="h-6 w-6 text-primary transition-transform group-hover:-translate-y-0.5" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-foreground">Guide</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:text-primary transition-colors">Guide</span>
               </Link>
             </div>
           </CardContent>
@@ -173,7 +175,7 @@ export default async function ProfilePage() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
           {/* Identity Info */}
           <div className="space-y-8 lg:col-span-4">
-            <Card className="border-none shadow-xl rounded-[2rem] overflow-hidden">
+            <Card className="border-none shadow-xl rounded-[2.5rem] overflow-hidden">
               <div className="h-1.5 bg-primary" />
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base font-bold uppercase tracking-tighter">
@@ -228,7 +230,7 @@ export default async function ProfilePage() {
 
           {/* Form Settings */}
           <div className="lg:col-span-8">
-            <Card className="border-none shadow-xl rounded-[2rem] overflow-hidden">
+            <Card className="border-none shadow-xl rounded-[2.5rem] overflow-hidden">
               <CardHeader className="bg-muted/30 p-8">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">

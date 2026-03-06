@@ -7,6 +7,10 @@ import {
 import { 
   TrendingUp,
   Wallet,
+  ClipboardList,
+  FileCheck2,
+  Home,
+  User as UserIcon,
 } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
@@ -45,6 +49,14 @@ export default async function DashboardPage() {
     .limit(1)
     .maybeSingle();
 
+  const quickNav = [
+    { href: '/tasks', label: 'Tasks', icon: ClipboardList, color: 'text-orange-500', bg: 'bg-orange-500/10' },
+    { href: '/assignments', label: 'Submit', icon: FileCheck2, color: 'text-green-500', bg: 'bg-green-500/10' },
+    { href: '/dashboard', label: 'Home', icon: Home, color: 'text-primary', bg: 'bg-primary/10' },
+    { href: '/withdraw', label: 'Wallet', icon: Wallet, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { href: '/profile', label: 'Profile', icon: UserIcon, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
       
@@ -74,36 +86,40 @@ export default async function DashboardPage() {
       {/* 2. Overlapping Content Area */}
       <div className="px-4 -mt-12 space-y-5 max-w-4xl mx-auto w-full pb-24 relative z-20">
         
-        <RamzanBanner />
+        {/* 3. New Integrated Navigation & Today Stats Card */}
+        <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden">
+            <CardContent className="p-0">
+                {/* Upper: Today's Earning Stat */}
+                <div className="p-6 border-b border-slate-50 bg-slate-50/30 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-2xl bg-green-500/10 flex items-center justify-center">
+                            <TrendingUp className="h-6 w-6 text-green-600" />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Today's Revenue</p>
+                            <p className="text-xl font-black text-green-600">PKR {user.today_earning.toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <span className="bg-green-500/10 text-green-600 text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full">Active Now</span>
+                    </div>
+                </div>
 
-        {/* 4. Earnings Stats & Quick Actions Summary */}
-        <div className="grid grid-cols-2 gap-3">
-          <Card className="border-none shadow-md rounded-3xl bg-white overflow-hidden group hover:translate-y-[-2px] transition-all">
-            <CardContent className="p-4 flex items-center gap-3 h-full">
-              <div className="h-10 w-10 rounded-xl bg-green-500/10 flex items-center justify-center shrink-0">
-                <TrendingUp className="h-5 w-5 text-green-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest truncate">Today</p>
-                <p className="text-sm font-black text-green-600">PKR {user.today_earning.toFixed(2)}</p>
-              </div>
+                {/* Lower: 5-Button Navigation Grid */}
+                <div className="grid grid-cols-5 gap-1 p-4">
+                    {quickNav.map((item) => (
+                        <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-2 p-2 rounded-2xl transition-all hover:bg-slate-50 active:scale-90">
+                            <div className={`h-12 w-12 ${item.bg} flex items-center justify-center rounded-2xl shadow-sm`}>
+                                <item.icon className={`h-5 w-5 ${item.color}`} />
+                            </div>
+                            <span className="text-[9px] font-black uppercase tracking-tight text-slate-600">{item.label}</span>
+                        </Link>
+                    ))}
+                </div>
             </CardContent>
-          </Card>
-          
-          <Link href="/withdraw" className="block h-full">
-            <Card className="border-none shadow-md rounded-3xl bg-white overflow-hidden group hover:translate-y-[-2px] transition-all cursor-pointer h-full">
-              <CardContent className="p-4 flex items-center gap-3 h-full">
-                <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0">
-                  <Wallet className="h-5 w-5 text-blue-600" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest truncate">Request</p>
-                  <p className="text-sm font-black text-blue-600 uppercase">Withdraw</p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        </div>
+        </Card>
+        
+        <RamzanBanner />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4">

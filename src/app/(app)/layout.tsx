@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -115,14 +116,6 @@ export default function AppLayout({
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
   ];
 
-  const bottomNavItems = [
-    { href: '/tasks', label: 'Tasks', icon: ClipboardList },
-    { href: '/assignments', label: 'Assignments', icon: FileCheck2 },
-    { href: '/dashboard', label: 'Home', icon: Home },
-    { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
-    { href: '/profile', label: 'Profile', icon: UserIcon },
-  ];
-
   const actionItems = [
     { href: '/referrals', label: 'Referrals', icon: Users },
     { href: '/watch', label: 'Guidelines', icon: Video },
@@ -204,40 +197,10 @@ export default function AppLayout({
         </header>
        )}
       <main className={cn(
-        "flex-1 pb-24 md:pb-4", 
+        "flex-1 pb-4", 
         !isProfilePage && "p-4 lg:p-6",
         isDashboard && "pt-0 p-0 lg:p-0"
       )}>{children}</main>
-
-      {/* Clean Meta-Style Bottom Navigation with Enhanced Top Shadow */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background border-t border-slate-200 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.15)]">
-        <div className="flex items-center justify-around px-2 h-16 pb-safe">
-          {bottomNavItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex flex-col items-center justify-center flex-1 h-full gap-1 transition-all duration-200 active:scale-90",
-                  isActive ? "text-primary" : "text-muted-foreground"
-                )}
-              >
-                <item.icon className={cn(
-                  "h-6 w-6 transition-transform duration-200",
-                  isActive && "scale-110"
-                )} />
-                <span className={cn(
-                  "text-[9px] font-bold uppercase tracking-tight",
-                  isActive ? "text-primary" : "text-muted-foreground/70"
-                )}>
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
     </div>
   );
 }

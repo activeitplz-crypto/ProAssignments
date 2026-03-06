@@ -206,9 +206,9 @@ export default function AppLayout({
         isDashboard && "pt-0 p-0 lg:p-0"
       )}>{children}</main>
 
-      {/* Ultra-Modern Floating Bottom Navigation Dock */}
-      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-[440px] z-50 md:hidden">
-        <div className="h-16 rounded-full border border-white/40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.15)] flex items-center justify-around px-2">
+      {/* Modern Pinned Bottom Navigation Dock */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_30px_-5px_rgba(0,0,0,0.05)]">
+        <div className="flex items-center justify-around px-2 h-20 pb-safe">
           {bottomNavItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -216,32 +216,33 @@ export default function AppLayout({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative flex flex-col items-center justify-center flex-1 h-12 transition-all duration-300 rounded-full group',
+                  'relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 group',
                   isActive ? 'scale-105' : 'scale-100'
                 )}
               >
-                {isActive && (
-                  <div className="absolute inset-0 bg-primary/10 rounded-full animate-in zoom-in-95 fade-in duration-300" />
-                )}
-                
                 <div className={cn(
-                  "flex flex-col items-center gap-0.5 transition-transform duration-300",
+                  "flex flex-col items-center gap-1 transition-transform duration-300",
                   isActive ? "translate-y-[-2px]" : "translate-y-0"
                 )}>
-                  <item.icon className={cn(
-                    'h-5 w-5 transition-all duration-300', 
-                    isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
-                  )} />
+                  <div className={cn(
+                    "p-2 rounded-2xl transition-all duration-300",
+                    isActive ? "bg-primary/10" : "bg-transparent group-hover:bg-slate-100 dark:group-hover:bg-slate-800"
+                  )}>
+                    <item.icon className={cn(
+                      'h-5 w-5 transition-all duration-300', 
+                      isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
+                    )} />
+                  </div>
                   <span className={cn(
-                    'text-[7px] font-black uppercase tracking-[0.15em] transition-all duration-300', 
-                    isActive ? 'opacity-100' : 'opacity-40 group-hover:opacity-80'
+                    'text-[8px] font-black uppercase tracking-[0.15em] transition-all duration-300', 
+                    isActive ? 'text-primary opacity-100' : 'text-muted-foreground opacity-40 group-hover:opacity-80'
                   )}>
                     {item.label}
                   </span>
                 </div>
 
                 {isActive && (
-                  <div className="absolute bottom-1.5 w-1 h-1 rounded-full bg-primary animate-pulse" />
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-t-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)] animate-in slide-in-from-bottom-1 duration-300" />
                 )}
               </Link>
             );

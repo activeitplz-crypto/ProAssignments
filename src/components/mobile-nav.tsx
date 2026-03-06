@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -40,10 +41,11 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
           variant="ghost" 
           size="icon" 
           className={cn(
-            "md:hidden h-12 w-12 rounded-2xl transition-all duration-300 active:scale-90 bg-[#9bd7dd] text-slate-900 hover:bg-[#9bd7dd]/90 shadow-lg border-none"
+            "md:hidden h-12 w-12 transition-all duration-300 active:scale-90 bg-transparent border-none",
+            dashboardMode ? "text-white" : "text-slate-900"
           )}
         >
-          <Menu className="h-6 w-6" />
+          <Menu className="h-7 w-7" />
           <span className="sr-only">Open navigation menu</span>
         </Button>
       </SheetTrigger>
@@ -53,7 +55,7 @@ export function MobileNav({ navItems, actionItems, dashboardMode }: MobileNavPro
         
         <SheetHeader className="p-8 relative z-10">
           <div className="flex items-center justify-between">
-            <SheetTitle className="flex items-center gap-3">
+            <SheetTitle className="flex items-center gap-3 text-left">
               <ProAssignmentIcon className="h-10 w-10 border border-slate-900/10 shadow-sm" />
               <div className="flex flex-col items-start">
                 <span className="text-xl font-black tracking-tighter italic leading-none text-slate-900">ProAssignment</span>

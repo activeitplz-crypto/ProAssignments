@@ -71,9 +71,10 @@ export default async function DashboardPage() {
         
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="text-white space-y-8 text-center">
-            <div className="space-y-2">
-                <h1 className="text-3xl md:text-4xl font-black tracking-tighter uppercase italic leading-none">
-                    Hello, {user.name?.split(' ')[0]}
+            <div className="flex flex-col items-center gap-1">
+                <span className="text-white/50 font-black uppercase text-[10px] tracking-[0.4em]">Hello,</span>
+                <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase italic leading-none text-white drop-shadow-lg">
+                    {user.name?.split(' ')[0]}
                 </h1>
             </div>
 

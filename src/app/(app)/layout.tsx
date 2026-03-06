@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -115,6 +116,11 @@ export default function AppLayout({
     { href: '/withdraw', label: 'Withdrawal', icon: Wallet },
   ];
 
+  const bottomNavItems = [
+    ...navItems,
+    { href: '/profile', label: 'Profile', icon: UserIcon },
+  ];
+
   const actionItems = [
     { href: '/referrals', label: 'Referrals', icon: Users },
     { href: '/watch', label: 'Guidelines', icon: Video },
@@ -126,10 +132,6 @@ export default function AppLayout({
     { href: 'https://postimages.org/', label: 'Postimages', icon: ImageIcon, target: '_blank' },
     { href: 'https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43', label: 'Our App', icon: Download, target: '_blank' },
   ];
-
-  const allNavItems = [...navItems, ...actionItems];
-
-  const hasPlan = !!user.current_plan;
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background text-foreground md:pl-60">
@@ -199,8 +201,8 @@ export default function AppLayout({
       <main className="flex-1 p-4 pb-20 md:pb-4 lg:p-6">{children}</main>
 
       <nav className="curved-nav fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden">
-        <div className="grid h-16 grid-cols-4 items-center justify-around">
-          {navItems.slice(0, 4).map((item) => (
+        <div className="grid h-16 grid-cols-5 items-center justify-around">
+          {bottomNavItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -210,7 +212,7 @@ export default function AppLayout({
               )}
             >
               <item.icon className={cn('h-6 w-6', pathname === item.href && 'rounded-full bg-primary/10 p-1')} />
-              <span className="text-xs">{item.label}</span>
+              <span className="text-[10px]">{item.label}</span>
             </Link>
           ))}
         </div>

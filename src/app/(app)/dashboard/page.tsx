@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { UserProfileCard } from '@/components/user-profile-card';
-import { DollarSign, Zap, Briefcase, Wallet, Video } from 'lucide-react';
+import { Wallet, Video, Megaphone, Bell } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
 import { OfferBanner } from './offer-banner';
@@ -36,10 +36,8 @@ export default async function DashboardPage() {
     name: user.name || 'Anonymous',
     username: user.username || 'anonymous',
     avatarUrl: user.avatar_url,
-    total_earning: user.total_earning,
-    today_earning: user.today_earning,
-    active_plan: user.current_plan || 'None',
     current_balance: user.current_balance,
+    active_plan: user.current_plan,
   };
 
   const hasPlan = !!user.current_plan;
@@ -50,60 +48,52 @@ export default async function DashboardPage() {
       
       {!hasPlan && <OfferBanner />}
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="transform transition-transform duration-300 hover:scale-105">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-normal text-muted-foreground">
-              Total Earnings
-            </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              PKR {userData.total_earning.toFixed(2)}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="transform transition-transform duration-300 hover:scale-105">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-normal text-muted-foreground">
-              Current Balance
-            </CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-             PKR {userData.current_balance.toFixed(2)}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="transform transition-transform duration-300 hover:scale-105">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-normal text-muted-foreground">
-              Today's Earnings
-            </CardTitle>
-             <Zap className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              PKR {userData.today_earning.toFixed(2)}
-            </p>
-          </CardContent>
-        </Card>
-         <Card className="transform transition-transform duration-300 hover:scale-105">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-normal text-muted-foreground">
-              Active Plan
-            </CardTitle>
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {userData.active_plan}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Main Balance Card - Keep user motivated on Home */}
+      <Card className="bg-primary text-primary-foreground overflow-hidden relative border-none shadow-xl">
+        <div className="absolute top-0 right-0 p-4 opacity-10">
+            <Wallet className="h-24 w-24" />
+        </div>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium opacity-90 flex items-center gap-2">
+            <Wallet className="h-4 w-4" /> Available Balance
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-4xl font-bold">
+            PKR {userData.current_balance.toFixed(2)}
+          </p>
+          <p className="text-xs mt-2 opacity-80">
+            {hasPlan ? `Plan: ${userData.active_plan}` : "Purchase a plan to start earning"}
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Notice Board / Announcements */}
+      <Card className="border-l-4 border-l-primary">
+        <CardHeader>
+          <CardTitle className="font-headline flex items-center gap-2">
+            <Megaphone className="h-6 w-6 text-primary" />
+            Notice Board
+          </CardTitle>
+          <CardDescription>Important updates and daily work instructions.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex gap-4 p-3 rounded-lg bg-muted/50 border">
+            <Bell className="h-5 w-5 text-primary shrink-0 mt-1" />
+            <div className="space-y-1">
+                <p className="font-semibold text-sm">Welcome to ProAssignment!</p>
+                <p className="text-sm text-muted-foreground">Complete your daily assignments to earn PKR based on your selected plan. Remember to upload clear images of your work.</p>
+            </div>
+          </div>
+          <div className="flex gap-4 p-3 rounded-lg bg-muted/50 border">
+            <Bell className="h-5 w-5 text-primary shrink-0 mt-1" />
+            <div className="space-y-1">
+                <p className="font-semibold text-sm">Withdrawal Policy</p>
+                <p className="text-sm text-muted-foreground">Withdrawals are processed within 24 hours. The minimum withdrawal limit is PKR 700.</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <RecentWithdrawals />
 
@@ -111,10 +101,10 @@ export default async function DashboardPage() {
         <CardHeader>
           <CardTitle className="font-headline flex items-center gap-2">
             <Video className="h-6 w-6 text-primary" />
-            Welcome Video
+            Tutorial Video
           </CardTitle>
           <CardDescription>
-            Watch this video to get started with our platform.
+            Watch this video to understand how to complete and submit your assignments.
           </CardDescription>
         </CardHeader>
         <CardContent>

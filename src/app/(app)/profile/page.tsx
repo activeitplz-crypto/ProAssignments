@@ -11,6 +11,7 @@ import { UserProfileCard } from '@/components/user-profile-card';
 import { ProfileForm } from './profile-form';
 import { redirect } from 'next/navigation';
 import { Label } from '@/components/ui/label';
+import { DollarSign, Zap, Briefcase, Wallet } from 'lucide-react';
 
 export default async function ProfilePage() {
   const supabase = createClient();
@@ -33,6 +34,13 @@ export default async function ProfilePage() {
     return <div>Error loading profile. Please try again.</div>;
   }
 
+  const stats = [
+    { title: 'Total Earnings', value: `PKR ${user.total_earning.toFixed(2)}`, icon: DollarSign },
+    { title: 'Current Balance', value: `PKR ${user.current_balance.toFixed(2)}`, icon: Wallet },
+    { title: "Today's Earnings", value: `PKR ${user.today_earning.toFixed(2)}`, icon: Zap },
+    { title: 'Active Plan', value: user.current_plan || 'None', icon: Briefcase },
+  ];
+
   return (
     <div className="space-y-6">
       <UserProfileCard 
@@ -40,6 +48,25 @@ export default async function ProfilePage() {
         username={user.username || 'anonymous'}
         avatarUrl={user.avatar_url}
       />
+
+      {/* Earning Details moved here */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {stats.map((stat) => (
+          <Card key={stat.title} className="transform transition-transform duration-300 hover:scale-105">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-normal text-muted-foreground">
+                {stat.title}
+              </CardTitle>
+              <stat.icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">
+                {stat.value}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
        <Card>
         <CardHeader>

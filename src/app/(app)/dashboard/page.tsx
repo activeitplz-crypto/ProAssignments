@@ -22,6 +22,7 @@ import { BlogCard } from './blog-card';
 import { HousewifeBlogCard } from './housewife-blog-card';
 import { PartTimeBlogCard } from './part-time-blog-card';
 import { MemberReviews } from './member-reviews';
+import { WithdrawalInfoCard } from './withdrawal-info-card';
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -124,6 +125,7 @@ export default async function DashboardPage() {
           <div className="space-y-4">
             <RecentWithdrawals />
             <VideoTutorialCard video={latestVideo} />
+            <WithdrawalInfoCard />
             <BlogCard />
             <HousewifeBlogCard />
             <PartTimeBlogCard />

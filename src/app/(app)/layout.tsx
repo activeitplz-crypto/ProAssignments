@@ -208,6 +208,9 @@ export default function AppLayout({
 
       {/* Modern Pinned Bottom Navigation Dock */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_30px_-5px_rgba(0,0,0,0.05)]">
+        {/* Explicit Top Border Line for High-End Separation */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-700 to-transparent opacity-50" />
+        
         <div className="flex items-center justify-around px-2 h-20 pb-safe">
           {bottomNavItems.map((item) => {
             const isActive = pathname === item.href;

@@ -4,10 +4,6 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { 
-  Megaphone, 
-  Info, 
-  Zap, 
-  ArrowUpRight, 
   TrendingUp,
   Wallet,
 } from 'lucide-react';
@@ -15,7 +11,6 @@ import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
 import { DownloadAppCard } from './download-app-card';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { RamzanBanner } from './ramzan-banner';
 
 export default async function DashboardPage() {
@@ -94,37 +89,6 @@ export default async function DashboardPage() {
               </CardContent>
             </Card>
           </Link>
-        </div>
-
-        {/* 5. Notice Board */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between px-2">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Notice Board</h2>
-            <Link href="/guide" className="text-[10px] font-black text-primary uppercase border-b border-primary/20 hover:border-primary transition-all">See All</Link>
-          </div>
-          
-          <div className="space-y-2">
-            {[
-              { title: 'System Update', desc: 'New ultra-modern interface.', icon: Megaphone, color: 'bg-indigo-50 text-indigo-600' },
-              { title: 'Fast Withdrawals', desc: 'Payments processed within 24h.', icon: Zap, color: 'bg-amber-50 text-amber-600' },
-              { title: 'Identity Verification', desc: 'PSEB & FBR registered.', icon: Info, color: 'bg-emerald-50 text-emerald-600' },
-            ].map((news, i) => (
-              <Card key={i} className="border-none shadow-sm rounded-2xl bg-white overflow-hidden hover:shadow-md hover:translate-x-1 transition-all cursor-pointer group">
-                <CardContent className="p-3.5 flex items-center gap-4">
-                  <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm", news.color)}>
-                    <news.icon className="h-5 w-5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-black text-xs text-foreground uppercase tracking-tight group-hover:text-primary transition-colors">{news.title}</p>
-                    <p className="text-[10px] text-muted-foreground font-bold mt-0.5">{news.desc}</p>
-                  </div>
-                  <div className="h-7 w-7 rounded-full bg-muted/30 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                    <ArrowUpRight className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-all" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

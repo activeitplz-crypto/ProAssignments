@@ -27,7 +27,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import type { Profile } from '@/lib/types';
 import type { Session } from '@supabase/supabase-js';
 import { useToast } from '@/hooks/use-toast';
-import { PurchaseNotification } from '@/components/purchase-notification';
 
 export default function AppLayout({
   children,
@@ -95,7 +94,6 @@ export default function AppLayout({
     return () => subscription.unsubscribe();
   }, [router, supabase, supabase.auth, toast]);
 
-  // Logic to handle 12:00 AM Daily Earning Reset
   useEffect(() => {
     const handleDailyResetCheck = async () => {
       if (!user) return;
@@ -107,7 +105,6 @@ export default function AppLayout({
       if (lastResetDay !== today) {
         await resetDailyEarnings();
         localStorage.setItem(lastResetKey, today);
-        console.log('Daily earnings reset for new day:', today);
       }
     };
 
@@ -150,7 +147,6 @@ export default function AppLayout({
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-[#F8FAFC] text-foreground md:pl-64">
-      {/* Desktop Sidebar */}
       <nav className="hidden md:fixed md:left-0 md:top-0 md:z-50 md:flex md:h-screen md:w-64 md:flex-col md:bg-white md:shadow-2xl md:shadow-slate-200/50">
         <div className="flex h-20 items-center gap-3 px-8">
           <ProAssignmentIcon className="h-9 w-9" />
@@ -210,7 +206,6 @@ export default function AppLayout({
         </div>
       </nav>
 
-       {/* Global Mobile/Desktop Adaptive Header */}
        {!isProfilePage && (
          <header className={cn(
            "flex h-20 shrink-0 items-center justify-between px-6 md:justify-end transition-all border-none z-50",
@@ -233,9 +228,6 @@ export default function AppLayout({
           </div>
         </header>
        )}
-
-      {/* Community Activity Notification for No Plan Users */}
-      <PurchaseNotification hasPlan={!!user.current_plan} />
 
       <main className={cn(
         "flex-1 pb-12", 

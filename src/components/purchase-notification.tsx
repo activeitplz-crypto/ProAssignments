@@ -3,10 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Zap, CheckCircle2 } from 'lucide-react';
-
-interface PurchaseNotificationProps {
-  hasPlan: boolean;
-}
+import { createClient } from '@/lib/supabase/client';
 
 const names = [
   'Zohaib', 'Kiran', 'Sajid', 'Mehak', 'Bilal', 'Ayesha', 'Hamza', 'Nida', 
@@ -25,46 +22,55 @@ const times = [
   '45 minutes ago', '1 hour ago', '3 hours ago', '5 hours ago', '8 hours ago'
 ];
 
-export function PurchaseNotification({ hasPlan }: PurchaseNotificationProps) {
+export function PurchaseNotification() {
   const [visible, setVisible] = useState(false);
   const [data, setData] = useState({ name: '', plan: '', time: '' });
-
-  const generateRandom = useCallback(() => {
-    const name = names[Math.floor(Math.random() * names.length)];
-    const plan = plans[Math.floor(Math.random() * plans.length)];
-    const time = times[Math.floor(Math.random() * times.length)];
-    setData({ name, plan, time });
-  }, []);
+  const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
-    if (hasPlan) return;
+    const checkDisplayEligibility = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Rule: "dont show to those have account"
+      if (session) return;
 
-    // Start showing after 15 seconds on the website
-    const initialDelay = setTimeout(() => {
-      showNext();
-    }, 15000);
+      // Rule: "show once in 8 hour"
+      const lastShownKey = 'pro_assignment_notify_timestamp';
+      const lastShown = localStorage.getItem(lastShownKey);
+      const now = Date.now();
+      const eightHours = 8 * 60 * 60 * 1000;
 
-    let loopTimeout: NodeJS.Timeout;
+      if (lastShown && (now - parseInt(lastShown)) < eightHours) {
+        return;
+      }
 
-    const showNext = () => {
-      generateRandom();
-      setVisible(true);
+      setShouldRender(true);
 
-      // Hide after 4 seconds
-      setTimeout(() => {
-        setVisible(false);
-        // Wait 12 seconds before showing the next one to keep it subtle
-        loopTimeout = setTimeout(showNext, 12000);
-      }, 4000);
+      // Rule: "show only when someone spend 15 second on website"
+      const timer = setTimeout(() => {
+        // Pick random data
+        const name = names[Math.floor(Math.random() * names.length)];
+        const plan = plans[Math.floor(Math.random() * plans.length)];
+        const time = times[Math.floor(Math.random() * times.length)];
+        
+        setData({ name, plan, time });
+        setVisible(true);
+        localStorage.setItem(lastShownKey, now.toString());
+
+        // Rule: "must be for 4 second"
+        setTimeout(() => {
+          setVisible(false);
+        }, 4000);
+      }, 15000);
+
+      return () => clearTimeout(timer);
     };
 
-    return () => {
-      clearTimeout(initialDelay);
-      clearTimeout(loopTimeout);
-    };
-  }, [hasPlan, generateRandom]);
+    checkDisplayEligibility();
+  }, []);
 
-  if (hasPlan) return null;
+  if (!shouldRender) return null;
 
   return (
     <div

@@ -55,7 +55,7 @@ export default function CommentsPage() {
                   </cite>
                   <blockquote className="relative">
                     <p className="text-lg font-medium italic text-slate-600 leading-relaxed">
-                      “{review.content}”
+                      {review.content}
                     </p>
                   </blockquote>
               </div>

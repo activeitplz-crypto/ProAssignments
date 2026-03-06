@@ -1,4 +1,3 @@
-
 import { createClient } from '@/lib/supabase/server';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MessageSquare, Sparkles } from 'lucide-react';
@@ -54,7 +53,7 @@ export default async function ReviewsPage() {
                     </cite>
                     <blockquote className="max-w-xl">
                       <p className="text-base font-medium italic text-slate-600 leading-relaxed">
-                        “{review.content}”
+                        {review.content}
                       </p>
                     </blockquote>
                 </div>

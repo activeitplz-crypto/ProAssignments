@@ -18,11 +18,11 @@ export function HousewifeBlogCard() {
     <Card className="border-none bg-white shadow-xl rounded-[2.5rem] overflow-hidden group">
       <div className="relative h-48 w-full">
         <Image
-          src="https://i.postimg.cc/fbKrfcT5/8978109f62887c264ea9730af469b85b.jpg"
-          alt="Housewife Earning"
+          src="https://i.postimg.cc/HxmMB1xQ/German-Worksheets-For-Beginners-Free-Printable-PDFs.jpg"
+          alt="Housewife Earning Opportunity"
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-105"
-          data-ai-hint="housewife working"
+          data-ai-hint="handwritten assignment"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-4 left-6">

@@ -7,16 +7,16 @@ import Image from 'next/image';
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
+    <div className="flex flex-col min-h-screen bg-[#F8FAFC] overflow-x-hidden">
       <header className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Logo />
-        <nav className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" asChild className="font-bold text-slate-600">
+        <nav className="flex items-center">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" asChild className="font-bold text-slate-600 px-2 sm:px-4">
                 <Link href="/login">Login</Link>
             </Button>
-            <Button asChild className="rounded-full px-4 h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px]">
-                <Link href="/signup">Get Started <ArrowRight className="ml-1.5 h-3 w-3" /></Link>
+            <Button asChild className="rounded-full px-3 sm:px-5 h-8 sm:h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[9px] sm:text-[10px] shrink-0">
+                <Link href="/signup">Get Started</Link>
             </Button>
           </div>
         </nav>

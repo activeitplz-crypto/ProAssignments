@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,7 +7,7 @@ import { Star, StarHalf, Quote } from 'lucide-react';
 const reviews = [
   {
     name: 'Arafa',
-    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣𝗜𝗡-𝗕𝗬-𝗟𝗔𝗗Ｄ𝗜.jpg',
+    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣𝗜𝗡-𝗕𝗬-𝗟𝗔𝗗ＤＩ.jpg',
     rating: 5,
     content: 'Main ek student hun. Pocket money ke liye join kia tha. Ab apni fees khud pay karti hun. 40k earn kar chuki hun. Ye meri best decision thi.'
   },
@@ -25,18 +24,6 @@ const reviews = [
     content: 'Very supportive team and fast withdrawals. I have been working here for 2 months now and the experience is amazing. Highly recommended for students.'
   },
   {
-    name: 'Bilal Ahmad',
-    avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
-    rating: 4.5,
-    content: 'ProAssignment has been a game-changer for me. As a university student, the flexible tasks help me cover my extra expenses without any pressure.'
-  },
-  {
-    name: 'Sadia Malik',
-    avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
-    rating: 5,
-    content: 'The AI verification system is super fast. I upload my handwritten assignments and get approval within minutes. Very reliable platform.'
-  },
-  {
     name: 'Amna Abbas',
     avatar: 'https://i.postimg.cc/s2fxXYnR/download_(1).jpg',
     rating: 5,
@@ -47,6 +34,30 @@ const reviews = [
     avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
     rating: 4.5,
     content: 'Jo log writing kar sakte hain unke liye ye ek acha side earning option ho sakta hai. Assignments mil jate hain aur payouts timely hain.'
+  },
+  {
+    name: 'Sadia Malik',
+    avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
+    rating: 5,
+    content: 'The AI verification system is super fast. I upload my handwritten assignments and get approval within minutes. Very reliable platform.'
+  },
+  {
+    name: 'Bilal Ahmad',
+    avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
+    rating: 4.5,
+    content: 'ProAssignment has been a game-changer for me. As a university student, the flexible tasks help me cover my extra expenses without any pressure.'
+  },
+  {
+    name: 'Faizan Sheikh',
+    avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
+    rating: 5,
+    content: 'Reliable platform for students in Pakistan. The withdrawal to Easypaisa is very convenient and fast. Highly recommended!'
+  },
+  {
+    name: 'Mariam Zahra',
+    avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
+    rating: 5,
+    content: 'Being a housewife, it was hard to find work that fits my schedule. ProAssignment allows me to earn during my free time comfortably from home.'
   }
 ];
 

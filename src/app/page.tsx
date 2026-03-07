@@ -1,8 +1,7 @@
-
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, TrendingUp, ShieldCheck, Video, Sparkles, Star } from 'lucide-react';
+import { ArrowRight, TrendingUp, ShieldCheck, Video, Sparkles } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';

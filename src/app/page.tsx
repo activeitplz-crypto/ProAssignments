@@ -12,20 +12,22 @@ export default function LandingPage() {
     <div className="flex flex-col min-h-screen bg-[#F8FAFC] overflow-x-hidden relative">
       <FloatingRamazanElements />
       
-      <header className="container mx-auto flex h-20 items-center justify-between px-2 sm:px-4 md:px-6 relative z-10">
-        <div className="shrink-0 scale-75 sm:scale-90 md:scale-100 origin-left">
-          <Logo />
-        </div>
-        <nav className="flex items-center">
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Button variant="ghost" asChild className="font-bold text-slate-600 px-2 sm:px-4 text-[10px] sm:text-xs md:text-sm h-8 sm:h-10">
-                <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild className="rounded-full px-3 sm:px-5 h-8 sm:h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[8px] sm:text-[9px] shrink-0">
-                <Link href="/signup">Get Started</Link>
-            </Button>
+      <header className="sticky top-0 z-50 w-full bg-[#F8FAFC]/80 backdrop-blur-md border-b border-slate-100">
+        <div className="container mx-auto flex h-20 items-center justify-between px-2 sm:px-4 md:px-6">
+          <div className="shrink-0 scale-75 sm:scale-90 md:scale-100 origin-left">
+            <Logo />
           </div>
-        </nav>
+          <nav className="flex items-center">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Button variant="ghost" asChild className="font-bold text-slate-600 px-2 sm:px-4 text-[10px] sm:text-xs md:text-sm h-8 sm:h-10">
+                  <Link href="/login">Login</Link>
+              </Button>
+              <Button asChild className="rounded-full px-3 sm:px-5 h-8 sm:h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[8px] sm:text-[9px] shrink-0">
+                  <Link href="/signup">Get Started</Link>
+              </Button>
+            </div>
+          </nav>
+        </div>
       </header>
 
       <main className="flex-1 relative z-10">

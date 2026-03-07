@@ -55,8 +55,8 @@ export function FloatingRamazanElements() {
         </div>
       ))}
 
-      {/* Central Floating Message */}
-      <div className="absolute top-[12%] left-1/2 -translate-x-1/2 z-[110] flex flex-col items-center gap-2 animate-float-msg">
+      {/* Central Floating Message - Sticky to viewport */}
+      <div className="absolute top-[120px] left-1/2 -translate-x-1/2 z-[110] flex flex-col items-center gap-2 animate-float-msg">
           <div className="bg-emerald-600/10 backdrop-blur-[4px] border border-emerald-500/20 px-6 py-2.5 rounded-full shadow-2xl flex items-center gap-3">
               <Moon className="h-3 w-3 text-emerald-500 fill-emerald-500" />
               <div className="flex flex-col items-center">
@@ -86,7 +86,7 @@ export function FloatingRamazanElements() {
         }
         @keyframes ramazan-float-msg {
           0%, 100% { transform: translate(-50%, 0); }
-          50% { transform: translate(-50%, -15px); }
+          50% { transform: translate(-50%, -10px); }
         }
         .animate-float-up {
           animation-name: ramazan-float-above;

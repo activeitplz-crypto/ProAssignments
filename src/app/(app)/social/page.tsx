@@ -27,7 +27,7 @@ export default async function SocialPage() {
   const officialChannels = [
     {
       name: 'WhatsApp Channel',
-      url: 'https://whatsapp.com/channel/0029Vb6EqdYLY6d5HhajEb3A%E2%81%A0',
+      url: 'https://whatsapp.com/channel/0029Vb6EqdYLY6d5HhajEb3A',
       icon: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
       color: 'bg-green-500',
       description: 'Get real-time task updates and news'
@@ -146,7 +146,7 @@ export default async function SocialPage() {
                 Our support terminals are active 24/7 on the official WhatsApp Channel.
             </p>
             <div className="pt-4">
-                <Link href="https://whatsapp.com/channel/0029Vb6EqdYLY6d5HhajEb3A%E2%81%A0" target="_blank" className="inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
+                <Link href="https://whatsapp.com/channel/0029Vb6EqdYLY6d5HhajEb3A" target="_blank" className="inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
                     Launch Support <MessageCircle className="h-4 w-4 text-green-500" />
                 </Link>
             </div>

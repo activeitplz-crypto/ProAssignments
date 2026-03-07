@@ -1,4 +1,3 @@
-
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -11,7 +10,6 @@ const assignmentSchema = z.object({
   images: z.array(z.string()).min(1, 'At least one image is required.'),
 });
 
-// This function calls the Supabase RPC to add earnings.
 async function distributeEarnings(supabase: any, userId: string) {
     const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
         p_user_id: userId,
@@ -31,7 +29,6 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: 'You must be logged in to submit an assignment.' };
   }
 
-  // 1. Check for existing APPROVED submission for this task today
   const today = new Date();
   today.setHours(0, 0, 0, 0); 
   const { data: existingSubmission, error: existingError } = await supabase
@@ -52,7 +49,6 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: 'You have already submitted and been approved for this task today.' };
   }
 
-  // 2. Auto-approve and distribute earnings.
   const approvalStatus = 'approved';
   const feedback = 'Submission auto-approved.';
 
@@ -63,7 +59,6 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
     return { error: error.message, isApproved: false };
   }
 
-  // 3. Insert the approved assignment record AFTER earnings are distributed.
   const { error: insertError } = await supabase
     .from('assignments')
     .insert({

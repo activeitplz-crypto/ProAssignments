@@ -1,4 +1,3 @@
-
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -17,7 +16,7 @@ import {
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { Withdrawal } from '@/lib/types';
-import { Wallet, Clock, CheckCircle, Info, Sparkles, ArrowDownToLine } from 'lucide-react';
+import { Wallet, Info, Sparkles, ArrowDownToLine } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default async function WithdrawPage() {
@@ -96,7 +95,7 @@ export default async function WithdrawPage() {
 
         <div className="space-y-4">
             <div className="flex items-center gap-2 px-2">
-                <HistoryIcon className="h-4 w-4 text-primary opacity-40" />
+                <WithdrawalHistoryIcon className="h-4 w-4 text-primary opacity-40" />
                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Capital History</h3>
             </div>
             <WithdrawalHistory withdrawals={withdrawals || []} />
@@ -133,7 +132,7 @@ function WithdrawalHistory({ withdrawals }: { withdrawals: Withdrawal[] }) {
                     </div>
                   </TableCell>
                   <TableCell className="py-6">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase">{format(new Date(p.created_at), 'MMM dd, yyyy')}</p>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">{format(new Date(w.created_at), 'MMM dd, yyyy')}</p>
                   </TableCell>
                   <TableCell className="px-8 py-6 text-right">
                      <Badge
@@ -167,7 +166,7 @@ function WithdrawalHistory({ withdrawals }: { withdrawals: Withdrawal[] }) {
   );
 }
 
-function HistoryIcon({ className }: { className?: string }) {
+function WithdrawalHistoryIcon({ className }: { className?: string }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

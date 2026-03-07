@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +15,7 @@ export default function LandingPage() {
             <Button variant="ghost" asChild className="font-bold text-slate-600">
                 <Link href="/login">Login</Link>
             </Button>
-            <Button asChild className="rounded-full px-4 h-8 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold uppercase tracking-widest text-[8px]">
+            <Button asChild className="rounded-full px-4 h-7 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold uppercase tracking-widest text-[7px]">
                 <Link href="/signup">Get Started <ArrowRight className="ml-1.5 h-3 w-3" /></Link>
             </Button>
           </div>
@@ -41,7 +40,7 @@ export default function LandingPage() {
 
           <div className="flex flex-col items-center gap-8 w-full max-w-md">
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-                <Button asChild className="h-10 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[9px] shadow-2xl shadow-primary/30 group">
+                <Button asChild className="h-9 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[8px] shadow-2xl shadow-primary/30 group">
                 <Link href="/signup">
                     Start Earning Now
                     <TrendingUp className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

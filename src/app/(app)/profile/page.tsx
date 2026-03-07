@@ -1,4 +1,3 @@
-
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -13,7 +12,6 @@ import {
   DollarSign, 
   Zap, 
   Briefcase, 
-  Wallet, 
   Fingerprint, 
   Mail, 
   Calendar, 
@@ -23,7 +21,6 @@ import {
   Settings,
   ShieldCheck
 } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 
@@ -54,7 +51,6 @@ export default async function ProfilePage() {
 
   const initials = user.name?.split(' ').map((n) => n[0]).join('').toUpperCase() || 'U';
 
-  // Helper to render currency with small decimals
   const renderCurrency = (amount: number) => {
     const parts = amount.toFixed(2).split('.');
     return (
@@ -90,15 +86,12 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-24">
-      {/* Immersive Primary Header with Balance Inside */}
+    <div className="min-h-screen bg-[#F8FAFC] pb-24">
       <div className="bg-primary pt-12 pb-24 rounded-b-[3.5rem] px-6 relative shadow-2xl overflow-hidden">
-        {/* Decorative subtle patterns */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-black/5 rounded-full -ml-10 -mb-10 blur-2xl" />
         
         <div className="max-w-4xl mx-auto relative z-10 space-y-10">
-          {/* Top Bar: User Info */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Avatar className="h-14 w-14 border-2 border-white/30 shadow-lg">
@@ -112,7 +105,6 @@ export default async function ProfilePage() {
             </div>
           </div>
 
-          {/* Integrated Balance Display */}
           <div className="flex flex-col items-center text-center space-y-3">
             <span className="text-white/60 font-bold uppercase text-[10px] tracking-[0.3em]">Available Balance</span>
             <div className="flex items-baseline gap-2">
@@ -125,7 +117,6 @@ export default async function ProfilePage() {
         </div>
       </div>
 
-      {/* Action Card - Positioned below without overlap */}
       <div className="px-6 mt-8 max-w-xl mx-auto">
         <Card className="rounded-[2.5rem] border-none shadow-xl overflow-hidden bg-white">
           <CardContent className="p-8">
@@ -162,10 +153,7 @@ export default async function ProfilePage() {
         </Card>
       </div>
 
-      {/* Main Content Area */}
       <div className="max-w-4xl mx-auto px-6 mt-10 space-y-10">
-        
-        {/* Compact Stats Grid */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {stats.map((stat) => (
             <Card key={stat.title} className="border-none bg-card/50 shadow-md">
@@ -192,7 +180,6 @@ export default async function ProfilePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
-          {/* Identity Info */}
           <div className="space-y-8 lg:col-span-4">
             <Card className="border-none shadow-xl rounded-[2.5rem] overflow-hidden">
               <div className="h-1.5 bg-primary" />
@@ -247,7 +234,6 @@ export default async function ProfilePage() {
             </Card>
           </div>
 
-          {/* Form Settings */}
           <div className="lg:col-span-8">
             <Card className="border-none shadow-xl rounded-[2.5rem] overflow-hidden">
               <CardHeader className="bg-muted/30 p-8">

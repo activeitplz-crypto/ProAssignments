@@ -1,10 +1,9 @@
-
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
 } from '@/components/ui/card';
-import { ListTodo, Info, CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { ListTodo, CheckCircle2, Clock, Sparkles } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { redirect } from 'next/navigation';
 import { TaskItem } from './task-item';

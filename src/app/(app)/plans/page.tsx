@@ -1,9 +1,7 @@
-
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,

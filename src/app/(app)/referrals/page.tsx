@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import {
@@ -30,7 +31,6 @@ async function getUplineInfo(supabase: any, referrerId: string): Promise<Upline 
         .single();
     
     if(error || !uplineProfile) {
-        console.error('Could not fetch upline info:', error);
         return null;
     }
 

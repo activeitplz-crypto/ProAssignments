@@ -36,7 +36,7 @@ import { cn } from '@/lib/utils';
 import { OfferCountdown } from './offer-countdown';
 
 export default async function PlansPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   const { data: profile } = await supabase

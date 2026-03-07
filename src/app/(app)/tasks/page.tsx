@@ -1,3 +1,4 @@
+
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -103,7 +104,7 @@ export default async function TasksPage() {
                 <Alert variant="default" className="border-none bg-transparent max-w-xs mx-auto text-center p-0">
                   <div className="flex flex-col items-center gap-4">
                     <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <Info className="h-6 w-6" />
+                        <span className="h-6 w-6">i</span>
                     </div>
                     <div className="space-y-1">
                         <AlertTitle className="text-sm font-black uppercase tracking-tight">Access Restricted</AlertTitle>

@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { PostgrestError } from '@supabase/supabase-js';
 
 async function verifyAdmin() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user || user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
     throw new Error('Not authorized');

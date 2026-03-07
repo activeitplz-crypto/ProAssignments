@@ -21,6 +21,7 @@ import { Users, CheckCircle, Gift, UserPlus, ArrowUpCircle } from 'lucide-react'
 import type { Referral, Upline } from '@/lib/types';
 import { format } from 'date-fns';
 import { CopyButton } from './copy-button';
+import { cn } from '@/lib/utils';
 
 async function getUplineInfo(supabase: any, referrerId: string): Promise<Upline | null> {
     const { data: uplineProfile, error } = await supabase

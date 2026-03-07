@@ -38,6 +38,7 @@ export default async function AdminLayout({
   }
 
   const navItems = [
+    { href: '/admin?tab=assignments', label: 'Assignments', icon: ClipboardList },
     { href: '/admin?tab=payments', label: 'Payments', icon: CreditCard },
     { href: '/admin?tab=withdrawals', label: 'Withdrawals', icon: Send },
     { href: '/admin?tab=users', label: 'Users', icon: Users },

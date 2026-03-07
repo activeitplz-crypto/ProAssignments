@@ -96,6 +96,30 @@ export default async function SocialPage() {
                 ))}
             </div>
         </section>
+
+        {dbLinks && dbLinks.length > 0 && (
+            <section className="space-y-6">
+                <div className="flex items-center gap-2 px-2">
+                    <MessageCircle className="h-4 w-4 text-primary opacity-40" />
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Verified Partner Links</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {dbLinks.map((link: SocialLink) => (
+                        <Link key={link.id} href={link.social_link} target="_blank" className="group">
+                            <Card className="border-none shadow-lg rounded-2xl bg-white overflow-hidden hover:bg-primary transition-all duration-300">
+                                <CardContent className="p-4 flex items-center gap-4">
+                                    <div className="h-10 w-10 rounded-xl overflow-hidden relative border border-slate-50 shadow-sm shrink-0">
+                                        <Image src={link.icon_url} alt={link.name} fill className="object-cover" />
+                                    </div>
+                                    <span className="text-xs font-black uppercase tracking-tight text-slate-900 group-hover:text-white transition-colors">{link.name}</span>
+                                    <ExternalLink className="h-3 w-3 ml-auto text-primary group-hover:text-white transition-colors" />
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    ))}
+                </div>
+            </section>
+        )}
       </div>
     </div>
   );

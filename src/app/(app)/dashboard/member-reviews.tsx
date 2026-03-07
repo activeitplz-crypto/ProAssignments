@@ -8,7 +8,7 @@ import { Star, StarHalf, Quote } from 'lucide-react';
 const reviews = [
   {
     name: 'Arafa',
-    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣𝗜𝗡-𝗕𝗬-𝗟𝗔𝗗𝗗𝗜.jpg',
+    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣𝗜𝗡-𝗕𝗬-𝗟𝗔𝗗Ｄ𝗜.jpg',
     rating: 5,
     content: 'Main ek student hun. Pocket money ke liye join kia tha. Ab apni fees khud pay karti hun. 40k earn kar chuki hun. Ye meri best decision thi.'
   },
@@ -35,6 +35,18 @@ const reviews = [
     avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
     rating: 5,
     content: 'The AI verification system is super fast. I upload my handwritten assignments and get approval within minutes. Very reliable platform.'
+  },
+  {
+    name: 'Amna Abbas',
+    avatar: 'https://i.postimg.cc/s2fxXYnR/download_(1).jpg',
+    rating: 5,
+    content: 'Main ne recently ProAssignments join kiya hai aur experience kaafi acha raha. Assignments simple hotay hain aur instructions clear hoti hain. Daily thori bohat earning bhi ho jati hai.'
+  },
+  {
+    name: 'Usman Ali',
+    avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
+    rating: 4.5,
+    content: 'Jo log writing kar sakte hain unke liye ye ek acha side earning option ho sakta hai. Assignments mil jate hain aur payouts timely hain.'
   }
 ];
 

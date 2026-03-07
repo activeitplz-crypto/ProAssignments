@@ -23,7 +23,8 @@ export default async function AdminPage({
 }: {
   searchParams: { tab: string | undefined };
 }) {
-  const defaultTab = searchParams.tab || 'assignments';
+  const resolvedSearchParams = await searchParams;
+  const defaultTab = resolvedSearchParams.tab || 'assignments';
   const supabase = await createClient();
   
   const { data: plansData } = await supabase.from('plans').select('*').order('investment');
@@ -43,7 +44,7 @@ export default async function AdminPage({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-8">
+      <TabsList className="grid w-full grid-cols-9">
         <TabsTrigger value="assignments">Assignments</TabsTrigger>
         <TabsTrigger value="payments">Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
@@ -52,6 +53,7 @@ export default async function AdminPage({
         <TabsTrigger value="tasks">Tasks</TabsTrigger>
         <TabsTrigger value="top-users">Top Users</TabsTrigger>
         <TabsTrigger value="videos">Guidelines</TabsTrigger>
+        <TabsTrigger value="socials">Socials</TabsTrigger>
       </TabsList>
 
       <TabsContent value="assignments">
@@ -92,6 +94,10 @@ export default async function AdminPage({
       
       <TabsContent value="videos">
         <ManageVideosForm videos={videos} />
+      </TabsContent>
+
+      <TabsContent value="socials">
+        <ManageSocialsForm socials={socialLinks} />
       </TabsContent>
     </Tabs>
   );

@@ -1,4 +1,3 @@
-
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -12,7 +11,7 @@ const loginSchema = z.object({
 });
 
 export async function login(formData: z.infer<typeof loginSchema>) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithPassword(formData);
 
@@ -37,7 +36,7 @@ const signupSchema = z.object({
 });
 
 export async function signup(formData: z.infer<typeof signupSchema>) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Auto-generate username from name
   const baseUsername = formData.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
@@ -79,15 +78,12 @@ export async function signup(formData: z.infer<typeof signupSchema>) {
     return { error: 'Could not create user. Please try again.', success: false };
   }
   
-  // Since email confirmation is off, the user is created and their profile is available.
-  // No need to link referrer in a separate step as it's handled by the `handle_new_user` trigger.
-
   return { error: null, success: true };
 }
 
 
 export async function logout() {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.auth.signOut();
   redirect('/login');
 }
@@ -97,7 +93,7 @@ export async function logout() {
  * This is intended to be called at the start of a new day.
  */
 export async function resetDailyEarnings() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return;

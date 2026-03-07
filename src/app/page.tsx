@@ -1,14 +1,18 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, TrendingUp, ShieldCheck, FileCheck2, Sparkles } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
+import { FloatingRamazanElements } from '@/components/floating-ramazan-elements';
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8FAFC] overflow-x-hidden">
-      <header className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
+    <div className="flex flex-col min-h-screen bg-[#F8FAFC] overflow-x-hidden relative">
+      <FloatingRamazanElements />
+      
+      <header className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6 relative z-10">
         <Logo />
         <nav className="flex items-center">
           <div className="flex items-center gap-2">
@@ -22,7 +26,7 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         <section className="container mx-auto flex flex-col items-center justify-center space-y-10 px-4 py-16 text-center md:py-24 lg:py-32">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/10 px-4 py-1.5 rounded-full">
@@ -39,8 +43,8 @@ export default function LandingPage() {
           </div>
 
           <div className="flex flex-col items-center gap-8 w-full max-w-md px-4">
-            <Button asChild className="h-12 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-primary/30 group w-full max-w-[240px]">
-              <Link href="/signup">
+            <Button asChild className="h-11 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-primary/30 group w-full max-w-[220px]">
+              <Link href="/signup" className="flex items-center justify-center">
                   Start Earning Now
                   <TrendingUp className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -48,7 +52,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-white/80 backdrop-blur-sm">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-black tracking-tighter text-center mb-16 uppercase italic text-slate-900 md:text-5xl">
               Work <span className="text-primary">Roadmap</span>
@@ -77,7 +81,7 @@ export default function LandingPage() {
           </div>
         </section>
         
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-white/50">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid items-center gap-16 md:grid-cols-2">
                     <div className="space-y-8">

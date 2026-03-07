@@ -49,7 +49,7 @@ const reviews = [
   },
   {
     name: 'Faizan Sheikh',
-    avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
+    avatar: 'https://i.postimg.cc/nrTJpkHW/En_route_again.jpg',
     rating: 5,
     content: 'Reliable platform for students in Pakistan. The withdrawal to Easypaisa is very convenient and fast. Highly recommended!'
   },

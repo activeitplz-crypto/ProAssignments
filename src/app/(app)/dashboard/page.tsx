@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
-import { VideoTutorialCard } from './video-tutorial-card';
 import { DownloadAppCard } from './download-app-card';
 import Link from 'next/link';
 import { RamzanBanner } from './ramzan-banner';
@@ -43,14 +42,6 @@ export default async function DashboardPage() {
   if (error || !user) {
     return <div className="p-8 text-center font-black uppercase tracking-widest text-destructive">User Context Sync Error</div>;
   }
-
-  // Fetch the latest tutorial video for direct playback
-  const { data: latestVideo } = await supabase
-    .from('videos')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
 
   const quickNav = [
     { href: '/tasks', label: 'Tasks', icon: ClipboardList, color: 'text-orange-500', bg: 'bg-orange-500/10' },
@@ -139,7 +130,6 @@ export default async function DashboardPage() {
           {/* Main Feed Column */}
           <div className="md:col-span-7 space-y-6">
             <RecentWithdrawals />
-            <VideoTutorialCard video={latestVideo} />
             <BlogCard />
             <HousewifeBlogCard />
             <PartTimeBlogCard />

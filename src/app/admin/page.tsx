@@ -43,15 +43,13 @@ export default async function AdminPage({
 
   return (
     <Tabs defaultValue={defaultTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-9">
+      <TabsList className="grid w-full grid-cols-7">
         <TabsTrigger value="assignments">Assignments</TabsTrigger>
         <TabsTrigger value="payments">Payments</TabsTrigger>
         <TabsTrigger value="withdrawals">Withdrawals</TabsTrigger>
         <TabsTrigger value="users">Users</TabsTrigger>
         <TabsTrigger value="plans">Plans</TabsTrigger>
         <TabsTrigger value="tasks">Tasks</TabsTrigger>
-        <TabsTrigger value="top-users">Top Users</TabsTrigger>
-        <TabsTrigger value="videos">Guidelines</TabsTrigger>
         <TabsTrigger value="socials">Socials</TabsTrigger>
       </TabsList>
 
@@ -85,14 +83,6 @@ export default async function AdminPage({
 
       <TabsContent value="tasks">
         <ManageTasksForm tasks={tasks} />
-      </TabsContent>
-      
-      <TabsContent value="top-users">
-        <ManageTopUsersForm topUsers={topUsers} />
-      </TabsContent>
-      
-      <TabsContent value="videos">
-        <ManageVideosForm videos={videos} />
       </TabsContent>
 
       <TabsContent value="socials">

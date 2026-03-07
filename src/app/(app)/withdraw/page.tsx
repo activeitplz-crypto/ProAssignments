@@ -1,4 +1,3 @@
-
 import { createClient } from '@/lib/supabase/server';
 import {
   Card,
@@ -70,7 +69,7 @@ export default async function WithdrawPage() {
           </div>
 
           <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
-              <Info className="h-3 w-3 text-white/70" />
+              <span className="h-3 w-3 text-white/70"><Info className="h-full w-full" /></span>
               <span className="text-[9px] font-bold text-white/90 uppercase tracking-widest">Min. Withdrawal: PKR 700</span>
           </div>
         </div>

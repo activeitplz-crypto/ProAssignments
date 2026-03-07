@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -56,7 +55,7 @@ const reviews = [
   },
   {
     name: 'Mariam Zahra',
-    avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
+    avatar: 'https://i.postimg.cc/DZqLzW4q/Modest_Muslim_Fashion_Elegant_Niqab_Style_Inspiration.jpg',
     rating: 5,
     content: 'Being a housewife, it was hard to find work that fits my schedule. ProAssignment allows me to earn during my free time.'
   }

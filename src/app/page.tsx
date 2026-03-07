@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -39,15 +38,13 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-8 w-full max-w-md">
-            <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-                <Button asChild className="h-14 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-primary/30 group max-w-xs mx-auto sm:mx-0">
-                <Link href="/signup">
-                    Start Earning Now
-                    <TrendingUp className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                </Button>
-            </div>
+          <div className="flex flex-col items-center gap-8 w-full max-w-md px-4">
+            <Button asChild className="h-12 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-primary/30 group w-full max-w-[240px]">
+              <Link href="/signup">
+                  Start Earning Now
+                  <TrendingUp className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
           </div>
         </section>
 
@@ -126,35 +123,13 @@ export default function LandingPage() {
             </div>
         </section>
 
-        <section className="py-24 container mx-auto px-4">
-            <div className="bg-primary rounded-[3.5rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-primary/30">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] -mr-48 -mt-48" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full blur-[80px] -ml-32 -mb-32" />
-                
-                <div className="max-w-2xl mx-auto space-y-8 relative z-10">
-                    <div className="space-y-4">
-                        <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-md">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-white">Mobile Terminal</span>
-                        </div>
-                        <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic leading-none">Download Our <br/>Mobile App</h2>
-                        <p className="text-white/60 text-sm md:text-base font-medium">Get the elite experience with native notifications and faster assignment verification.</p>
-                    </div>
-                    <Button asChild className="h-14 px-10 rounded-2xl bg-white text-primary hover:bg-slate-50 font-black uppercase tracking-[0.2em] text-[11px] shadow-xl group">
-                        <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
-                            Start Earning Now <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                    </Button>
-                </div>
-            </div>
-        </section>
+        <footer className="container mx-auto px-4 py-12 text-center">
+          <div className="flex flex-col items-center gap-6">
+              <Logo />
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} ProAssignment. All Rights Reserved.</p>
+          </div>
+        </footer>
       </main>
-
-      <footer className="container mx-auto px-4 py-12 text-center">
-        <div className="flex flex-col items-center gap-6">
-            <Logo />
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} ProAssignment. All Rights Reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

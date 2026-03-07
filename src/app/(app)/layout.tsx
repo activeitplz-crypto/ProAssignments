@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -91,7 +92,7 @@ export default function AppLayout({
     );
 
     return () => subscription.unsubscribe();
-  }, [router, supabase, supabase.auth, toast]);
+  }, [router, supabase, toast]);
 
   useEffect(() => {
     const handleDailyResetCheck = async () => {

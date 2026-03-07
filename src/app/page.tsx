@@ -37,7 +37,6 @@ export default async function LandingPage() {
       </header>
 
       <main className="flex-1">
-        {/* Hero Section */}
         <section className="container mx-auto flex flex-col items-center justify-center space-y-10 px-4 py-16 text-center md:py-24 lg:py-32">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/10 px-4 py-1.5 rounded-full">
@@ -65,7 +64,6 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* Video Tutorial Section */}
         <section className="py-20 bg-slate-900 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -mr-48 -mt-48" />
             <div className="container mx-auto px-4 relative z-10">
@@ -92,7 +90,6 @@ export default async function LandingPage() {
             </div>
         </section>
 
-        {/* Features Section */}
         <section className="py-24 bg-white">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-black tracking-tighter text-center mb-16 uppercase italic text-slate-900 md:text-5xl">
@@ -122,7 +119,6 @@ export default async function LandingPage() {
           </div>
         </section>
         
-        {/* Compliance Section */}
         <section className="py-24 bg-white">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid items-center gap-16 md:grid-cols-2">
@@ -169,7 +165,6 @@ export default async function LandingPage() {
             </div>
         </section>
 
-        {/* App CTA */}
         <section className="py-24 container mx-auto px-4">
             <div className="bg-primary rounded-[3.5rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-primary/30">
                 <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] -mr-48 -mt-48" />

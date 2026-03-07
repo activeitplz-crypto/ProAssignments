@@ -68,7 +68,6 @@ export default async function PlansPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
-      {/* 1. Immersive Header */}
       <div className="bg-primary pt-16 pb-24 px-6 relative rounded-b-[3.5rem] shadow-lg overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="max-w-6xl mx-auto text-center relative z-10 space-y-4">
@@ -83,7 +82,6 @@ export default async function PlansPage() {
         </div>
       </div>
 
-      {/* 2. Overlapping Plans Grid */}
       <div className="px-4 -mt-12 space-y-12 max-w-7xl mx-auto w-full pb-32 relative z-20">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {(plans as Plan[]).map((plan) => {
@@ -104,7 +102,6 @@ export default async function PlansPage() {
                     isOffer ? "ring-2 ring-primary/20" : "",
                     isOffer && plan.offer_expires_at ? "rounded-t-none" : ""
                 )}>
-                    {/* Visual Decor */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/10 transition-colors" />
                     
                     <CardHeader className="p-8 pb-4 relative z-10">
@@ -161,7 +158,7 @@ export default async function PlansPage() {
                     {isActive ? (
                         <div className="w-full h-14 rounded-2xl bg-green-500 text-white flex items-center justify-center gap-2 shadow-lg shadow-green-500/20">
                             <ShieldCheck className="h-5 w-5" />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Active Partner</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest">Active Plan</span>
                         </div>
                         ) : isPending ? (
                         <div className="w-full h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center gap-2 border border-slate-200">
@@ -178,7 +175,6 @@ export default async function PlansPage() {
             })}
         </div>
 
-        {/* 3. Transaction History Section */}
         <div className="space-y-6 pt-12">
             <div className="flex items-center gap-2 px-2">
                 <Clock className="h-4 w-4 text-primary opacity-40" />

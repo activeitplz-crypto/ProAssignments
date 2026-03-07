@@ -19,12 +19,6 @@ const reviews = [
     content: 'Jab first time payment receive hui toh meri khushi ka thikana nahi tha. Pehly sirf loss hota tha, ab profit hi profit hai. Recommend karti hun sabko.'
   },
   {
-    name: 'Hina Tariq',
-    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣𝗜𝗡-𝗕𝗬-𝗟𝗔𝗗𝗗𝗜.jpg',
-    rating: 4.5,
-    content: 'Mujhe online kaam dhundhna mushkil lag raha tha lekin ProAssignments se start karna easy tha. Daily assignments mil jate hain aur kaam bhi zyada complicated nahi hota. Ghar baith kar kaam karne ka ye acha option hai.'
-  },
-  {
     name: 'Komal Tariq',
     avatar: 'https://i.postimg.cc/BvXpjD8Y/dp.jpg',
     rating: 5,

@@ -3,8 +3,6 @@ import { createClient } from '@/lib/supabase/server';
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import { WithdrawForm } from './withdraw-form';
 import { redirect } from 'next/navigation';
@@ -23,7 +21,7 @@ import { Wallet, Clock, CheckCircle, Info, Sparkles, ArrowDownToLine, History } 
 import { cn } from '@/lib/utils';
 
 export default async function WithdrawPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session }} = await supabase.auth.getSession();
 
   if (!session) {
@@ -53,7 +51,6 @@ export default async function WithdrawPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
-      {/* 1. Immersive Financial Header */}
       <div className="bg-primary pt-16 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="max-w-4xl mx-auto text-center relative z-10 space-y-6">
@@ -79,10 +76,7 @@ export default async function WithdrawPage() {
         </div>
       </div>
 
-      {/* 2. Overlapping Page Content */}
       <div className="px-4 -mt-10 space-y-8 max-w-4xl mx-auto w-full pb-24 relative z-20">
-        
-        {/* Request Card */}
         <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden">
           <div className="p-8 border-b border-slate-50 flex items-center gap-5">
             <div className="h-14 w-14 rounded-[1.5rem] bg-primary/5 flex items-center justify-center border border-primary/10">
@@ -100,7 +94,6 @@ export default async function WithdrawPage() {
           </CardContent>
         </Card>
 
-        {/* History Section */}
         <div className="space-y-4">
             <div className="flex items-center gap-2 px-2">
                 <History className="h-4 w-4 text-primary opacity-40" />

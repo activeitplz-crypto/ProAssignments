@@ -14,7 +14,6 @@ import {
   ClipboardList,
   ListTodo,
   Award,
-  MessageSquare,
   Video,
   Share2,
 } from 'lucide-react';
@@ -31,7 +30,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session }} = await supabase.auth.getSession();
 
   if (!session || session.user.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
@@ -45,8 +44,6 @@ export default async function AdminLayout({
     { href: '/admin?tab=plans', label: 'Plans', icon: ClipboardList },
     { href: '/admin?tab=tasks', label: 'Tasks', icon: ListTodo },
     { href: '/admin?tab=top-users', label: 'Top Users', icon: Award },
-    { href: '/admin?tab=reviews', label: 'Reviews', icon: MessageSquare },
-    { href: '/admin?tab=feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/admin?tab=videos', label: 'Guidelines', icon: Video },
     { href: '/admin?tab=socials', label: 'Socials', icon: Share2 },
   ];

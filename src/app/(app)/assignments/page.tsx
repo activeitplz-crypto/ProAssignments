@@ -11,7 +11,6 @@ import { AssignmentForm } from './assignment-form';
 import type { Task, Assignment } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-// This component now only shows "Approved" or "Pending"
 function getStatusBadge(isApproved: boolean) {
     if (isApproved) {
         return (
@@ -29,9 +28,8 @@ function getStatusBadge(isApproved: boolean) {
     );
 }
 
-
 export default async function AssignmentsPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
@@ -64,7 +62,6 @@ export default async function AssignmentsPage() {
     );
   }
   
-  // Fetch the user's daily tasks
   const { data: plan } = await supabase
     .from('plans')
     .select('daily_assignments')
@@ -84,12 +81,11 @@ export default async function AssignmentsPage() {
     return <div className="p-12 text-center font-black uppercase tracking-widest text-destructive">System Interface Error</div>;
   }
 
-  // Fetch today's APPROVED submissions to check status
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const { data: approved_assignments, error: submissionsError } = await supabase
     .from('assignments')
-    .select('task_id') // We only need the task_id
+    .select('task_id')
     .eq('user_id', session.user.id)
     .eq('status', 'approved')
     .gte('created_at', today.toISOString());
@@ -106,10 +102,8 @@ export default async function AssignmentsPage() {
         }
     });
 
-
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
-      {/* 1. Immersive Blue Header Section */}
       <div className="bg-primary pt-16 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
@@ -124,14 +118,11 @@ export default async function AssignmentsPage() {
         </div>
       </div>
 
-      {/* 2. Overlapping Page Content */}
       <div className="px-4 -mt-10 space-y-8 max-w-4xl mx-auto w-full pb-24 relative z-20">
-        
         {tasks && tasks.length > 0 ? (
           <div className="space-y-8">
             {(tasks as Task[]).map((task, index) => {
               const isApproved = approvedTaskIds.has(task.id);
-              
               return (
                 <Card key={task.id} className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden group">
                   <div className="p-8 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

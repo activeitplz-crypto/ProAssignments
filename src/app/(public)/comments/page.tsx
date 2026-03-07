@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from '@/components/ui/card';
 import { MessageSquare } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,11 +13,6 @@ const staticReviews = [
         name: 'Areeba Khan',
         avatar_url: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
         content: 'ProAssignments mere liye ek acha platform sabit hua. Main student hun aur free time mein assignments likh kar earning kar leti hun. Process simple hai aur guide bhi easily mil jati hai. Mujhe yahan ka system kaafi easy laga.',
-    },
-    {
-        name: 'Hina Tariq',
-        avatar_url: 'https://i.postimg.cc/FKFzRyPv/download_(2).jpg',
-        content: 'Mujhe online kaam dhundhna mushkil lag raha tha lekin ProAssignments se start karna easy tha. Daily assignments mil jate hain aur kaam bhi zyada complicated nahi hota. Ghar baith kar kaam karne ka ye acha option hai.',
     },
     {
         name: 'Usman Ali',

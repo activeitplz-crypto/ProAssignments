@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default async function SocialPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session }} = await supabase.auth.getSession();
 
   if (!session) {
@@ -43,7 +43,6 @@ export default async function SocialPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
-      {/* 1. Immersive Elite Header */}
       <div className="bg-primary pt-16 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
@@ -59,14 +58,11 @@ export default async function SocialPage() {
       </div>
 
       <div className="px-4 -mt-10 space-y-10 max-w-5xl mx-auto w-full pb-24 relative z-20">
-        
-        {/* Official Featured Channels */}
         <section className="space-y-6">
             <div className="flex items-center gap-2 px-2">
                 <Share2 className="h-4 w-4 text-primary opacity-40" />
                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Featured Official Channels</h3>
             </div>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {officialChannels.map((channel) => (
                     <Link key={channel.name} href={channel.url} target="_blank" className="group">
@@ -100,57 +96,6 @@ export default async function SocialPage() {
                 ))}
             </div>
         </section>
-
-        {/* Community Hubs (Database Driven) */}
-        <section className="space-y-6">
-            <div className="flex items-center gap-2 px-2">
-                <Share2 className="h-4 w-4 text-primary opacity-40" />
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Community Hubs</h3>
-            </div>
-
-            {dbLinks && dbLinks.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {(dbLinks as SocialLink[]).map((link) => (
-                        <Link key={link.id} href={link.social_link} target="_blank" className="group">
-                            <Card className="border-none shadow-lg rounded-[2rem] bg-white overflow-hidden text-center transition-all duration-500 hover:bg-slate-50">
-                                <CardContent className="p-6 space-y-4">
-                                    <div className="relative h-14 w-14 mx-auto overflow-hidden rounded-2xl bg-slate-50 p-3 group-hover:scale-110 transition-transform">
-                                        <Image
-                                            src={link.icon_url}
-                                            alt={`${link.name} icon`}
-                                            fill
-                                            className="object-contain p-2"
-                                            data-ai-hint="social icon"
-                                        />
-                                    </div>
-                                    <span className="block text-[10px] font-black uppercase tracking-widest text-slate-900 truncate px-2">{link.name}</span>
-                                </CardContent>
-                            </Card>
-                        </Link>
-                    ))}
-                </div>
-            ) : (
-                <div className="flex h-48 flex-col items-center justify-center rounded-[2.5rem] border-2 border-dashed border-slate-200 bg-white/50">
-                    <p className="text-center text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                        Additional hubs will be updated soon.
-                    </p>
-                </div>
-            )}
-        </section>
-
-        {/* Support Footer */}
-        <div className="bg-slate-900 rounded-[2.5rem] p-10 text-center space-y-6 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
-            <h4 className="text-white text-lg font-black uppercase italic tracking-tighter">Need Direct Assistance?</h4>
-            <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest leading-relaxed max-w-xs mx-auto">
-                Our support terminals are active 24/7 on the official WhatsApp Channel.
-            </p>
-            <div className="pt-4">
-                <Link href="https://whatsapp.com/channel/0029Vb6EqdYLY6d5HhajEb3A" target="_blank" className="inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
-                    Join Channel <MessageCircle className="h-4 w-4 text-green-500" />
-                </Link>
-            </div>
-        </div>
       </div>
     </div>
   );

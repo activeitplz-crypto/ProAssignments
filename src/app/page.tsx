@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, TrendingUp, ShieldCheck, Video, Sparkles } from 'lucide-react';
+import { ArrowRight, TrendingUp, ShieldCheck, FileCheck2, Sparkles } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
 
@@ -15,8 +15,8 @@ export default function LandingPage() {
             <Button variant="ghost" asChild className="font-bold text-slate-600">
                 <Link href="/login">Login</Link>
             </Button>
-            <Button asChild className="rounded-full px-3 h-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[6px]">
-                <Link href="/signup">Get Started <ArrowRight className="ml-1 h-2.5 w-2.5" /></Link>
+            <Button asChild className="rounded-full px-4 h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px]">
+                <Link href="/signup">Get Started <ArrowRight className="ml-1.5 h-3 w-3" /></Link>
             </Button>
           </div>
         </nav>
@@ -40,10 +40,10 @@ export default function LandingPage() {
 
           <div className="flex flex-col items-center gap-8 w-full max-w-md">
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-                <Button asChild className="h-7 px-5 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[6px] shadow-2xl shadow-primary/30 group">
+                <Button asChild className="h-14 px-10 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[11px] shadow-2xl shadow-primary/30 group">
                 <Link href="/signup">
                     Start Earning Now
-                    <TrendingUp className="ml-2 h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                    <TrendingUp className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 </Button>
             </div>
@@ -58,8 +58,8 @@ export default function LandingPage() {
             <div className="grid gap-8 md:grid-cols-3">
               {[
                 { title: "Choose Plan", desc: "Select a certified investment plan that matches your goals. Higher plans unlock more daily assignments.", icon: TrendingUp },
-                { title: "Complete Tasks", desc: "Write assigned work by hand and upload proof. Our AI scans ensure instant verification.", icon: Video },
-                { title: "Get Paid", desc: "Earnings are added instantly to your balance. Withdraw to Easypaisa or JazzCash daily.", icon: ShieldCheck }
+                { title: "Complete Assignment", desc: "Write assigned work by hand and upload photographic proof for validation. Verified work triggers instant earnings.", icon: FileCheck2 },
+                { title: "Get Paid", desc: "Earnings are added instantly to your balance. Withdraw to Easypaisa or JazzCash daily without referral requirements.", icon: ShieldCheck }
               ].map((item, i) => (
                 <Card key={i} className="border-none shadow-xl rounded-[2.5rem] bg-slate-50 overflow-hidden group hover:bg-primary transition-all duration-500">
                   <CardHeader className="p-10 space-y-6">
@@ -136,11 +136,11 @@ export default function LandingPage() {
                             <span className="text-[10px] font-black uppercase tracking-widest text-white">Mobile Terminal</span>
                         </div>
                         <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic leading-none">Download Our <br/>Mobile App</h2>
-                        <p className="text-white/60 text-sm md:text-base font-medium">Get the elite experience with native notifications and faster AI verification.</p>
+                        <p className="text-white/60 text-sm md:text-base font-medium">Get the elite experience with native notifications and faster assignment verification.</p>
                     </div>
-                    <Button asChild className="h-7 px-6 rounded-2xl bg-white text-primary hover:bg-slate-50 font-black uppercase tracking-[0.2em] text-[7px] shadow-xl group">
+                    <Button asChild className="h-14 px-10 rounded-2xl bg-white text-primary hover:bg-slate-50 font-black uppercase tracking-[0.2em] text-[11px] shadow-xl group">
                         <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
-                            Start Earning Now <ArrowRight className="ml-2 h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                            Start Earning Now <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </Button>
                 </div>

@@ -39,7 +39,7 @@ const reviews = [
     name: 'Sadia Malik',
     avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
     rating: 5,
-    content: 'The AI verification system is super fast. I upload my handwritten assignments and get approval within minutes. Very reliable platform.'
+    content: 'The assignment verification system is super fast. I upload my handwritten assignments and get approval within minutes. Very reliable platform.'
   },
   {
     name: 'Bilal Ahmad',

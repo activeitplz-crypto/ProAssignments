@@ -34,7 +34,7 @@ const reviews = [
     name: 'Usman Ali',
     avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
     rating: 4.5,
-    content: 'Jo log writing kar sakte hain unke liye ye ek acha side earning option ho sakta hai. Assignments mil jate hain aur payouts timely hain.'
+    content: 'Jo log writing kar sakte hain unke liye ye ek acha side earning option ho sakta hai. Payouts timely hain.'
   },
   {
     name: 'Sadia Malik',
@@ -46,7 +46,7 @@ const reviews = [
     name: 'Bilal Ahmad',
     avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
     rating: 4.5,
-    content: 'ProAssignment has been a game-changer for me. As a university student, the flexible tasks help me cover my extra expenses without any pressure.'
+    content: 'ProAssignment has been a game-changer for me. As a university student, the flexible tasks help me cover my extra expenses.'
   },
   {
     name: 'Faizan Sheikh',
@@ -58,7 +58,7 @@ const reviews = [
     name: 'Mariam Zahra',
     avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
     rating: 5,
-    content: 'Being a housewife, it was hard to find work that fits my schedule. ProAssignment allows me to earn during my free time comfortably from home.'
+    content: 'Being a housewife, it was hard to find work that fits my schedule. ProAssignment allows me to earn during my free time.'
   }
 ];
 

@@ -133,7 +133,7 @@ function WithdrawalHistory({ withdrawals }: { withdrawals: Withdrawal[] }) {
                     </div>
                   </TableCell>
                   <TableCell className="py-6">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase">{format(new Date(w.created_at), 'MMM dd, yyyy')}</p>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase">{format(new Date(p.created_at), 'MMM dd, yyyy')}</p>
                   </TableCell>
                   <TableCell className="px-8 py-6 text-right">
                      <Badge

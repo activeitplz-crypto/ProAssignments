@@ -1,4 +1,3 @@
-
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
@@ -15,7 +14,6 @@ async function verifyAdmin() {
   return supabase;
 }
 
-// Helper function to handle Supabase responses
 async function handleSupabaseResponse<T>(query: Promise<{ data: T | null; error: PostgrestError | null }>): Promise<T> {
   const { data, error } = await query;
   if (error) {
@@ -27,7 +25,6 @@ async function handleSupabaseResponse<T>(query: Promise<{ data: T | null; error:
   }
   return data;
 }
-
 
 export async function approvePayment(formData: FormData) {
   const paymentId = formData.get('paymentId') as string;
@@ -61,12 +58,11 @@ export async function approvePayment(formData: FormData) {
         .single()
     );
       
-    // Use a transaction to ensure all or nothing
     const { error: transactionError } = await supabase.rpc('approve_payment_and_distribute_bonus', {
         p_payment_id: paymentId,
         p_user_id: profile.id,
         p_plan_name: plan.name,
-        p_referred_by_id: profile.referred_by || null // Pass null if no referrer
+        p_referred_by_id: profile.referred_by || null
     });
 
     if (transactionError) {
@@ -81,7 +77,6 @@ export async function approvePayment(formData: FormData) {
   revalidatePath('/admin');
   return { error: null };
 }
-
 
 export async function rejectPayment(formData: FormData) {
   const supabase = await verifyAdmin();
@@ -121,7 +116,6 @@ export async function rejectWithdrawal(formData: FormData) {
   const withdrawalId = formData.get('withdrawalId') as string;
 
   try {
-    // 1. Fetch withdrawal details
     const { data: withdrawal, error: fetchError } = await supabase
       .from('withdrawals')
       .select('user_id, amount, status')
@@ -129,11 +123,8 @@ export async function rejectWithdrawal(formData: FormData) {
       .single();
 
     if (fetchError || !withdrawal) throw new Error('Withdrawal not found.');
-    
-    // Only process if it's currently pending to avoid double refunds
     if (withdrawal.status !== 'pending') throw new Error('Withdrawal is already processed.');
 
-    // 2. Fetch current user balance
     const { data: profile, error: profileFetchError } = await supabase
       .from('profiles')
       .select('current_balance')
@@ -142,7 +133,6 @@ export async function rejectWithdrawal(formData: FormData) {
 
     if (profileFetchError || !profile) throw new Error('User profile not found for refund.');
 
-    // 3. Update profile balance (refund the amount)
     const { error: refundError } = await supabase
       .from('profiles')
       .update({ current_balance: profile.current_balance + withdrawal.amount })
@@ -150,7 +140,6 @@ export async function rejectWithdrawal(formData: FormData) {
 
     if (refundError) throw new Error('Failed to refund balance to user.');
 
-    // 4. Finally reject the withdrawal record
     const { error: updateError } = await supabase
       .from('withdrawals')
       .update({ status: 'rejected' })
@@ -185,7 +174,6 @@ export async function savePlan(formData: z.infer<typeof planSchema>) {
     const validatedData = planSchema.parse(formData);
     const { id, ...planData } = validatedData;
     
-    // Ensure null if empty string
     if (planData.offer_name === '') planData.offer_name = null;
     if (planData.original_investment === 0) planData.original_investment = null;
     if (planData.offer_expires_at === '') planData.offer_expires_at = null;
@@ -204,11 +192,9 @@ export async function savePlan(formData: z.infer<typeof planSchema>) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=plans', 'page');
     revalidatePath('/plans');
     return { error: null };
 }
-
 
 const taskSchema = z.object({
     id: z.string().optional(),
@@ -233,7 +219,6 @@ export async function saveTask(formData: z.infer<typeof taskSchema>) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=tasks', 'page');
     revalidatePath('/tasks');
     return { error: null };
 }
@@ -251,7 +236,6 @@ export async function deleteTask(formData: FormData) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=tasks', 'page');
     revalidatePath('/tasks');
     return { error: null };
 }
@@ -268,11 +252,8 @@ export async function approveAssignment(formData: FormData) {
     .single();
   
   if (fetchError || !assignment) return { error: 'Assignment not found.' };
-
-  // If already approved, do nothing to prevent double payment.
   if (assignment.status === 'approved') return { error: 'Assignment has already been approved.' };
 
-  // Only change the status. Do not distribute earnings here.
   const { error } = await supabase
     .from('assignments')
     .update({ status: 'approved' })
@@ -287,7 +268,6 @@ export async function approveAssignment(formData: FormData) {
   revalidatePath('/assignments');
   return { error: null };
 }
-
 
 export async function rejectAssignment(formData: FormData) {
   const supabase = await verifyAdmin();
@@ -329,7 +309,6 @@ export async function saveTopUser(formData: z.infer<typeof topUserSchema>) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=top-users', 'page');
     revalidatePath('/top-users');
     return { error: null };
 }
@@ -347,11 +326,9 @@ export async function deleteTopUser(formData: FormData) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=top-users', 'page');
     revalidatePath('/top-users');
     return { error: null };
 }
-
 
 const reviewSchema = z.object({
     id: z.string().optional(),
@@ -377,7 +354,6 @@ export async function saveReview(formData: z.infer<typeof reviewSchema>) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=reviews', 'page');
     revalidatePath('/reviews');
     return { error: null };
 }
@@ -395,11 +371,9 @@ export async function deleteReview(formData: FormData) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=reviews', 'page');
     revalidatePath('/reviews');
     return { error: null };
 }
-
 
 const videoSchema = z.object({
     id: z.string().optional(),
@@ -424,7 +398,6 @@ export async function saveVideo(formData: z.infer<typeof videoSchema>) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=videos', 'page');
     revalidatePath('/watch');
     return { error: null };
 }
@@ -442,11 +415,9 @@ export async function deleteVideo(formData: FormData) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=videos', 'page');
     revalidatePath('/watch');
     return { error: null };
 }
-
 
 const feedbackVideoSchema = z.object({
     id: z.string().optional(),
@@ -471,7 +442,6 @@ export async function saveFeedbackVideo(formData: z.infer<typeof feedbackVideoSc
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=feedbacks', 'page');
     revalidatePath('/feedbacks');
     return { error: null };
 }
@@ -489,7 +459,6 @@ export async function deleteFeedbackVideo(formData: FormData) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=feedbacks', 'page');
     revalidatePath('/feedbacks');
     return { error: null };
 }
@@ -518,7 +487,6 @@ export async function saveSocialLink(formData: z.infer<typeof socialLinkSchema>)
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=socials', 'page');
     revalidatePath('/social');
     return { error: null };
 }
@@ -536,7 +504,6 @@ export async function deleteSocialLink(formData: FormData) {
     }
 
     revalidatePath('/admin');
-    revalidatePath('/admin?tab=socials', 'page');
     revalidatePath('/social');
     return { error: null };
 }

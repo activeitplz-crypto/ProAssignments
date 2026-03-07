@@ -15,8 +15,8 @@ export default function LandingPage() {
             <Button variant="ghost" asChild className="font-bold text-slate-600">
                 <Link href="/login">Login</Link>
             </Button>
-            <Button asChild className="rounded-full px-4 h-7 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold uppercase tracking-widest text-[7px]">
-                <Link href="/signup">Get Started <ArrowRight className="ml-1.5 h-3 w-3" /></Link>
+            <Button asChild className="rounded-full px-3 h-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold uppercase tracking-widest text-[6px]">
+                <Link href="/signup">Get Started <ArrowRight className="ml-1 h-2.5 w-2.5" /></Link>
             </Button>
           </div>
         </nav>
@@ -40,40 +40,14 @@ export default function LandingPage() {
 
           <div className="flex flex-col items-center gap-8 w-full max-w-md">
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-                <Button asChild className="h-9 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[8px] shadow-2xl shadow-primary/30 group">
+                <Button asChild className="h-8 px-6 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[7px] shadow-2xl shadow-primary/30 group">
                 <Link href="/signup">
-                    Start Earning Now
-                    <TrendingUp className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    Get Started Now
+                    <TrendingUp className="ml-2 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 </Button>
             </div>
           </div>
-        </section>
-
-        <section className="py-20 bg-slate-900 overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -mr-48 -mt-48" />
-            <div className="container mx-auto px-4 relative z-10">
-                <div className="max-w-4xl mx-auto space-y-12">
-                    <div className="text-center space-y-3">
-                        <div className="flex items-center justify-center gap-2">
-                            <span className="text-primary font-black uppercase text-[10px] tracking-[0.3em]">Work Station Guide</span>
-                        </div>
-                        <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase italic text-white">How to Work on <span className="text-primary">ProAssignment</span></h2>
-                        <p className="text-white/40 text-[11px] font-bold uppercase tracking-widest">Watch the complete workflow to maximize your daily success</p>
-                    </div>
-
-                    <div className="relative aspect-video rounded-[2.5rem] overflow-hidden border-8 border-white/5 shadow-2xl bg-black/40">
-                        <iframe
-                            src="https://www.youtube.com/embed/QosrndbuZQk"
-                            title="Work Tutorial"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="h-full w-full"
-                        ></iframe>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <section className="py-24 bg-white">
@@ -165,7 +139,7 @@ export default function LandingPage() {
                         <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic leading-none">Download Our <br/>Mobile App</h2>
                         <p className="text-white/60 text-sm md:text-base font-medium">Get the elite experience with native notifications and faster AI verification.</p>
                     </div>
-                    <Button asChild className="h-14 px-10 rounded-2xl bg-white text-primary hover:bg-slate-50 font-black uppercase tracking-[0.2em] text-[10px] shadow-xl group">
+                    <Button asChild className="h-12 px-8 rounded-2xl bg-white text-primary hover:bg-slate-50 font-black uppercase tracking-[0.2em] text-[9px] shadow-xl group">
                         <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
                             Download Now <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </Link>

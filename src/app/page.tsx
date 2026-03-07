@@ -42,7 +42,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
                 <Button asChild className="h-7 px-5 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[6px] shadow-2xl shadow-primary/30 group">
                 <Link href="/signup">
-                    Get Started Now
+                    Start Earning Now
                     <TrendingUp className="ml-2 h-3 w-3 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 </Button>
@@ -140,7 +140,7 @@ export default function LandingPage() {
                     </div>
                     <Button asChild className="h-7 px-6 rounded-2xl bg-white text-primary hover:bg-slate-50 font-black uppercase tracking-[0.2em] text-[7px] shadow-xl group">
                         <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
-                            Download Now <ArrowRight className="ml-2 h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                            Start Earning Now <ArrowRight className="ml-2 h-3 w-3 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </Button>
                 </div>

@@ -5,12 +5,10 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 import { ArrowRight, TrendingUp, ShieldCheck, FileCheck2, Sparkles } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
-import { FloatingRamazanElements } from '@/components/floating-ramazan-elements';
 
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC] overflow-x-hidden relative">
-      <FloatingRamazanElements />
       
       <header className="sticky top-0 z-50 w-full bg-[#F8FAFC]/80 backdrop-blur-md border-b border-slate-100">
         <div className="container mx-auto flex h-20 items-center justify-between px-2 sm:px-4 md:px-6">

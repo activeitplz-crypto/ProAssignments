@@ -17,7 +17,7 @@ import {
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import type { Withdrawal } from '@/lib/types';
-import { Wallet, Clock, CheckCircle, Info, Sparkles, ArrowDownToLine, History } from 'lucide-react';
+import { Wallet, Clock, CheckCircle, Info, Sparkles, ArrowDownToLine } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default async function WithdrawPage() {
@@ -96,7 +96,7 @@ export default async function WithdrawPage() {
 
         <div className="space-y-4">
             <div className="flex items-center gap-2 px-2">
-                <History className="h-4 w-4 text-primary opacity-40" />
+                <HistoryIcon className="h-4 w-4 text-primary opacity-40" />
                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Capital History</h3>
             </div>
             <WithdrawalHistory withdrawals={withdrawals || []} />
@@ -167,7 +167,7 @@ function WithdrawalHistory({ withdrawals }: { withdrawals: Withdrawal[] }) {
   );
 }
 
-function History({ className }: { className?: string }) {
+function HistoryIcon({ className }: { className?: string }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

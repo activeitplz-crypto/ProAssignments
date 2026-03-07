@@ -147,7 +147,7 @@ export default async function SocialPage() {
             </p>
             <div className="pt-4">
                 <Link href="https://whatsapp.com/channel/0029Vb6EqdYLY6d5HhajEb3A" target="_blank" className="inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
-                    Launch Support <MessageCircle className="h-4 w-4 text-green-500" />
+                    Join Channel <MessageCircle className="h-4 w-4 text-green-500" />
                 </Link>
             </div>
         </div>

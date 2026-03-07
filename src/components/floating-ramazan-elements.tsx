@@ -24,7 +24,7 @@ export function FloatingRamazanElements() {
 
   useEffect(() => {
     // Generate festive elements on mount
-    const newElements = Array.from({ length: 12 }).map((_, i) => ({
+    const newElements = Array.from({ length: 15 }).map((_, i) => ({
       id: i,
       x: Math.random() * 95,
       size: Math.random() * (25 - 12) + 12,
@@ -38,6 +38,7 @@ export function FloatingRamazanElements() {
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-[100] select-none">
+      {/* Festive floating particles */}
       {elements.map((el) => (
         <div
           key={el.id}
@@ -53,6 +54,19 @@ export function FloatingRamazanElements() {
           {el.type === 'lantern' && <LanternIcon size={el.size} />}
         </div>
       ))}
+
+      {/* Central Floating Message */}
+      <div className="absolute top-[12%] left-1/2 -translate-x-1/2 z-[110] flex flex-col items-center gap-2 animate-float-msg">
+          <div className="bg-emerald-600/10 backdrop-blur-[4px] border border-emerald-500/20 px-6 py-2.5 rounded-full shadow-2xl flex items-center gap-3">
+              <Moon className="h-3 w-3 text-emerald-500 fill-emerald-500" />
+              <div className="flex flex-col items-center">
+                <span className="text-[7px] font-black uppercase tracking-[0.4em] text-emerald-600/60 leading-none mb-0.5">Mubarak</span>
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-emerald-700 leading-none">Ramazan Kareem</span>
+              </div>
+              <Star className="h-2.5 w-2.5 text-amber-400 fill-amber-400" />
+          </div>
+      </div>
+
       <style jsx global>{`
         @keyframes ramazan-float-above {
           0% {
@@ -70,10 +84,17 @@ export function FloatingRamazanElements() {
             opacity: 0;
           }
         }
+        @keyframes ramazan-float-msg {
+          0%, 100% { transform: translate(-50%, 0); }
+          50% { transform: translate(-50%, -15px); }
+        }
         .animate-float-up {
           animation-name: ramazan-float-above;
           animation-iteration-count: infinite;
           animation-timing-function: linear;
+        }
+        .animate-float-msg {
+          animation: ramazan-float-msg 4s ease-in-out infinite;
         }
       `}</style>
     </div>

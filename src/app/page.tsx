@@ -2,16 +2,15 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, TrendingUp, MessageSquare, Download, ShieldCheck, Video, Sparkles } from 'lucide-react';
+import { ArrowRight, TrendingUp, ShieldCheck, Video, Sparkles } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';
 import { getYouTubeEmbedUrl } from '@/lib/utils';
 
 export default async function LandingPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   
-  // Fetch the latest tutorial video for public display
   const { data: latestVideo } = await supabase
     .from('videos')
     .select('*')
@@ -25,13 +24,15 @@ export default async function LandingPage() {
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
       <header className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Logo />
-        <nav className="flex items-center gap-4">
-          <Button variant="ghost" asChild className="font-bold text-slate-600">
-            <Link href="/login">Login</Link>
-          </Button>
-          <Button asChild className="rounded-full px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px]">
-            <Link href="/signup">Get Started <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
-          </Button>
+        <nav className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" asChild className="font-bold text-slate-600">
+                <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild className="rounded-full px-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[10px]">
+                <Link href="/signup">Get Started <ArrowRight className="ml-2 h-3.5 w-3.5" /></Link>
+            </Button>
+          </div>
         </nav>
       </header>
 
@@ -52,19 +53,15 @@ export default async function LandingPage() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md">
-            <Button size="lg" asChild className="h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/30 group">
-              <Link href="/signup">
-                Start Earning Today
-                <TrendingUp className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="h-14 rounded-2xl border-slate-200 font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all">
-              <Link href="/comments">
-                User Reviews
-                <MessageSquare className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+          <div className="flex flex-col items-center gap-8 w-full max-w-md">
+            <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+                <Button size="lg" asChild className="h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/30 group">
+                <Link href="/signup">
+                    Start Earning Today
+                    <TrendingUp className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                </Button>
+            </div>
           </div>
         </section>
 
@@ -82,21 +79,14 @@ export default async function LandingPage() {
                     </div>
 
                     <div className="relative aspect-video rounded-[2.5rem] overflow-hidden border-8 border-white/5 shadow-2xl bg-black/40">
-                        {embedUrl ? (
-                            <iframe
-                                src={embedUrl}
-                                title="Work Tutorial"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="h-full w-full"
-                            ></iframe>
-                        ) : (
-                            <div className="h-full w-full flex flex-col items-center justify-center gap-4 text-white/20">
-                                <Video className="h-16 w-16" />
-                                <span className="text-xs font-black uppercase tracking-widest">Tutorial Syncing...</span>
-                            </div>
-                        )}
+                        <iframe
+                            src="https://www.youtube.com/embed/QosrndbuZQk"
+                            title="Work Tutorial"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="h-full w-full"
+                        ></iframe>
                     </div>
                 </div>
             </div>
@@ -133,7 +123,7 @@ export default async function LandingPage() {
         </section>
         
         {/* Compliance Section */}
-        <section className="py-24 bg-slate-50">
+        <section className="py-24 bg-white">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid items-center gap-16 md:grid-cols-2">
                     <div className="space-y-8">
@@ -148,13 +138,13 @@ export default async function LandingPage() {
                         </div>
                         
                         <div className="grid gap-4">
-                            <div className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl shadow-sm border border-slate-100">
                                 <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center text-green-600">
                                     <ShieldCheck className="h-5 w-5" />
                                 </div>
                                 <span className="text-xs font-black uppercase tracking-tight text-slate-700">FBR Registered Business</span>
                             </div>
-                            <div className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                            <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl shadow-sm border border-slate-100">
                                 <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-600">
                                     <ShieldCheck className="h-5 w-5" />
                                 </div>
@@ -188,7 +178,7 @@ export default async function LandingPage() {
                 <div className="max-w-2xl mx-auto space-y-8 relative z-10">
                     <div className="space-y-4">
                         <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-md">
-                            <Download className="h-3.5 w-3.5 text-white" />
+                            <Sparkles className="h-3.5 w-3.5 text-white" />
                             <span className="text-[10px] font-black uppercase tracking-widest text-white">Mobile Terminal</span>
                         </div>
                         <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic leading-none">Download Our <br/>Mobile App</h2>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -6,28 +7,46 @@ import { Star, StarHalf, Quote } from 'lucide-react';
 
 const reviews = [
   {
+    name: 'Arafa',
+    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣𝗜𝗡-𝗕𝗬-𝗟𝗔𝗗𝗗𝗜.jpg',
+    rating: 5,
+    content: 'Main ek student hun. Pocket money ke liye join kia tha. Ab apni fees khud pay karti hun. 40k earn kar chuki hun. Ye meri best decision thi.'
+  },
+  {
+    name: 'Zainab',
+    avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
+    rating: 5,
+    content: 'Jab first time payment receive hui toh meri khushi ka thikana nahi tha. Pehly sirf loss hota tha, ab profit hi profit hai. Recommend karti hun sabko.'
+  },
+  {
+    name: 'Hina Tariq',
+    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣𝗜𝗡-𝗕𝗬-𝗟𝗔𝗗𝗗𝗜.jpg',
+    rating: 4.5,
+    content: 'Mujhe online kaam dhundhna mushkil lag raha tha lekin ProAssignments se start karna easy tha. Daily assignments mil jate hain aur kaam bhi zyada complicated nahi hota. Ghar baith kar kaam karne ka ye acha option hai.'
+  },
+  {
+    name: 'Komal Tariq',
+    avatar: 'https://i.postimg.cc/BvXpjD8Y/dp.jpg',
+    rating: 5,
+    content: 'Very supportive team and fast withdrawals. I have been working here for 2 months now and the experience is amazing. Highly recommended for students.'
+  },
+  {
     name: 'Amna Abbas',
     avatar: 'https://i.postimg.cc/s2fxXYnR/download_(1).jpg',
     rating: 4.5,
-    content: 'Main ne recently ProAssignments join kiya hai aur experience kaafi acha raha. Assignments simple hotay hain aur instructions clear hoti hain. Mujhe ghar baith kar kaam karne ka moka mil raha hai. Daily thori bohat earning bhi ho jati hai jo kaafi helpful hai.'
+    content: 'Main ne recently ProAssignments join kiya hai aur experience kaafi acha raha. Assignments simple hotay hain aur instructions clear hoti hain.'
   },
   {
     name: 'Areeba Khan',
     avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
     rating: 5,
-    content: 'ProAssignments mere liye ek acha platform sabit hua. Main student hun aur free time mein assignments likh kar earning kar leti hun. Process simple hai aur guide bhi easily mil jati hai. Mujhe yahan ka system kaafi easy laga.'
-  },
-  {
-    name: 'Hina Tariq',
-    avatar: 'https://i.postimg.cc/FKFzRyPv/download_(2).jpg',
-    rating: 4.5,
-    content: 'Mujhe online kaam dhundhna mushkil lag raha tha lekin ProAssignments se start karna easy tha. Daily assignments mil jate hain aur kaam bhi zyada complicated nahi hota. Ghar baith kar kaam karne ka ye acha option hai.'
+    content: 'ProAssignments mere liye ek acha platform sabit hua. Main student hun aur free time mein assignments likh kar earning kar leti hun.'
   },
   {
     name: 'Usman Ali',
     avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
     rating: 4,
-    content: 'Main ne curiosity mein ProAssignments join kiya tha aur experience theek raha. Assignments mil jate hain aur kaam simple hota hai. Jo log writing kar sakte hain unke liye ye ek acha side earning option ho sakta hai.'
+    content: 'Main ne curiosity mein ProAssignments join kiya tha aur experience theek raha. Assignments mil jate hain aur kaam simple hota hai.'
   }
 ];
 

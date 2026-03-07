@@ -11,7 +11,6 @@ import {
   ClipboardList,
   FileCheck2,
   User as UserIcon,
-  Sparkles,
 } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { RecentWithdrawals } from './recent-withdrawals';
@@ -26,7 +25,7 @@ import { FaqSection } from './faq-section';
 import { cn } from '@/lib/utils';
 
 export default async function DashboardPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session }} = await supabase.auth.getSession();
 
   if (!session) {

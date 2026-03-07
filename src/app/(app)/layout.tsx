@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
@@ -11,7 +12,6 @@ import {
   Loader2,
   FileCheck2,
   Users,
-  MessageSquare,
   HelpCircle,
   Video,
   Share2,
@@ -141,7 +141,6 @@ export default function AppLayout({
     { href: '/referrals', label: 'Referral', icon: Users },
     { href: '/guide', label: 'Guide', icon: HelpCircle },
     { href: '/watch', label: 'Tutorials', icon: Video },
-    { href: '/feedbacks', label: 'Feedbacks', icon: MessageSquare },
     { href: '/social', label: 'Social Hub', icon: Share2 },
   ];
 

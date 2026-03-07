@@ -1,4 +1,3 @@
-
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
@@ -12,15 +11,14 @@ const updateProfileSchema = z.object({
 });
 
 export async function updateProfile(formData: z.infer<typeof updateProfileSchema>) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     return { error: 'You must be logged in to update your profile.' };
   }
 
-  // Check if username is already taken by another user
-  const { data: existingUser, error: existingUserError } = await supabase
+  const { data: existingUser } = await supabase
     .from('profiles')
     .select('id')
     .eq('username', formData.username)
@@ -29,10 +27,6 @@ export async function updateProfile(formData: z.infer<typeof updateProfileSchema
 
   if (existingUser) {
     return { error: 'Username is already taken.' };
-  }
-   if (existingUserError && existingUserError.code !== 'PGRST116') { // Ignore 'No rows found' error
-    console.error('Error checking username:', existingUserError);
-    return { error: 'Could not validate username.' };
   }
 
   const { error } = await supabase
@@ -50,7 +44,6 @@ export async function updateProfile(formData: z.infer<typeof updateProfileSchema
   }
 
   revalidatePath('/profile');
-  revalidatePath('/(app)', 'layout');
   revalidatePath('/dashboard');
   return { error: null };
 }

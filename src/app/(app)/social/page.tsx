@@ -1,4 +1,3 @@
-
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,10 +18,6 @@ export default async function SocialPage() {
     .from('social_links')
     .select('*')
     .order('created_at', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching social links:', error);
-  }
 
   const officialChannels = [
     {

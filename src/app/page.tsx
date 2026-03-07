@@ -1,24 +1,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, TrendingUp, ShieldCheck, Video, Sparkles } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import Image from 'next/image';
-import { createClient } from '@/lib/supabase/server';
-import { getYouTubeEmbedUrl } from '@/lib/utils';
 
-export default async function LandingPage() {
-  const supabase = await createClient();
-  
-  const { data: latestVideo } = await supabase
-    .from('videos')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  const embedUrl = latestVideo ? getYouTubeEmbedUrl(latestVideo.url) : null;
-
+export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
       <header className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">

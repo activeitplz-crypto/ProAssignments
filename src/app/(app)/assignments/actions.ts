@@ -1,4 +1,3 @@
-
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -12,20 +11,19 @@ const assignmentSchema = z.object({
 });
 
 // This function calls the Supabase RPC to add earnings.
-async function distributeEarnings(supabase: ReturnType<typeof createClient>, userId: string) {
+async function distributeEarnings(supabase: any, userId: string) {
     const { error: rpcError } = await supabase.rpc('add_fixed_earnings', {
         p_user_id: userId,
     });
 
     if (rpcError) {
         console.error('Earnings Distribution RPC Error:', rpcError);
-        // We throw an error to make sure the calling function knows it failed.
         throw new Error('Failed to distribute earnings.');
     }
 }
 
 export async function submitAssignmentWithImages(formData: z.infer<typeof assignmentSchema>) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
@@ -34,7 +32,7 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
 
   // 1. Check for existing APPROVED submission for this task today
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // Start of today
+  today.setHours(0, 0, 0, 0); 
   const { data: existingSubmission, error: existingError } = await supabase
     .from('assignments')
     .select('id')
@@ -54,12 +52,10 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
   }
 
   // 2. Auto-approve and distribute earnings.
-  // The submission is automatically approved since an image is present.
   const approvalStatus = 'approved';
   const feedback = 'Submission auto-approved.';
 
   try {
-    // Attempt to distribute earnings first. If this fails, the process stops.
     await distributeEarnings(supabase, user.id);
   } catch (error: any) {
     console.error('Caught earnings distribution error in submit action:', error);
@@ -81,8 +77,6 @@ export async function submitAssignmentWithImages(formData: z.infer<typeof assign
 
   if (insertError) {
     console.error('Assignment Insert Error:', insertError);
-    // Note: At this point, earnings were already distributed. This could lead to a discrepancy.
-    // A more robust solution would use a database transaction, but this is a simpler implementation.
     return { error: 'Failed to save your assignment record, but earnings were added.', isApproved: true };
   }
   

@@ -25,22 +25,16 @@ const reviews = [
     content: 'Very supportive team and fast withdrawals. I have been working here for 2 months now and the experience is amazing. Highly recommended for students.'
   },
   {
-    name: 'Amna Abbas',
-    avatar: 'https://i.postimg.cc/s2fxXYnR/download_(1).jpg',
+    name: 'Bilal Ahmad',
+    avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
     rating: 4.5,
-    content: 'Main ne recently ProAssignments join kiya hai aur experience kaafi acha raha. Assignments simple hotay hain aur instructions clear hoti hain.'
+    content: 'ProAssignment has been a game-changer for me. As a university student, the flexible tasks help me cover my extra expenses without any pressure.'
   },
   {
-    name: 'Areeba Khan',
+    name: 'Sadia Malik',
     avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
     rating: 5,
-    content: 'ProAssignments mere liye ek acha platform sabit hua. Main student hun aur free time mein assignments likh kar earning kar leti hun.'
-  },
-  {
-    name: 'Usman Ali',
-    avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
-    rating: 4,
-    content: 'Main ne curiosity mein ProAssignments join kiya tha aur experience theek raha. Assignments mil jate hain aur kaam simple hota hai.'
+    content: 'The AI verification system is super fast. I upload my handwritten assignments and get approval within minutes. Very reliable platform.'
   }
 ];
 
@@ -83,7 +77,7 @@ export function MemberReviews() {
               </div>
 
               <blockquote className="max-w-xs">
-                <p className="text-xs font-medium italic text-muted-foreground leading-relaxed">
+                <p className="text-xs font-medium italic text-slate-600 leading-relaxed">
                   {review.content}
                 </p>
               </blockquote>

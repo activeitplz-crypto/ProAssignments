@@ -1,12 +1,13 @@
+
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Sparkles } from 'lucide-react';
 import type { FeedbackVideo as FeedbackVideoType } from '@/lib/types';
 import { getYouTubeEmbedUrl } from '@/lib/utils';
 
 export default async function FeedbacksPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session }} = await supabase.auth.getSession();
 
   if (!session) {
@@ -20,62 +21,64 @@ export default async function FeedbacksPage() {
 
    if (error) {
     console.error('Error fetching feedback videos:', error);
-    return <div>Could not load feedback videos. Please try again later.</div>
+    return <div className="p-12 text-center font-black uppercase tracking-widest text-destructive">Video Sync Error</div>
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2 text-3xl">
-            <MessageSquare className="h-8 w-8 text-primary" />
-            User Feedbacks
-          </CardTitle>
-          <CardDescription>
-            Watch video testimonials from our satisfied users.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {videos && videos.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {(videos as FeedbackVideoType[]).map((video) => {
-                const embedUrl = getYouTubeEmbedUrl(video.url);
-                return (
-                  <Card key={video.id} className="overflow-hidden">
-                    {embedUrl ? (
-                        <div className="aspect-video">
-                            <iframe
-                                src={embedUrl}
-                                title={video.title}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="h-full w-full"
-                            ></iframe>
-                        </div>
-                    ) : (
-                        <div className="aspect-video bg-muted flex items-center justify-center">
-                            <p className="text-destructive text-sm p-4">Invalid video URL</p>
-                        </div>
-                    )}
-                    <CardHeader>
-                      <CardTitle className="text-lg">{video.title}</CardTitle>
-                    </CardHeader>
-                  </Card>
-                )
-              })}
-            </div>
-          ) : (
-            <div className="flex h-48 flex-col items-center justify-center rounded-lg border-2 border-dashed bg-muted">
-                <p className="text-center text-muted-foreground">
-                    No feedback videos have been added yet.
-                    <br />
-                    Check back later to see what our users are saying!
-                </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+    <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
+      <div className="bg-primary pt-16 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
+        <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
+          <div className="flex items-center justify-center gap-2">
+              <span className="text-white/60 font-black uppercase text-[10px] tracking-[0.3em]">Member Success</span>
+              <Sparkles className="h-3 w-3 text-yellow-400/60" />
+          </div>
+          <h1 className="text-4xl font-black tracking-tighter uppercase italic text-white leading-none">
+            User <span className="text-white/80">Feedbacks</span>
+          </h1>
+          <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">Watch real success stories from our network</p>
+        </div>
+      </div>
+
+      <div className="px-4 -mt-10 space-y-8 max-w-6xl mx-auto w-full pb-24 relative z-20">
+        {videos && videos.length > 0 ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {(videos as FeedbackVideoType[]).map((video) => {
+              const embedUrl = getYouTubeEmbedUrl(video.url);
+              return (
+                <Card key={video.id} className="border-none shadow-xl rounded-[2rem] bg-white overflow-hidden group hover:translate-y-[-4px] transition-all">
+                  {embedUrl ? (
+                      <div className="aspect-video relative overflow-hidden">
+                          <iframe
+                              src={embedUrl}
+                              title={video.title}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="h-full w-full"
+                          ></iframe>
+                      </div>
+                  ) : (
+                      <div className="aspect-video bg-muted flex items-center justify-center">
+                          <p className="text-destructive text-[10px] font-bold uppercase p-4">Invalid video URL</p>
+                      </div>
+                  )}
+                  <CardHeader className="p-6">
+                    <CardTitle className="text-sm font-black uppercase tracking-tight text-slate-900">{video.title}</CardTitle>
+                  </CardHeader>
+                </Card>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="flex h-64 flex-col items-center justify-center rounded-[2.5rem] border-2 border-dashed bg-white shadow-sm">
+              <MessageSquare className="h-12 w-12 text-slate-200 mb-4" />
+              <p className="text-center text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  Feedback library is being updated.
+              </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

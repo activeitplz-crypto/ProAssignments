@@ -10,7 +10,7 @@ import { redirect } from 'next/navigation';
 import { TaskItem } from './task-item';
 
 export default async function TasksPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { session } } = await supabase.auth.getSession();
 
   if (!session) {
@@ -45,7 +45,6 @@ export default async function TasksPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
-      {/* 1. Immersive Blue Header Section */}
       <div className="bg-primary pt-16 pb-20 px-6 relative rounded-b-[2.5rem] shadow-lg overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
@@ -63,7 +62,6 @@ export default async function TasksPage() {
         </div>
       </div>
 
-      {/* 2. Overlapping Progress Card */}
       <div className="px-4 -mt-10 space-y-6 max-w-4xl mx-auto w-full pb-24 relative z-20">
         <Card className="border-none shadow-xl rounded-[2.5rem] bg-white overflow-hidden">
             <CardContent className="p-8 flex items-center justify-between">
@@ -80,7 +78,6 @@ export default async function TasksPage() {
             </CardContent>
         </Card>
 
-        {/* 3. Modern Task List */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 px-2">
               <ListTodo className="h-4 w-4 text-primary opacity-40" />

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,7 +8,7 @@ import { Star, StarHalf, Quote } from 'lucide-react';
 const reviews = [
   {
     name: 'Arafa',
-    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣ＩＮ-Ｂ𝗬-ＬＡＤＤＩ.jpg',
+    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣ＩＮ-ＢＹ-ＬＡＤＤＩ.jpg',
     rating: 5,
     content: 'Main ek student hun. Pocket money ke liye join kia tha. Ab apni fees khud pay karti hun. 40k earn kar chuki hun. Ye meri best decision thi.'
   },
@@ -37,7 +38,7 @@ const reviews = [
   },
   {
     name: 'Sadia Malik',
-    avatar: 'https://i.postimg.cc/wBxMvXWH/GIRL_DP.jpg',
+    avatar: 'https://i.postimg.cc/SsWCKXYL/download_(4).jpg',
     rating: 5,
     content: 'The assignment verification system is super fast. I upload my handwritten assignments and get approval within minutes. Very reliable platform.'
   },

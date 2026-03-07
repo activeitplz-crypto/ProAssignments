@@ -7,7 +7,7 @@ import { Star, StarHalf, Quote } from 'lucide-react';
 const reviews = [
   {
     name: 'Arafa',
-    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣ＩＮ-ＢＹ-ＬＡＤＤＩ.jpg',
+    avatar: 'https://i.postimg.cc/1zMjV6rk/𝗣ＩＮ-Ｂ𝗬-ＬＡＤＤＩ.jpg',
     rating: 5,
     content: 'Main ek student hun. Pocket money ke liye join kia tha. Ab apni fees khud pay karti hun. 40k earn kar chuki hun. Ye meri best decision thi.'
   },
@@ -43,7 +43,7 @@ const reviews = [
   },
   {
     name: 'Bilal Ahmad',
-    avatar: 'https://i.postimg.cc/vm8TBrPb/hksalaar.jpg',
+    avatar: 'https://i.postimg.cc/Hn3gd2YH/image.jpg',
     rating: 4.5,
     content: 'ProAssignment has been a game-changer for me. As a university student, the flexible tasks help me cover my extra expenses.'
   },

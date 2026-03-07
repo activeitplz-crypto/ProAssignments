@@ -33,7 +33,7 @@ export default function LandingPage() {
               <span>Assignment</span>
               <span className="text-primary italic">Work</span>
             </h1>
-            <p className="max-w-[600px] mx-auto text-sm font-medium text-muted-foreground md:text-base leading-relaxed">
+            <p className="max-w-[600px] mx-auto text-sm font-medium text-muted-foreground md:text-base leading-relaxed px-4">
               Monetize your handwriting skills through our secure digital ecosystem. Join thousands of students and professionals earning daily income.
             </p>
           </div>

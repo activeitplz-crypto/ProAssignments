@@ -1,8 +1,8 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Share2, MessageCircle, Facebook, ExternalLink, Sparkles } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Share2, MessageCircle, ExternalLink, Sparkles } from 'lucide-react';
 import type { SocialLink } from '@/lib/types';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -30,14 +30,14 @@ export default async function SocialPage() {
       url: 'https://whatsapp.com/channel/0029Vb6EqdYLY6d5HhajEb3A',
       icon: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
       color: 'bg-green-500',
-      description: 'Get real-time task updates and news'
+      description: 'Get real-time task updates, announcements and community news.'
     },
     {
       name: 'Facebook Official',
       url: 'https://www.facebook.com/share/18R9WkiuqA/',
       icon: 'https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg',
       color: 'bg-blue-600',
-      description: 'Join our growing community on Facebook'
+      description: 'Join our growing community on Facebook for success stories.'
     }
   ];
 

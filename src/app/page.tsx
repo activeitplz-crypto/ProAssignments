@@ -15,7 +15,7 @@ export default function LandingPage() {
             <Button variant="ghost" asChild className="font-bold text-slate-600">
                 <Link href="/login">Login</Link>
             </Button>
-            <Button asChild className="rounded-full px-3 h-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold uppercase tracking-widest text-[6px]">
+            <Button asChild className="rounded-full px-3 h-6 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[6px]">
                 <Link href="/signup">Get Started <ArrowRight className="ml-1 h-2.5 w-2.5" /></Link>
             </Button>
           </div>
@@ -40,10 +40,10 @@ export default function LandingPage() {
 
           <div className="flex flex-col items-center gap-8 w-full max-w-md">
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-                <Button asChild className="h-8 px-6 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[7px] shadow-2xl shadow-primary/30 group">
+                <Button asChild className="h-7 px-5 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-[6px] shadow-2xl shadow-primary/30 group">
                 <Link href="/signup">
                     Get Started Now
-                    <TrendingUp className="ml-2 h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                    <TrendingUp className="ml-2 h-3 w-3 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 </Button>
             </div>
@@ -53,7 +53,7 @@ export default function LandingPage() {
         <section className="py-24 bg-white">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl font-black tracking-tighter text-center mb-16 uppercase italic text-slate-900 md:text-5xl">
-              Path to <span className="text-primary">Revenue</span>
+              Work <span className="text-primary">Roadmap</span>
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
               {[
@@ -133,15 +133,14 @@ export default function LandingPage() {
                 <div className="max-w-2xl mx-auto space-y-8 relative z-10">
                     <div className="space-y-4">
                         <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-md">
-                            <Sparkles className="h-3.5 w-3.5 text-white" />
                             <span className="text-[10px] font-black uppercase tracking-widest text-white">Mobile Terminal</span>
                         </div>
                         <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white uppercase italic leading-none">Download Our <br/>Mobile App</h2>
                         <p className="text-white/60 text-sm md:text-base font-medium">Get the elite experience with native notifications and faster AI verification.</p>
                     </div>
-                    <Button asChild className="h-12 px-8 rounded-2xl bg-white text-primary hover:bg-slate-50 font-black uppercase tracking-[0.2em] text-[9px] shadow-xl group">
+                    <Button asChild className="h-7 px-6 rounded-2xl bg-white text-primary hover:bg-slate-50 font-black uppercase tracking-[0.2em] text-[7px] shadow-xl group">
                         <Link href="https://web2apkpro.com/public_download.php?project_id=2547&token=e3a1121a43" target="_blank">
-                            Download Now <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            Download Now <ArrowRight className="ml-2 h-3 w-3 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </Button>
                 </div>

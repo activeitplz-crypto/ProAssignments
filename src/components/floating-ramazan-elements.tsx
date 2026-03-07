@@ -30,34 +30,36 @@ export function FloatingRamazanElements() {
       size: Math.random() * (25 - 12) + 12,
       delay: Math.random() * 10,
       duration: Math.random() * (25 - 15) + 15,
-      type: i % 3 === 0 ? 'lantern' : i % 3 === 1 ? 'moon' : 'star' as any,
+      type: (i % 3 === 0 ? 'lantern' : i % 3 === 1 ? 'moon' : 'star') as 'moon' | 'star' | 'lantern',
       color: i % 2 === 0 ? 'text-emerald-500' : 'text-amber-400',
     }));
     setElements(newElements);
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-[100] select-none">
-      {/* Festive floating particles */}
-      {elements.map((el) => (
-        <div
-          key={el.id}
-          className={`absolute bottom-[-100px] animate-float-up opacity-30 ${el.color}`}
-          style={{
-            left: `${el.x}%`,
-            animationDelay: `${el.delay}s`,
-            animationDuration: `${el.duration}s`,
-          }}
-        >
-          {el.type === 'moon' && <Moon size={el.size} fill="currentColor" />}
-          {el.type === 'star' && <Star size={el.size} fill="currentColor" />}
-          {el.type === 'lantern' && <LanternIcon size={el.size} />}
-        </div>
-      ))}
+    <>
+      {/* Festive floating particles in background layer */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-[90] select-none">
+        {elements.map((el) => (
+          <div
+            key={el.id}
+            className={`absolute bottom-[-100px] animate-float-up opacity-30 ${el.color}`}
+            style={{
+              left: `${el.x}%`,
+              animationDelay: `${el.delay}s`,
+              animationDuration: `${el.duration}s`,
+            }}
+          >
+            {el.type === 'moon' && <Moon size={el.size} fill="currentColor" />}
+            {el.type === 'star' && <Star size={el.size} fill="currentColor" />}
+            {el.type === 'lantern' && <LanternIcon size={el.size} />}
+          </div>
+        ))}
+      </div>
 
-      {/* Central Floating Message - Sticky to viewport */}
-      <div className="absolute top-[120px] left-1/2 -translate-x-1/2 z-[110] flex flex-col items-center gap-2 animate-float-msg">
-          <div className="bg-emerald-600/10 backdrop-blur-[4px] border border-emerald-500/20 px-6 py-2.5 rounded-full shadow-2xl flex items-center gap-3">
+      {/* FIXED Central Floating Message - Stays visible during scroll */}
+      <div className="fixed top-[100px] left-1/2 -translate-x-1/2 z-[150] pointer-events-none select-none flex flex-col items-center animate-float-msg">
+          <div className="bg-emerald-600/10 backdrop-blur-[8px] border border-emerald-500/20 px-6 py-2.5 rounded-full shadow-[0_20px_50px_-12px_rgba(0,0,0,0.2)] flex items-center gap-3">
               <Moon className="h-3 w-3 text-emerald-500 fill-emerald-500" />
               <div className="flex flex-col items-center">
                 <span className="text-[7px] font-black uppercase tracking-[0.4em] text-emerald-600/60 leading-none mb-0.5">Mubarak</span>
@@ -97,6 +99,6 @@ export function FloatingRamazanElements() {
           animation: ramazan-float-msg 4s ease-in-out infinite;
         }
       `}</style>
-    </div>
+    </>
   );
 }

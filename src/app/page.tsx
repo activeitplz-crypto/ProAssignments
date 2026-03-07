@@ -14,15 +14,15 @@ export default function LandingPage() {
       
       <header className="sticky top-0 z-50 w-full bg-[#F8FAFC]/80 backdrop-blur-md border-b border-slate-100">
         <div className="container mx-auto flex h-20 items-center justify-between px-2 sm:px-4 md:px-6">
-          <div className="shrink-0 scale-75 sm:scale-90 md:scale-100 origin-left">
+          <div className="shrink-0 scale-[0.65] sm:scale-90 md:scale-100 origin-left">
             <Logo />
           </div>
           <nav className="flex items-center">
             <div className="flex items-center gap-1 sm:gap-2">
-              <Button variant="ghost" asChild className="font-bold text-slate-600 px-2 sm:px-4 text-[10px] sm:text-xs md:text-sm h-8 sm:h-10">
+              <Button variant="ghost" asChild className="font-bold text-slate-600 px-2 sm:px-4 text-[9px] sm:text-xs md:text-sm h-8 sm:h-10">
                   <Link href="/login">Login</Link>
               </Button>
-              <Button asChild className="rounded-full px-3 sm:px-5 h-8 sm:h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[8px] sm:text-[9px] shrink-0">
+              <Button asChild className="rounded-full px-2.5 sm:px-5 h-8 sm:h-9 bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-black uppercase tracking-widest text-[7px] sm:text-[9px] shrink-0">
                   <Link href="/signup">Get Started</Link>
               </Button>
             </div>
@@ -64,7 +64,7 @@ export default function LandingPage() {
             <div className="grid gap-8 md:grid-cols-3">
               {[
                 { title: "Choose Plan", desc: "Select a certified investment plan that matches your goals. Higher plans unlock more daily assignments.", icon: TrendingUp },
-                { title: "Complete Assignment", desc: "Write assigned work by hand and upload photographic proof for validation. Verified work triggers instant earnings.", icon: FileCheck2 },
+                { title: "Complete Assignment", desc: "Write assigned work by hand and upload proof. Validation ensures your work meets the required standards.", icon: FileCheck2 },
                 { title: "Get Paid", desc: "Earnings are added instantly to your balance. Withdraw to Easypaisa or JazzCash daily without referral requirements.", icon: ShieldCheck }
               ].map((item, i) => (
                 <Card key={i} className="border-none shadow-xl rounded-[2.5rem] bg-slate-50 overflow-hidden group hover:bg-primary transition-all duration-500">
